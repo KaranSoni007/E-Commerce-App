@@ -11,6 +11,8 @@ function Wishlist() {
   const { addToCart } = useCart();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showToastMessage = useCallback((message) => {
     setToastMessage(message);
@@ -57,6 +59,16 @@ function Wishlist() {
       clearWishlist();
       showToastMessage("Wishlist cleared");
     }
+  };
+
+  const openQuickView = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const closeQuickView = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
   };
 
   if (wishlist.length === 0) {
@@ -149,18 +161,18 @@ function Wishlist() {
             return (
               <div
                 key={index}
-                className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-shadow"
+                className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-shadow flex flex-col h-full"
               >
                 {/* Product Image */}
-                <div className="relative h-48 bg-gray-50 flex items-center justify-center p-4">
-                  <Link to={`/product/${productIndex + 1}`}>
+                <div className="relative h-48 bg-gray-50 flex items-center justify-center p-4 overflow-hidden">
+                  <Link to={`/product/${productIndex + 1}`} className="w-full h-full flex items-center justify-center">
                     <img
                       src={
                         product.src ||
                         "https://via.placeholder.com/300x200?text=No+Image"
                       }
                       alt={product.title}
-                      className="max-w-full max-h-full object-contain hover:scale-105 transition-transform"
+                      className="w-full h-full object-contain hover:scale-105 transition-transform"
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src =
@@ -199,9 +211,9 @@ function Wishlist() {
                 </div>
 
                 {/* Product Info */}
-                <div className="p-4">
-                  <Link to={`/product/${productIndex + 1}`}>
-                    <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 mb-2 hover:text-indigo-600 transition-colors">
+                <div className="p-4 flex flex-col grow">
+                  <Link to={`/product/${productIndex + 1}`} className="block">
+                    <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 mb-2 min-h-10 hover:text-indigo-600 transition-colors">
                       {product.title}
                     </h3>
                   </Link>
@@ -221,19 +233,27 @@ function Wishlist() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="space-y-2">
+                  <div className="space-y-2 mt-auto">
                     <button
                       onClick={() => handleMoveToCart(product)}
                       className="w-full py-2.5 rounded-lg bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 transition-colors"
                     >
                       Move to Cart
                     </button>
-                    <Link
-                      to={`/product/${productIndex + 1}`}
-                      className="block w-full py-2.5 rounded-lg border border-gray-300 text-gray-700 font-semibold text-sm text-center hover:bg-gray-50 transition-colors no-underline"
-                    >
-                      View Details
-                    </Link>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => openQuickView(product)}
+                        className="py-2.5 rounded-lg border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors"
+                      >
+                        Quick View
+                      </button>
+                      <Link
+                        to={`/product/${productIndex + 1}`}
+                        className="block py-2.5 rounded-lg border border-gray-300 text-gray-700 font-semibold text-sm text-center hover:bg-gray-50 transition-colors no-underline"
+                      >
+                        Details
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -241,6 +261,66 @@ function Wishlist() {
           })}
         </div>
       </div>
+
+      {/* Quick View Modal */}
+      {isModalOpen && selectedProduct && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn" onClick={closeQuickView}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden relative animate-scaleIn" onClick={e => e.stopPropagation()}>
+            <button
+              onClick={closeQuickView}
+              className="absolute top-4 right-4 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors z-10"
+            >
+              ✕
+            </button>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2">
+              <div className="h-64 md:h-full bg-gray-50 flex items-center justify-center p-6">
+                <img
+                  src={selectedProduct.src || "https://via.placeholder.com/300x200?text=No+Image"}
+                  alt={selectedProduct.title}
+                  className="max-w-full max-h-full object-contain"
+                />
+              </div>
+              
+              <div className="p-8 flex flex-col">
+                <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">{selectedProduct.title}</h3>
+                <div className="mb-4">
+                   <span className="text-2xl font-bold text-indigo-600">
+                      {formatPrice(selectedProduct.OriginalPrice)}
+                   </span>
+                   {selectedProduct.MRP && (
+                      <span className="ml-2 text-sm text-gray-400 line-through">
+                        {formatPrice(selectedProduct.MRP)}
+                      </span>
+                   )}
+                </div>
+                
+                <p className="text-gray-600 text-sm mb-6 grow line-clamp-4">
+                  {selectedProduct.description || `Experience the ultimate in technology with this premium ${selectedProduct.category?.toLowerCase() || 'product'}. Designed with cutting-edge features and superior craftsmanship.`}
+                </p>
+                
+                <div className="space-y-3 mt-auto">
+                  <button
+                    onClick={() => {
+                      handleMoveToCart(selectedProduct);
+                      closeQuickView();
+                    }}
+                    className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors"
+                  >
+                    Move to Cart
+                  </button>
+                  <Link
+                    to={`/product/${products.findIndex(p => p.title === selectedProduct.title) + 1}`}
+                    className="block w-full py-3 rounded-xl border border-gray-300 text-gray-700 font-semibold text-center hover:bg-gray-50 transition-colors no-underline"
+                  >
+                    View Full Details
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         @keyframes slideIn {
@@ -255,6 +335,25 @@ function Wishlist() {
         }
         .animate-slideIn {
           animation: slideIn 0.3s ease-out;
+        }
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        .line-clamp-4 {
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        @keyframes scaleIn {
+          from { transform: scale(0.95); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
+        }
+        .animate-scaleIn {
+          animation: scaleIn 0.2s ease-out;
         }
       `}</style>
     </div>

@@ -310,7 +310,7 @@ function OrderTracking() {
                 key={idx}
                 className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl"
               >
-                <div className="w-16 h-16 rounded-lg bg-white border border-gray-200 overflow-hidden flex-shrink-0">
+                <div className="w-16 h-16 rounded-lg bg-white border border-gray-200 overflow-hidden shrink-0">
                   <img
                     src={item.src}
                     alt={item.title}

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect, useRef } from "react";
 
 const WishlistContext = createContext();
 
@@ -7,15 +7,40 @@ export const useWishlist = () => {
 };
 
 export const WishlistProvider = ({ children }) => {
+  const [userEmail, setUserEmail] = useState(localStorage.getItem("userEmail") || "guest");
   const [wishlist, setWishlist] = useState(() => {
-    const savedWishlist = localStorage.getItem("wishlist");
+    const email = localStorage.getItem("userEmail") || "guest";
+    const savedWishlist = localStorage.getItem(`wishlist_${email}`);
     return savedWishlist ? JSON.parse(savedWishlist) : [];
   });
+  const isInitialized = useRef(false);
 
-  // Automatically saves to Local Storage whenever the wishlist state changes
+  // Listen for user login/logout
   useEffect(() => {
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
-  }, [wishlist]);
+    const handleUserUpdate = () => {
+      setUserEmail(localStorage.getItem("userEmail") || "guest");
+    };
+    window.addEventListener("userUpdated", handleUserUpdate);
+    return () => window.removeEventListener("userUpdated", handleUserUpdate);
+  }, []);
+
+  // Load wishlist when user changes
+  useEffect(() => {
+    isInitialized.current = false;
+    const key = `wishlist_${userEmail}`;
+    const savedWishlist = localStorage.getItem(key);
+    setWishlist(savedWishlist ? JSON.parse(savedWishlist) : []);
+  }, [userEmail]);
+
+  // Save wishlist when it changes
+  useEffect(() => {
+    if (!isInitialized.current) {
+      isInitialized.current = true;
+      return;
+    }
+    const key = `wishlist_${userEmail}`;
+    localStorage.setItem(key, JSON.stringify(wishlist));
+  }, [wishlist, userEmail]);
 
   const addToWishlist = (product) => {
     setWishlist((prevWishlist) => {

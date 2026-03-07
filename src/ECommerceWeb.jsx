@@ -1,4 +1,4 @@
- import React, { useState, useEffect, memo, useCallback, useMemo } from "react";
+import React, { useState, useEffect, memo, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Products from "./Products";
@@ -105,7 +105,10 @@ const CardView = memo(
         e.stopPropagation();
         const added = toggleWishlist(product);
         setIsWishlisted(added);
-        showToast(added ? "Added to wishlist!" : "Removed from wishlist", "success");
+        showToast(
+          added ? "Added to wishlist!" : "Removed from wishlist",
+          "success",
+        );
       },
       [toggleWishlist, product, showToast],
     );
@@ -121,7 +124,7 @@ const CardView = memo(
     }, [isAdded]);
 
     const discount = getDiscount(OriginalPrice, MRP);
-    const displayRating = averageRating || 4;
+    const displayRating = averageRating || 0;
     const displayReviewCount = reviewCount || 0;
 
     // Memoize star rating rendering
@@ -254,7 +257,7 @@ function ECommerceWeb() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [toast, setToast] = useState(null);
-  
+
   // Debounce search input to reduce re-renders while typing
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
@@ -729,7 +732,7 @@ function ECommerceWeb() {
                     Brand
                   </h4>
                   <div className="max-h-32 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
-                    {brands.slice(0, 10).map((brand) => (
+                    {brands.map((brand) => (
                       <label
                         key={brand}
                         className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded transition-colors"
@@ -861,7 +864,8 @@ function ECommerceWeb() {
               Load More Products
             </button>
             <p className="text-xs text-gray-400 mt-3">
-              Showing {Math.min(visibleCount, filteredData.length)} of {filteredData.length} products
+              Showing {Math.min(visibleCount, filteredData.length)} of{" "}
+              {filteredData.length} products
             </p>
           </div>
         )}

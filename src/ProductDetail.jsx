@@ -25,11 +25,13 @@ function ProductDetail() {
   const [averageRating, setAverageRating] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [stockStatus, setStockStatus] = useState({ isInStock: true, stockCount: 10 });
-  
+  const [stockStatus, setStockStatus] = useState({
+    isInStock: true,
+    stockCount: 50,
+  });
+
   // Recently viewed products
   const [recentlyViewed, setRecentlyViewed] = useState([]);
-
 
   useEffect(() => {
     // Find product by index (id in URL corresponds to product index)
@@ -41,12 +43,14 @@ function ProductDetail() {
       setSelectedImage(0);
 
       // Add to recently viewed
-      const viewed = JSON.parse(localStorage.getItem("recentlyViewed")) || [];
+      const currentUserEmail = localStorage.getItem("userEmail") || "guest";
+      const viewedKey = `recentlyViewed_${currentUserEmail}`;
+      const viewed = JSON.parse(localStorage.getItem(viewedKey)) || [];
       const newViewed = [
         foundProduct,
         ...viewed.filter((p) => p.title !== foundProduct.title),
       ].slice(0, 10);
-      localStorage.setItem("recentlyViewed", JSON.stringify(newViewed));
+      localStorage.setItem(viewedKey, JSON.stringify(newViewed));
       setRecentlyViewed(newViewed.slice(1));
 
       // Get reviews data
@@ -55,23 +59,9 @@ function ProductDetail() {
 
       // Check wishlist status
       setIsWishlisted(isInWishlist(foundProduct.title));
-      
-      // Get or generate stock status (persist per product)
-      const stockKey = `stock_${foundProduct.title}`;
-      let savedStock = localStorage.getItem(stockKey);
-      if (!savedStock) {
-        // Generate once and save
-        const isInStock = Math.random() > 0.1;
-        const stockCount = Math.floor(Math.random() * 50) + 5;
-        savedStock = JSON.stringify({ isInStock, stockCount });
-        localStorage.setItem(stockKey, savedStock);
-      }
-      setStockStatus(JSON.parse(savedStock));
     }
     setLoading(false);
   }, [id, getAverageRating, getReviewCount, isInWishlist]);
-
-
   const getDiscount = useCallback(() => {
     if (!product || !product.MRP || !product.OriginalPrice) return 0;
     return Math.round(
@@ -136,7 +126,6 @@ function ProductDetail() {
   const { isInStock, stockCount } = stockStatus;
 
   if (loading) {
-
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -206,7 +195,7 @@ function ProductDetail() {
             {product.category || "Products"}
           </Link>
           <span className="text-gray-400">/</span>
-          <span className="text-gray-900 font-medium truncate max-w-[200px]">
+          <span className="text-gray-900 font-medium truncate max-w-50">
             {product.title?.substring(0, 30)}...
           </span>
         </nav>
@@ -253,9 +242,7 @@ function ProductDetail() {
                 <span
                   className={`font-semibold ${isInStock ? "text-green-600" : "text-red-600"}`}
                 >
-                  {isInStock
-                    ? `In Stock (${stockCount} available)`
-                    : "Out of Stock"}
+                  {isInStock ? "In Stock" : "Out of Stock"}
                 </span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -359,7 +346,7 @@ function ProductDetail() {
                         ? "bg-indigo-600 text-white hover:bg-indigo-700"
                         : "bg-gray-300 text-gray-500 cursor-not-allowed"
                   }`}
-                >  
+                >
                   {isAdded
                     ? "✓ Added to Cart"
                     : isInStock
@@ -448,10 +435,11 @@ function ProductDetail() {
               </div>
 
               <div className="p-6">
-              {activeTab === "description" && (
+                {activeTab === "description" && (
                   <div className="animate-fadeIn">
                     <p className="text-gray-600 leading-relaxed">
-                      {product.description || `Experience the ultimate in technology with this premium ${product.category?.toLowerCase()}. Designed with cutting-edge features and superior craftsmanship, this product delivers exceptional performance that exceeds expectations. Whether you're a professional or an enthusiast, this is the perfect choice for those who demand excellence.`}
+                      {product.description ||
+                        `Experience the ultimate in technology with this premium ${product.category?.toLowerCase()}. Designed with cutting-edge features and superior craftsmanship, this product delivers exceptional performance that exceeds expectations. Whether you're a professional or an enthusiast, this is the perfect choice for those who demand excellence.`}
                     </p>
                   </div>
                 )}
@@ -459,12 +447,19 @@ function ProductDetail() {
                 {activeTab === "specifications" && (
                   <div className="animate-fadeIn space-y-3">
                     {product.specifications ? (
-                      Object.entries(product.specifications).map(([key, value]) => (
-                        <div key={key} className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-500">{key}</span>
-                          <span className="font-medium text-gray-900">{value}</span>
-                        </div>
-                      ))
+                      Object.entries(product.specifications).map(
+                        ([key, value]) => (
+                          <div
+                            key={key}
+                            className="flex justify-between py-2 border-b border-gray-100"
+                          >
+                            <span className="text-gray-500">{key}</span>
+                            <span className="font-medium text-gray-900">
+                              {value}
+                            </span>
+                          </div>
+                        ),
+                      )
                     ) : (
                       <>
                         <div className="flex justify-between py-2 border-b border-gray-100">
@@ -481,7 +476,9 @@ function ProductDetail() {
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100">
                           <span className="text-gray-500">Warranty</span>
-                          <span className="font-medium text-gray-900">1 Year</span>
+                          <span className="font-medium text-gray-900">
+                            1 Year
+                          </span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100">
                           <span className="text-gray-500">Available</span>
@@ -528,7 +525,7 @@ function ProductDetail() {
                       <img
                         src={item.src}
                         alt={item.title}
-                        className="max-w-full max-h-[120px] object-contain"
+                        className="max-w-full max-h-30 object-contain"
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src =

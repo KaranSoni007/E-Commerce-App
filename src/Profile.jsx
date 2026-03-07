@@ -45,7 +45,7 @@ function Profile() {
     confirmPassword: "",
   });
 
-// Recently viewed state
+  // Recently viewed state
   const [recentlyViewed, setRecentlyViewed] = useState([]);
 
   // Payment methods state
@@ -78,7 +78,10 @@ function Profile() {
 
     const existingUsers = JSON.parse(localStorage.getItem("mockUsers")) || [];
     const matchedUser = existingUsers.find((u) => u.name === userName);
-    const userEmail = localStorage.getItem("userEmail") || matchedUser?.email || "user@example.com";
+    const userEmail =
+      localStorage.getItem("userEmail") ||
+      matchedUser?.email ||
+      "user@example.com";
 
     setUserData({
       name: userName || "Valued Customer",
@@ -132,11 +135,13 @@ function Profile() {
     }
 
     // Load recently viewed products
-    const viewed = JSON.parse(localStorage.getItem("recentlyViewed")) || [];
+    const viewedKey = `recentlyViewed_${userEmail}`;
+    const viewed = JSON.parse(localStorage.getItem(viewedKey)) || [];
     setRecentlyViewed(viewed.slice(0, 4));
 
     // Load payment methods
-    const savedPayments = JSON.parse(localStorage.getItem("mockPayments")) || [];
+    const savedPayments =
+      JSON.parse(localStorage.getItem("mockPayments")) || [];
     const userPayments = savedPayments.filter((p) => p.userEmail === userEmail);
     setPaymentMethods(userPayments);
 
@@ -215,7 +220,11 @@ function Profile() {
 
     alert("✅ Password changed successfully!");
     setShowPasswordChange(false);
-    setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    setPasswordData({
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
   };
 
   // Address Management Functions
@@ -317,7 +326,8 @@ function Profile() {
       return;
     }
 
-    const allAddresses = JSON.parse(localStorage.getItem("mockAddresses")) || [];
+    const allAddresses =
+      JSON.parse(localStorage.getItem("mockAddresses")) || [];
 
     const addressData = {
       userEmail: userData.email,
@@ -352,10 +362,13 @@ function Profile() {
     }
 
     const addrToDelete = addresses[index];
-    const allAddresses = JSON.parse(localStorage.getItem("mockAddresses")) || [];
+    const allAddresses =
+      JSON.parse(localStorage.getItem("mockAddresses")) || [];
     const updatedAll = allAddresses.filter(
       (a) =>
-        !(a.userEmail === addrToDelete.userEmail && a.text === addrToDelete.text),
+        !(
+          a.userEmail === addrToDelete.userEmail && a.text === addrToDelete.text
+        ),
     );
 
     localStorage.setItem("mockAddresses", JSON.stringify(updatedAll));
@@ -367,7 +380,8 @@ function Profile() {
     const otherAddrs = addresses.filter((_, i) => i !== index);
     const reorderedAddrs = [selectedAddr, ...otherAddrs];
 
-    const allAddresses = JSON.parse(localStorage.getItem("mockAddresses")) || [];
+    const allAddresses =
+      JSON.parse(localStorage.getItem("mockAddresses")) || [];
     const otherUserAddrs = allAddresses.filter(
       (a) => a.userEmail !== userData.email,
     );
@@ -389,10 +403,10 @@ function Profile() {
     localStorage.setItem("mockUsers", JSON.stringify(updatedUsers));
 
     setUserData((prev) => ({ ...prev, name: editName }));
-    
+
     // 🔹 Notify other components (like Navbar) that user data has changed
     window.dispatchEvent(new Event("userUpdated"));
-    
+
     setShowEditProfile(false);
     alert("✅ Profile updated successfully!");
   };
@@ -456,11 +470,23 @@ function Profile() {
 
     // Update global mock storage
     const allPayments = JSON.parse(localStorage.getItem("mockPayments")) || [];
-    const otherPayments = allPayments.filter((p) => p.userEmail !== userData.email);
-    localStorage.setItem("mockPayments", JSON.stringify([...otherPayments, ...updatedPayments]));
+    const otherPayments = allPayments.filter(
+      (p) => p.userEmail !== userData.email,
+    );
+    localStorage.setItem(
+      "mockPayments",
+      JSON.stringify([...otherPayments, ...updatedPayments]),
+    );
 
     setShowPaymentForm(false);
-    setPaymentFormData({ cardNumber: "", cardHolder: "", expiryMonth: "", expiryYear: "", cvv: "", cardType: "Credit Card" });
+    setPaymentFormData({
+      cardNumber: "",
+      cardHolder: "",
+      expiryMonth: "",
+      expiryYear: "",
+      cvv: "",
+      cardType: "Credit Card",
+    });
     alert("✅ Payment method added successfully!");
   };
 
@@ -484,7 +510,7 @@ function Profile() {
           <div className="lg:col-span-1 space-y-6">
             {/* User Info Card */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col items-center text-center">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center text-4xl font-bold mb-4 shadow-lg">
+              <div className="w-24 h-24 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center text-4xl font-bold mb-4 shadow-lg">
                 {userData.name.charAt(0).toUpperCase()}
               </div>
               <h2 className="text-xl font-bold text-gray-900 mb-1">
@@ -494,8 +520,16 @@ function Profile() {
 
               {/* Verification Badge */}
               <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium mb-4">
-                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 Verified Account
               </div>
@@ -504,7 +538,9 @@ function Profile() {
               <div className="w-full space-y-2 text-left border-t border-gray-100 pt-4">
                 <div className="flex justify-between text-xs">
                   <span className="text-gray-500">Member Since</span>
-                  <span className="text-gray-700 font-medium">{memberSince}</span>
+                  <span className="text-gray-700 font-medium">
+                    {memberSince}
+                  </span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-gray-500">Last Login</span>
@@ -523,8 +559,18 @@ function Profile() {
             {/* Stats Dashboard */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
               <h3 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <svg className="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                <svg
+                  className="w-4 h-4 text-indigo-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
                 </svg>
                 Account Stats
               </h3>
@@ -534,21 +580,29 @@ function Profile() {
                     <span className="text-lg">📦</span>
                     <span className="text-xs text-gray-600">Total Orders</span>
                   </div>
-                  <span className="font-bold text-indigo-700 text-lg">{totalOrders}</span>
+                  <span className="font-bold text-indigo-700 text-lg">
+                    {totalOrders}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-xl">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">💰</span>
                     <span className="text-xs text-gray-600">Total Spent</span>
                   </div>
-                  <span className="font-bold text-emerald-700 text-lg">{formatPrice(totalSpent)}</span>
+                  <span className="font-bold text-emerald-700 text-lg">
+                    {formatPrice(totalSpent)}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-amber-50 rounded-xl">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">❤️</span>
-                    <span className="text-xs text-gray-600">Wishlist Items</span>
+                    <span className="text-xs text-gray-600">
+                      Wishlist Items
+                    </span>
                   </div>
-                  <span className="font-bold text-amber-700 text-lg">{wishlistCount}</span>
+                  <span className="font-bold text-amber-700 text-lg">
+                    {wishlistCount}
+                  </span>
                 </div>
               </div>
             </div>
@@ -556,8 +610,18 @@ function Profile() {
             {/* Quick Actions */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
               <h3 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <svg className="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <svg
+                  className="w-4 h-4 text-indigo-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
                 </svg>
                 Quick Actions
               </h3>
@@ -589,8 +653,18 @@ function Profile() {
             {/* Notification Preferences */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                <svg
+                  className="w-5 h-5 text-indigo-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                  />
                 </svg>
                 Notification Preferences
               </h3>
@@ -598,32 +672,44 @@ function Profile() {
                 <label className="flex items-center gap-3 cursor-pointer">
                   <div
                     className={`relative w-12 h-6 rounded-full transition-colors ${
-                      notificationPrefs.orderUpdates ? "bg-indigo-600" : "bg-gray-300"
+                      notificationPrefs.orderUpdates
+                        ? "bg-indigo-600"
+                        : "bg-gray-300"
                     }`}
                     onClick={() => handleNotificationToggle("orderUpdates")}
                   >
                     <div
                       className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${
-                        notificationPrefs.orderUpdates ? "translate-x-7" : "translate-x-1"
+                        notificationPrefs.orderUpdates
+                          ? "translate-x-7"
+                          : "translate-x-1"
                       }`}
                     />
                   </div>
-                  <span className="text-sm text-gray-700 font-medium">Order Updates</span>
+                  <span className="text-sm text-gray-700 font-medium">
+                    Order Updates
+                  </span>
                 </label>
                 <label className="flex items-center gap-3 cursor-pointer">
                   <div
                     className={`relative w-12 h-6 rounded-full transition-colors ${
-                      notificationPrefs.promotions ? "bg-indigo-600" : "bg-gray-300"
+                      notificationPrefs.promotions
+                        ? "bg-indigo-600"
+                        : "bg-gray-300"
                     }`}
                     onClick={() => handleNotificationToggle("promotions")}
                   >
                     <div
                       className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${
-                        notificationPrefs.promotions ? "translate-x-7" : "translate-x-1"
+                        notificationPrefs.promotions
+                          ? "translate-x-7"
+                          : "translate-x-1"
                       }`}
                     />
                   </div>
-                  <span className="text-sm text-gray-700 font-medium">Promotions & Deals</span>
+                  <span className="text-sm text-gray-700 font-medium">
+                    Promotions & Deals
+                  </span>
                 </label>
               </div>
             </div>
@@ -632,8 +718,18 @@ function Profile() {
             {recentlyViewed.length > 0 && (
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-5 h-5 text-indigo-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                   Recently Viewed
                 </h3>
@@ -653,7 +749,9 @@ function Profile() {
                           />
                         </div>
                         <div className="p-2">
-                          <p className="text-xs text-gray-600 line-clamp-1">{product.title}</p>
+                          <p className="text-xs text-gray-600 line-clamp-1">
+                            {product.title}
+                          </p>
                         </div>
                       </div>
                     </Link>
@@ -666,8 +764,18 @@ function Profile() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <div className="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
                 <h3 className="text-lg font-bold text-gray-900 m-0 flex items-center gap-2">
-                  <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  <svg
+                    className="w-5 h-5 text-indigo-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                    />
                   </svg>
                   Recent Orders
                 </h3>
@@ -821,7 +929,8 @@ function Profile() {
                           className="w-full p-2.5 border border-gray-200 bg-gray-100 rounded-lg text-sm text-gray-500 cursor-not-allowed"
                         />
                         <p className="text-[11px] text-gray-500 mt-1">
-                          For security reasons, your email address cannot be changed.
+                          For security reasons, your email address cannot be
+                          changed.
                         </p>
                       </div>
                     </div>
@@ -932,7 +1041,9 @@ function Profile() {
                       {showAddressForm && (
                         <div className="bg-gray-50 rounded-xl p-5 border border-gray-200 animate-fadeIn">
                           <h4 className="font-bold text-gray-900 mb-4 text-sm flex items-center gap-2">
-                            {editingAddress ? "✏️ Edit Address" : "➕ Add New Address"}
+                            {editingAddress
+                              ? "✏️ Edit Address"
+                              : "➕ Add New Address"}
                           </h4>
 
                           <div className="space-y-3">
@@ -945,7 +1056,10 @@ function Profile() {
                                   type="text"
                                   value={addressFormData.fullName}
                                   onChange={(e) =>
-                                    handleAddressInputChange("fullName", e.target.value)
+                                    handleAddressInputChange(
+                                      "fullName",
+                                      e.target.value,
+                                    )
                                   }
                                   placeholder="John Doe"
                                   className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none transition-all bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
@@ -959,7 +1073,10 @@ function Profile() {
                                   type="tel"
                                   value={addressFormData.phone}
                                   onChange={(e) =>
-                                    handleAddressInputChange("phone", e.target.value)
+                                    handleAddressInputChange(
+                                      "phone",
+                                      e.target.value,
+                                    )
                                   }
                                   placeholder="9876543210"
                                   maxLength="10"
@@ -976,7 +1093,10 @@ function Profile() {
                                 type="text"
                                 value={addressFormData.street}
                                 onChange={(e) =>
-                                  handleAddressInputChange("street", e.target.value)
+                                  handleAddressInputChange(
+                                    "street",
+                                    e.target.value,
+                                  )
                                 }
                                 placeholder="123 Main Street, Apartment 4B"
                                 className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none transition-all bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
@@ -992,7 +1112,10 @@ function Profile() {
                                   type="text"
                                   value={addressFormData.city}
                                   onChange={(e) =>
-                                    handleAddressInputChange("city", e.target.value)
+                                    handleAddressInputChange(
+                                      "city",
+                                      e.target.value,
+                                    )
                                   }
                                   placeholder="Mumbai"
                                   className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none transition-all bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
@@ -1006,7 +1129,10 @@ function Profile() {
                                   type="text"
                                   value={addressFormData.state}
                                   onChange={(e) =>
-                                    handleAddressInputChange("state", e.target.value)
+                                    handleAddressInputChange(
+                                      "state",
+                                      e.target.value,
+                                    )
                                   }
                                   placeholder="Maharashtra"
                                   className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none transition-all bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
@@ -1020,7 +1146,10 @@ function Profile() {
                                   type="text"
                                   value={addressFormData.pincode}
                                   onChange={(e) =>
-                                    handleAddressInputChange("pincode", e.target.value)
+                                    handleAddressInputChange(
+                                      "pincode",
+                                      e.target.value,
+                                    )
                                   }
                                   placeholder="400001"
                                   maxLength="6"
@@ -1034,7 +1163,9 @@ function Profile() {
                                 onClick={saveAddress}
                                 className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold text-sm transition-colors shadow-sm cursor-pointer border-none"
                               >
-                                {editingAddress ? "Update Address" : "Save Address"}
+                                {editingAddress
+                                  ? "Update Address"
+                                  : "Save Address"}
                               </button>
                               <button
                                 onClick={closeAddressForm}
@@ -1050,17 +1181,35 @@ function Profile() {
                       {addresses.length === 0 && !showAddressForm ? (
                         <div className="text-center py-6 bg-gray-50 rounded-xl">
                           <span className="text-3xl mb-2 block">📍</span>
-                          <p className="text-sm text-gray-500">No saved addresses yet.</p>
+                          <p className="text-sm text-gray-500">
+                            No saved addresses yet.
+                          </p>
                         </div>
                       ) : (
                         <div className="space-y-3">
                           {addresses.map((addr, index) => {
-                            const displayName = addr.fullName || (addr.text ? addr.text.split(", ")[0] : "Unknown");
-                            const displayPhone = addr.phone || (addr.text ? addr.text.split(", ")[1] : "");
-                            const displayStreet = addr.street || (addr.text ? addr.text.split(", ")[2] : addr.text);
-                            const displayCity = addr.city || (addr.text ? addr.text.split(", ")[3] : "");
-                            const displayState = addr.state || (addr.text ? addr.text.split(", ")[4] : "");
-                            const displayPincode = addr.pincode || (addr.text ? addr.text.split(", ")[5] : "");
+                            const displayName =
+                              addr.fullName ||
+                              (addr.text
+                                ? addr.text.split(", ")[0]
+                                : "Unknown");
+                            const displayPhone =
+                              addr.phone ||
+                              (addr.text ? addr.text.split(", ")[1] : "");
+                            const displayStreet =
+                              addr.street ||
+                              (addr.text
+                                ? addr.text.split(", ")[2]
+                                : addr.text);
+                            const displayCity =
+                              addr.city ||
+                              (addr.text ? addr.text.split(", ")[3] : "");
+                            const displayState =
+                              addr.state ||
+                              (addr.text ? addr.text.split(", ")[4] : "");
+                            const displayPincode =
+                              addr.pincode ||
+                              (addr.text ? addr.text.split(", ")[5] : "");
 
                             return (
                               <div
@@ -1074,7 +1223,9 @@ function Profile() {
                                 <div className="flex justify-between items-start">
                                   <div className="flex-1 pr-3">
                                     <div className="flex items-center gap-2 mb-2">
-                                      <span className="font-bold text-gray-900 text-sm">{displayName}</span>
+                                      <span className="font-bold text-gray-900 text-sm">
+                                        {displayName}
+                                      </span>
                                       {index === 0 && (
                                         <span className="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded-full font-medium">
                                           Default
@@ -1146,17 +1297,27 @@ function Profile() {
                   {showPaymentMethods && (
                     <div className="mt-4 space-y-4 animate-fadeIn">
                       {paymentMethods.map((method) => (
-                        <div key={method.id} className="flex justify-between items-center p-4 border border-gray-200 rounded-xl bg-gray-50">
+                        <div
+                          key={method.id}
+                          className="flex justify-between items-center p-4 border border-gray-200 rounded-xl bg-gray-50"
+                        >
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-6 bg-gray-300 rounded flex items-center justify-center text-[10px] font-bold text-gray-600">
                               CARD
                             </div>
                             <div>
-                              <p className="text-sm font-bold text-gray-900">•••• •••• •••• {method.lastFour}</p>
-                              <p className="text-xs text-gray-500">Expires {method.expiryMonth}/{method.expiryYear}</p>
+                              <p className="text-sm font-bold text-gray-900">
+                                •••• •••• •••• {method.lastFour}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                Expires {method.expiryMonth}/{method.expiryYear}
+                              </p>
                             </div>
                           </div>
-                          <button onClick={() => handleDeletePayment(method.id)} className="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors border-none cursor-pointer">
+                          <button
+                            onClick={() => handleDeletePayment(method.id)}
+                            className="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors border-none cursor-pointer"
+                          >
                             🗑️
                           </button>
                         </div>
@@ -1171,67 +1332,114 @@ function Profile() {
                         </button>
                       ) : (
                         <div className="bg-gray-50 rounded-xl p-5 border border-gray-200 animate-fadeIn">
-                          <h4 className="font-bold text-gray-900 mb-4 text-sm">Add New Card</h4>
+                          <h4 className="font-bold text-gray-900 mb-4 text-sm">
+                            Add New Card
+                          </h4>
                           <div className="space-y-3">
                             <div>
-                              <label className="block text-xs font-medium text-gray-600 mb-1">Card Number</label>
+                              <label className="block text-xs font-medium text-gray-600 mb-1">
+                                Card Number
+                              </label>
                               <input
                                 type="text"
                                 value={paymentFormData.cardNumber}
-                                onChange={(e) => handlePaymentInputChange("cardNumber", e.target.value)}
+                                onChange={(e) =>
+                                  handlePaymentInputChange(
+                                    "cardNumber",
+                                    e.target.value,
+                                  )
+                                }
                                 placeholder="0000 0000 0000 0000"
                                 maxLength="19"
                                 className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600"
                               />
                             </div>
                             <div>
-                              <label className="block text-xs font-medium text-gray-600 mb-1">Card Holder Name</label>
+                              <label className="block text-xs font-medium text-gray-600 mb-1">
+                                Card Holder Name
+                              </label>
                               <input
                                 type="text"
                                 value={paymentFormData.cardHolder}
-                                onChange={(e) => handlePaymentInputChange("cardHolder", e.target.value)}
+                                onChange={(e) =>
+                                  handlePaymentInputChange(
+                                    "cardHolder",
+                                    e.target.value,
+                                  )
+                                }
                                 placeholder="Name on card"
                                 className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600"
                               />
                             </div>
                             <div className="grid grid-cols-3 gap-3">
                               <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">Expiry Month</label>
+                                <label className="block text-xs font-medium text-gray-600 mb-1">
+                                  Expiry Month
+                                </label>
                                 <input
                                   type="text"
                                   placeholder="MM"
                                   maxLength="2"
                                   value={paymentFormData.expiryMonth}
-                                  onChange={(e) => handlePaymentInputChange("expiryMonth", e.target.value)}
+                                  onChange={(e) =>
+                                    handlePaymentInputChange(
+                                      "expiryMonth",
+                                      e.target.value,
+                                    )
+                                  }
                                   className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600"
                                 />
                               </div>
                               <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">Expiry Year</label>
+                                <label className="block text-xs font-medium text-gray-600 mb-1">
+                                  Expiry Year
+                                </label>
                                 <input
                                   type="text"
                                   placeholder="YY"
                                   maxLength="2"
                                   value={paymentFormData.expiryYear}
-                                  onChange={(e) => handlePaymentInputChange("expiryYear", e.target.value)}
+                                  onChange={(e) =>
+                                    handlePaymentInputChange(
+                                      "expiryYear",
+                                      e.target.value,
+                                    )
+                                  }
                                   className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600"
                                 />
                               </div>
                               <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">CVV</label>
+                                <label className="block text-xs font-medium text-gray-600 mb-1">
+                                  CVV
+                                </label>
                                 <input
                                   type="password"
                                   placeholder="123"
                                   maxLength="3"
                                   value={paymentFormData.cvv}
-                                  onChange={(e) => handlePaymentInputChange("cvv", e.target.value)}
+                                  onChange={(e) =>
+                                    handlePaymentInputChange(
+                                      "cvv",
+                                      e.target.value,
+                                    )
+                                  }
                                   className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600"
                                 />
                               </div>
                             </div>
                             <div className="flex gap-3 pt-3">
-                              <button onClick={savePaymentMethod} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer border-none">Save Card</button>
-                              <button onClick={() => setShowPaymentForm(false)} className="flex-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer">Cancel</button>
+                              <button
+                                onClick={savePaymentMethod}
+                                className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer border-none"
+                              >
+                                Save Card
+                              </button>
+                              <button
+                                onClick={() => setShowPaymentForm(false)}
+                                className="flex-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer"
+                              >
+                                Cancel
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -1257,23 +1465,47 @@ function Profile() {
                     <div className="mt-4 animate-fadeIn space-y-2">
                       {/* Contact Support */}
                       <div
-                        onClick={() => setActiveSupportSection(activeSupportSection === "contact" ? null : "contact")}
+                        onClick={() =>
+                          setActiveSupportSection(
+                            activeSupportSection === "contact"
+                              ? null
+                              : "contact",
+                          )
+                        }
                         className={`p-3 rounded-lg text-sm m-0 cursor-pointer transition-colors font-medium flex justify-between items-center ${
-                          activeSupportSection === "contact" ? "bg-indigo-50 text-indigo-700" : "bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-indigo-700"
+                          activeSupportSection === "contact"
+                            ? "bg-indigo-50 text-indigo-700"
+                            : "bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-indigo-700"
                         }`}
                       >
                         <span>📞 Contact Customer Service</span>
-                        <span>{activeSupportSection === "contact" ? "−" : "+"}</span>
+                        <span>
+                          {activeSupportSection === "contact" ? "−" : "+"}
+                        </span>
                       </div>
                       {activeSupportSection === "contact" && (
                         <div className="p-4 bg-white border border-gray-100 rounded-lg text-sm text-gray-600 animate-fadeIn ml-2 mb-2">
-                          <p className="font-semibold text-gray-900 mb-2">We're here to help!</p>
+                          <p className="font-semibold text-gray-900 mb-2">
+                            We're here to help!
+                          </p>
                           <div className="space-y-2">
                             <p className="flex items-center gap-2">
-                              <span>📧</span> <a href="mailto:support@explore.com" className="text-indigo-600 hover:underline">support@explore.com</a>
+                              <span>📧</span>{" "}
+                              <a
+                                href="mailto:support@explore.com"
+                                className="text-indigo-600 hover:underline"
+                              >
+                                support@explore.com
+                              </a>
                             </p>
                             <p className="flex items-center gap-2">
-                              <span>📞</span> <a href="tel:+919876543210" className="text-indigo-600 hover:underline">+91 98765 43210</a>
+                              <span>📞</span>{" "}
+                              <a
+                                href="tel:+919876543210"
+                                className="text-indigo-600 hover:underline"
+                              >
+                                +91 98765 43210
+                              </a>
                             </p>
                             <p className="flex items-center gap-2">
                               <span>🕒</span> Mon-Sat, 9:00 AM - 8:00 PM
@@ -1284,45 +1516,80 @@ function Profile() {
 
                       {/* FAQ */}
                       <div
-                        onClick={() => setActiveSupportSection(activeSupportSection === "faq" ? null : "faq")}
+                        onClick={() =>
+                          setActiveSupportSection(
+                            activeSupportSection === "faq" ? null : "faq",
+                          )
+                        }
                         className={`p-3 rounded-lg text-sm m-0 cursor-pointer transition-colors font-medium flex justify-between items-center ${
-                          activeSupportSection === "faq" ? "bg-indigo-50 text-indigo-700" : "bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-indigo-700"
+                          activeSupportSection === "faq"
+                            ? "bg-indigo-50 text-indigo-700"
+                            : "bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-indigo-700"
                         }`}
                       >
                         <span>❓ Frequently Asked Questions</span>
-                        <span>{activeSupportSection === "faq" ? "−" : "+"}</span>
+                        <span>
+                          {activeSupportSection === "faq" ? "−" : "+"}
+                        </span>
                       </div>
                       {activeSupportSection === "faq" && (
                         <div className="p-4 bg-white border border-gray-100 rounded-lg text-sm text-gray-600 animate-fadeIn ml-2 mb-2 space-y-3">
                           <div>
-                            <p className="font-semibold text-gray-900 mb-1">How do I track my order?</p>
-                            <p>Go to "Recent Orders" section above and click "Track Order" on your purchase.</p>
+                            <p className="font-semibold text-gray-900 mb-1">
+                              How do I track my order?
+                            </p>
+                            <p>
+                              Go to "Recent Orders" section above and click
+                              "Track Order" on your purchase.
+                            </p>
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-900 mb-1">Can I cancel my order?</p>
-                            <p>Yes, you can cancel orders that haven't been shipped yet from the order details page.</p>
+                            <p className="font-semibold text-gray-900 mb-1">
+                              Can I cancel my order?
+                            </p>
+                            <p>
+                              Yes, you can cancel orders that haven't been
+                              shipped yet from the order details page.
+                            </p>
                           </div>
                         </div>
                       )}
 
                       {/* Return Policy */}
                       <div
-                        onClick={() => setActiveSupportSection(activeSupportSection === "return" ? null : "return")}
+                        onClick={() =>
+                          setActiveSupportSection(
+                            activeSupportSection === "return" ? null : "return",
+                          )
+                        }
                         className={`p-3 rounded-lg text-sm m-0 cursor-pointer transition-colors font-medium flex justify-between items-center ${
-                          activeSupportSection === "return" ? "bg-indigo-50 text-indigo-700" : "bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-indigo-700"
+                          activeSupportSection === "return"
+                            ? "bg-indigo-50 text-indigo-700"
+                            : "bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-indigo-700"
                         }`}
                       >
                         <span>🔄 Return Policy</span>
-                        <span>{activeSupportSection === "return" ? "−" : "+"}</span>
+                        <span>
+                          {activeSupportSection === "return" ? "−" : "+"}
+                        </span>
                       </div>
                       {activeSupportSection === "return" && (
                         <div className="p-4 bg-white border border-gray-100 rounded-lg text-sm text-gray-600 animate-fadeIn ml-2 mb-2">
-                          <p className="font-semibold text-gray-900 mb-2">Easy 10-Day Returns</p>
-                          <p className="mb-2">If you are not satisfied with your purchase, you can return it within 10 days for a full refund.</p>
+                          <p className="font-semibold text-gray-900 mb-2">
+                            Easy 10-Day Returns
+                          </p>
+                          <p className="mb-2">
+                            If you are not satisfied with your purchase, you can
+                            return it within 10 days for a full refund.
+                          </p>
                           <ul className="list-disc pl-4 space-y-1 text-xs">
-                            <li>Item must be unused and in original packaging.</li>
+                            <li>
+                              Item must be unused and in original packaging.
+                            </li>
                             <li>Include all tags and accessories.</li>
-                            <li>Refunds are processed within 5-7 business days.</li>
+                            <li>
+                              Refunds are processed within 5-7 business days.
+                            </li>
                           </ul>
                         </div>
                       )}
@@ -1339,7 +1606,9 @@ function Profile() {
                     <span className="text-sm text-red-600 font-semibold flex items-center gap-2">
                       <span>🗑️</span> Delete Account
                     </span>
-                    <span className="text-red-600 text-sm font-semibold">Delete →</span>
+                    <span className="text-red-600 text-sm font-semibold">
+                      Delete →
+                    </span>
                   </div>
                 </div>
               </div>

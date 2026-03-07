@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect, useRef } from "react";
 
 const CartContext = createContext();
 
@@ -7,15 +7,40 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
+  const [userEmail, setUserEmail] = useState(localStorage.getItem("userEmail") || "guest");
   const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem("cart");
+    const email = localStorage.getItem("userEmail") || "guest";
+    const savedCart = localStorage.getItem(`cart_${email}`);
     return savedCart ? JSON.parse(savedCart) : [];
   });
+  const isInitialized = useRef(false);
 
-  // Automatically saves to Local Storage whenever the cart state changes
+  // Listen for user login/logout to switch carts
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+    const handleUserUpdate = () => {
+      setUserEmail(localStorage.getItem("userEmail") || "guest");
+    };
+    window.addEventListener("userUpdated", handleUserUpdate);
+    return () => window.removeEventListener("userUpdated", handleUserUpdate);
+  }, []);
+
+  // Load cart when user changes
+  useEffect(() => {
+    isInitialized.current = false; // Prevent saving during load
+    const key = `cart_${userEmail}`;
+    const savedCart = localStorage.getItem(key);
+    setCart(savedCart ? JSON.parse(savedCart) : []);
+  }, [userEmail]);
+
+  // Save cart when it changes, but only to the current user's key
+  useEffect(() => {
+    if (!isInitialized.current) {
+      isInitialized.current = true;
+      return;
+    }
+    const key = `cart_${userEmail}`;
+    localStorage.setItem(key, JSON.stringify(cart));
+  }, [cart, userEmail]);
 
   const addToCart = (product) => {
     setCart((prevCart) => {

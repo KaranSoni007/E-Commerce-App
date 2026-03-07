@@ -1,5 +1,5 @@
 const products = [
-  // 📺 CATEGORY: TVs - Popular & Trending Brands
+  // CATEGORY: TV
   {
     src: "/EProducts/Samsung 65inch.jpg",
     title: "Samsung 138cm (55 inch) Crystal 4K Vision AI Smart TV",
@@ -176,17 +176,17 @@ const products = [
     category: "TVs",
   },
 
-  // 📱 CATEGORY: SMARTPHONES - Popular & Trending Brands
+  // CATEGORY: SMARTPHONES
   {
     src: "/EProducts/Iphone 16 128GB Blue.jpg",
-    title: "Apple iPhone 16 (128GB) - Blue",
+    title: "Iphone 16 (128GB) - Blue",
     OriginalPrice: 69900,
     MRP: 79900,
     category: "Smartphones",
   },
   {
     src: "/EProducts/Vivo V60e 5G pink.jpg",
-    title: "Vivo V40e 5G (8GB RAM, 256GB) - Royal Bronze",
+    title: "Vivo V60e 5G (8GB RAM, 256GB) - Royal Bronze",
     OriginalPrice: 27999,
     MRP: 34999,
     category: "Smartphones",
@@ -298,7 +298,7 @@ const products = [
   },
   {
     src: "/EProducts/iPhone 14 (128GB) - Midnight.webp",
-    title: "iPhone 14 (128GB) - Midnight",
+    title: "Iphone 14 (128GB) - Midnight",
     OriginalPrice: 54999,
     MRP: 69900,
     category: "Smartphones",
@@ -353,7 +353,7 @@ const products = [
     category: "Smartphones",
   },
 
-  // 💻 CATEGORY: LAPTOPS - Popular & Trending Brands
+  // CATEGORY: LAPTOPS
   {
     src: "/EProducts/Apple MacBook Air M3 (8GB RAM, 256GB SSD) - Midnight.jpg",
     title: "Apple MacBook Air M3 (8GB RAM, 256GB SSD) - Midnight",
@@ -530,7 +530,7 @@ const products = [
     category: "Laptops",
   },
 
-  // 🎧 CATEGORY: AUDIO - Popular & Trending Brands
+  // CATEGORY: AUDIO
   {
     src: "/EProducts/Sony WH-1000XM5 Wireless Noise Cancelling Headphones.webp",
     title: "Sony WH-1000XM5 Wireless Noise Cancelling Headphones",
@@ -707,7 +707,7 @@ const products = [
     category: "Audio",
   },
 
-  // ⌚ CATEGORY: WEARABLES - Popular & Trending Brands
+  // CATEGORY: WEARABLES
   {
     src: "/EProducts/Apple Watch Series 9 GPS 45mm Smartwatch.jpg",
     title: "Apple Watch Series 9 GPS 45mm Smartwatch",
