@@ -10,9 +10,9 @@ function Footer() {
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xl font-bold">
-                E
+                I
               </div>
-              <h2 className="text-2xl font-extrabold">Explore</h2>
+              <h2 className="text-2xl font-extrabold">IntelliKart</h2>
             </div>
             <p className="text-gray-400 text-sm mb-4">
               Your one-stop destination for premium electronics and gadgets at
@@ -159,7 +159,7 @@ function Footer() {
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm">
-              © 2024 Explore. All rights reserved.
+              © 2024 IntelliKart. All rights reserved.
             </p>
             <div className="flex gap-6">
               <a

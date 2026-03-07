@@ -73,17 +73,17 @@ function Wishlist() {
 
   if (wishlist.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 py-10 px-6 font-sans">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-6 font-sans transition-colors duration-200">
         <div className="max-w-4xl mx-auto">
           <Link
             to="/"
-            className="inline-block mb-6 text-indigo-600 text-sm font-semibold transition-colors hover:text-indigo-800 no-underline"
+            className="inline-block mb-6 text-indigo-600 dark:text-indigo-400 text-sm font-semibold transition-colors hover:text-indigo-800 dark:hover:text-indigo-300 no-underline"
           >
             ← Back to Store
           </Link>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
-            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-pink-100 flex items-center justify-center">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-12 text-center">
+            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center">
               <svg
                 className="w-12 h-12 text-pink-500"
                 fill="none"
@@ -98,10 +98,10 @@ function Wishlist() {
                 />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
               Your Wishlist is Empty
             </h2>
-            <p className="text-gray-500 mb-6">
+            <p className="text-gray-500 dark:text-gray-400 mb-6">
               Save items you love and they'll appear here
             </p>
             <Link
@@ -117,7 +117,7 @@ function Wishlist() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-6 font-sans">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-6 font-sans transition-colors duration-200">
       {/* Toast Notification */}
       {showToast && (
         <div className="fixed top-24 right-6 z-50 px-6 py-3 rounded-xl shadow-lg bg-emerald-500 text-white animate-slideIn">
@@ -131,21 +131,21 @@ function Wishlist() {
       <div className="max-w-7xl mx-auto">
         <Link
           to="/"
-          className="inline-block mb-6 text-indigo-600 text-sm font-semibold transition-colors hover:text-indigo-800 no-underline"
+          className="inline-block mb-6 text-indigo-600 dark:text-indigo-400 text-sm font-semibold transition-colors hover:text-indigo-800 dark:hover:text-indigo-300 no-underline"
         >
           ← Back to Store
         </Link>
 
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">My Wishlist</h1>
-            <p className="text-gray-500 mt-1">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My Wishlist</h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">
               {wishlist.length} {wishlist.length === 1 ? "item" : "items"} saved
             </p>
           </div>
           <button
             onClick={handleClearAll}
-            className="text-red-600 font-semibold text-sm px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
+            className="text-red-600 dark:text-red-400 font-semibold text-sm px-4 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
             Clear All
           </button>
@@ -154,18 +154,15 @@ function Wishlist() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {wishlist.map((product, index) => {
             const discount = getDiscount(product.OriginalPrice, product.MRP);
-            const productIndex = products.findIndex(
-              (p) => p.title === product.title,
-            );
 
             return (
               <div
                 key={index}
-                className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-shadow flex flex-col h-full"
+                className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-lg transition-shadow flex flex-col h-full"
               >
                 {/* Product Image */}
-                <div className="relative h-48 bg-gray-50 flex items-center justify-center p-4 overflow-hidden">
-                  <Link to={`/product/${productIndex + 1}`} className="w-full h-full flex items-center justify-center">
+                <div className="relative h-48 bg-gray-50 dark:bg-gray-700 flex items-center justify-center p-4 overflow-hidden">
+                  <Link to={`/product/${product.id}`} className="w-full h-full flex items-center justify-center">
                     <img
                       src={
                         product.src ||
@@ -191,7 +188,7 @@ function Wishlist() {
                   {/* Remove Button */}
                   <button
                     onClick={() => handleRemove(product.title)}
-                    className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white text-gray-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center shadow-md transition-colors"
+                    className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white dark:bg-gray-800 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center justify-center shadow-md transition-colors"
                     aria-label="Remove from wishlist"
                   >
                     <svg
@@ -212,8 +209,8 @@ function Wishlist() {
 
                 {/* Product Info */}
                 <div className="p-4 flex flex-col grow">
-                  <Link to={`/product/${productIndex + 1}`} className="block">
-                    <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 mb-2 min-h-10 hover:text-indigo-600 transition-colors">
+                  <Link to={`/product/${product.id}`} className="block">
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 mb-2 min-h-10 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                       {product.title}
                     </h3>
                   </Link>
@@ -221,7 +218,7 @@ function Wishlist() {
                   {/* Price */}
                   <div className="mb-3">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-lg font-bold text-indigo-600">
+                      <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
                         {formatPrice(product.OriginalPrice)}
                       </span>
                       {product.MRP && (
@@ -243,13 +240,13 @@ function Wishlist() {
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         onClick={() => openQuickView(product)}
-                        className="py-2.5 rounded-lg border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors"
+                        className="py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                       >
                         Quick View
                       </button>
                       <Link
-                        to={`/product/${productIndex + 1}`}
-                        className="block py-2.5 rounded-lg border border-gray-300 text-gray-700 font-semibold text-sm text-center hover:bg-gray-50 transition-colors no-underline"
+                        to={`/product/${product.id}`}
+                        className="block py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-semibold text-sm text-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors no-underline"
                       >
                         Details
                       </Link>
@@ -265,16 +262,16 @@ function Wishlist() {
       {/* Quick View Modal */}
       {isModalOpen && selectedProduct && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn" onClick={closeQuickView}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden relative animate-scaleIn" onClick={e => e.stopPropagation()}>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden relative animate-scaleIn" onClick={e => e.stopPropagation()}>
             <button
               onClick={closeQuickView}
-              className="absolute top-4 right-4 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors z-10"
+              className="absolute top-4 right-4 p-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors z-10"
             >
               ✕
             </button>
             
             <div className="grid grid-cols-1 md:grid-cols-2">
-              <div className="h-64 md:h-full bg-gray-50 flex items-center justify-center p-6">
+              <div className="h-64 md:h-full bg-gray-50 dark:bg-gray-700 flex items-center justify-center p-6">
                 <img
                   src={selectedProduct.src || "https://via.placeholder.com/300x200?text=No+Image"}
                   alt={selectedProduct.title}
@@ -283,9 +280,9 @@ function Wishlist() {
               </div>
               
               <div className="p-8 flex flex-col">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">{selectedProduct.title}</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">{selectedProduct.title}</h3>
                 <div className="mb-4">
-                   <span className="text-2xl font-bold text-indigo-600">
+                   <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
                       {formatPrice(selectedProduct.OriginalPrice)}
                    </span>
                    {selectedProduct.MRP && (
@@ -295,7 +292,7 @@ function Wishlist() {
                    )}
                 </div>
                 
-                <p className="text-gray-600 text-sm mb-6 grow line-clamp-4">
+                <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 grow line-clamp-4">
                   {selectedProduct.description || `Experience the ultimate in technology with this premium ${selectedProduct.category?.toLowerCase() || 'product'}. Designed with cutting-edge features and superior craftsmanship.`}
                 </p>
                 
@@ -310,8 +307,8 @@ function Wishlist() {
                     Move to Cart
                   </button>
                   <Link
-                    to={`/product/${products.findIndex(p => p.title === selectedProduct.title) + 1}`}
-                    className="block w-full py-3 rounded-xl border border-gray-300 text-gray-700 font-semibold text-center hover:bg-gray-50 transition-colors no-underline"
+                    to={`/product/${selectedProduct.id}`}
+                    className="block w-full py-3 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-semibold text-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors no-underline"
                   >
                     View Full Details
                   </Link>

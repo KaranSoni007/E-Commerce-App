@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { useReviews } from "./ReviewContext";
+import { useAuth } from "./AuthContext";
 
 function ProductReviews({ productTitle, product }) {
   const {
@@ -11,6 +12,7 @@ function ProductReviews({ productTitle, product }) {
     getUserReview,
     editReview,
   } = useReviews();
+  const { user } = useAuth();
 
   // Get reviews for this product directly from context - this ensures automatic updates
   const reviews = allReviews[productTitle] || [];
@@ -38,13 +40,9 @@ function ProductReviews({ productTitle, product }) {
   const [filterRating, setFilterRating] = useState("all");
 
   // Get current user info
-  const userName = localStorage.getItem("userName") || "Guest";
-  const userEmail = (() => {
-    const existingUsers = JSON.parse(localStorage.getItem("mockUsers")) || [];
-    const matchedUser = existingUsers.find((u) => u.name === userName);
-    return matchedUser?.email || "guest@example.com";
-  })();
-  const isLoggedIn = !!localStorage.getItem("token");
+  const userName = user?.name || "Guest";
+  const userEmail = user?.email || "guest@example.com";
+  const isLoggedIn = !!user;
 
   // Review form state
   const [formData, setFormData] = useState({
@@ -180,12 +178,12 @@ function ProductReviews({ productTitle, product }) {
   const userReview = getUserReview(productTitle, userEmail);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
       {/* Reviews Header */}
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h3 className="text-xl font-bold text-gray-900">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
               Customer Reviews
             </h3>
             <div className="flex items-center gap-2 mt-2">
@@ -201,10 +199,10 @@ function ProductReviews({ productTitle, product }) {
                   </svg>
                 ))}
               </div>
-              <span className="font-bold text-gray-900">
+              <span className="font-bold text-gray-900 dark:text-white">
                 {averageRating} out of 5
               </span>
-              <span className="text-gray-500">
+              <span className="text-gray-500 dark:text-gray-400">
                 ({reviewCount} {reviewCount === 1 ? "review" : "reviews"})
               </span>
             </div>
@@ -215,7 +213,7 @@ function ProductReviews({ productTitle, product }) {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-indigo-600"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:border-indigo-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
@@ -228,7 +226,7 @@ function ProductReviews({ productTitle, product }) {
             <select
               value={filterRating}
               onChange={(e) => setFilterRating(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-indigo-600"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:border-indigo-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               <option value="all">All Ratings</option>
               <option value="5">5 Stars</option>
@@ -254,7 +252,7 @@ function ProductReviews({ productTitle, product }) {
             {isLoggedIn && userHasReviewed && (
               <button
                 onClick={() => handleEdit(userReview)}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold text-sm hover:bg-gray-200 transition-colors"
+                className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-semibold text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
                 Edit Your Review
               </button>
@@ -266,20 +264,20 @@ function ProductReviews({ productTitle, product }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
         {/* Rating Breakdown - Left Column */}
         <div className="lg:col-span-1">
-          <h4 className="font-semibold text-gray-900 mb-4">Rating Breakdown</h4>
+          <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Rating Breakdown</h4>
           <div className="space-y-2">
             {[5, 4, 3, 2, 1].map((rating) => (
               <div key={rating} className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-700 w-8">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-8">
                   {rating} star
                 </span>
-                <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-yellow-400 rounded-full transition-all duration-300"
                     style={{ width: `${getStarPercentage(rating)}%` }}
                   ></div>
                 </div>
-                <span className="text-sm text-gray-500 w-8 text-right">
+                <span className="text-sm text-gray-500 dark:text-gray-400 w-8 text-right">
                   {ratingBreakdown[rating] || 0}
                 </span>
               </div>
@@ -287,24 +285,24 @@ function ProductReviews({ productTitle, product }) {
           </div>
 
           {/* Review Stats */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-xl">
-            <h5 className="font-semibold text-gray-900 mb-3">
+          <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+            <h5 className="font-semibold text-gray-900 dark:text-white mb-3">
               Review Statistics
             </h5>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Total Reviews</span>
-                <span className="font-medium text-gray-900">{reviewCount}</span>
+                <span className="text-gray-600 dark:text-gray-300">Total Reviews</span>
+                <span className="font-medium text-gray-900 dark:text-white">{reviewCount}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Verified Purchases</span>
-                <span className="font-medium text-gray-900">
+                <span className="text-gray-600 dark:text-gray-300">Verified Purchases</span>
+                <span className="font-medium text-gray-900 dark:text-white">
                   {reviews.filter((r) => r.verified).length}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Would Recommend</span>
-                <span className="font-medium text-gray-900">
+                <span className="text-gray-600 dark:text-gray-300">Would Recommend</span>
+                <span className="font-medium text-gray-900 dark:text-white">
                   {reviews.filter((r) => r.recommend).length}
                 </span>
               </div>
@@ -316,14 +314,14 @@ function ProductReviews({ productTitle, product }) {
         <div className="lg:col-span-2">
           {/* Review Form */}
           {showReviewForm && (
-            <div className="mb-6 p-6 bg-indigo-50 rounded-xl animate-fadeIn">
-              <h4 className="font-bold text-gray-900 mb-4">
+            <div className="mb-6 p-6 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl animate-fadeIn">
+              <h4 className="font-bold text-gray-900 dark:text-white mb-4">
                 {editingReview ? "Edit Your Review" : "Write a Review"}
               </h4>
               <form onSubmit={handleSubmitReview} className="space-y-4">
                 {/* Rating Selection */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     Your Rating *
                   </label>
                   <div className="flex gap-2">
@@ -332,7 +330,7 @@ function ProductReviews({ productTitle, product }) {
                         key={star}
                         type="button"
                         onClick={() => handleInputChange("rating", star)}
-                        className="w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
+                        className="w-10 h-10 rounded-lg flex items-center justify-center transition-colors hover:bg-white/50 dark:hover:bg-white/10"
                       >
                         <svg
                           className={`w-6 h-6 ${star <= formData.rating ? "text-yellow-400" : "text-gray-300"}`}
@@ -348,7 +346,7 @@ function ProductReviews({ productTitle, product }) {
 
                 {/* Review Title */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     Review Title *
                   </label>
                   <input
@@ -356,14 +354,14 @@ function ProductReviews({ productTitle, product }) {
                     value={formData.title}
                     onChange={(e) => handleInputChange("title", e.target.value)}
                     placeholder="Summarize your experience"
-                    className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-indigo-600"
+                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:border-indigo-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     required
                   />
                 </div>
 
                 {/* Review Text */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     Your Review *
                   </label>
                   <textarea
@@ -373,7 +371,7 @@ function ProductReviews({ productTitle, product }) {
                     }
                     placeholder="Tell us what you liked or disliked about this product"
                     rows={4}
-                    className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-indigo-600 resize-none"
+                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:border-indigo-600 resize-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     required
                   />
                 </div>
@@ -381,7 +379,7 @@ function ProductReviews({ productTitle, product }) {
                 {/* Pros & Cons */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       Pros (Optional)
                     </label>
                     <input
@@ -391,11 +389,11 @@ function ProductReviews({ productTitle, product }) {
                         handleInputChange("pros", e.target.value)
                       }
                       placeholder="What did you like?"
-                      className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-indigo-600"
+                      className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:border-indigo-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       Cons (Optional)
                     </label>
                     <input
@@ -405,7 +403,7 @@ function ProductReviews({ productTitle, product }) {
                         handleInputChange("cons", e.target.value)
                       }
                       placeholder="What could be better?"
-                      className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-indigo-600"
+                      className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:border-indigo-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     />
                   </div>
                 </div>
@@ -421,7 +419,7 @@ function ProductReviews({ productTitle, product }) {
                       }
                       className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500"
                     />
-                    <span className="text-sm text-gray-700">
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
                       I would recommend this product to a friend
                     </span>
                   </label>
@@ -441,7 +439,7 @@ function ProductReviews({ productTitle, product }) {
                       setShowReviewForm(false);
                       resetForm();
                     }}
-                    className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-semibold text-sm hover:bg-gray-50 transition-colors"
+                    className="px-6 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
                     Cancel
                   </button>
@@ -456,7 +454,7 @@ function ProductReviews({ productTitle, product }) {
               filteredReviews.map((review) => (
                 <div
                   key={review.id}
-                  className="p-5 border border-gray-200 rounded-xl hover:border-indigo-300 transition-colors"
+                  className="p-5 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors"
                 >
                   {/* Review Header */}
                   <div className="flex items-start justify-between mb-3">
@@ -466,7 +464,7 @@ function ProductReviews({ productTitle, product }) {
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-gray-900">
+                          <span className="font-semibold text-gray-900 dark:text-white">
                             {review.userName}
                           </span>
                           {review.verified && (
@@ -475,7 +473,7 @@ function ProductReviews({ productTitle, product }) {
                             </span>
                           )}
                         </div>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                           {formatDate(review.createdAt)}
                         </span>
                         {review.editedAt && (
@@ -491,7 +489,7 @@ function ProductReviews({ productTitle, product }) {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEdit(review)}
-                          className="p-1.5 text-gray-400 hover:text-indigo-600 transition-colors"
+                          className="p-1.5 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                           title="Edit"
                         >
                           <svg
@@ -510,7 +508,7 @@ function ProductReviews({ productTitle, product }) {
                         </button>
                         <button
                           onClick={() => handleDelete(review.id)}
-                          className="p-1.5 text-gray-400 hover:text-red-600 transition-colors"
+                          className="p-1.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                           title="Delete"
                         >
                           <svg
@@ -545,13 +543,13 @@ function ProductReviews({ productTitle, product }) {
                         </svg>
                       ))}
                     </div>
-                    <span className="font-semibold text-gray-900">
+                    <span className="font-semibold text-gray-900 dark:text-white">
                       {review.title}
                     </span>
                   </div>
 
                   {/* Review Text */}
-                  <p className="text-gray-600 text-sm mb-3 leading-relaxed">
+                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-3 leading-relaxed">
                     {review.review}
                   </p>
 
@@ -562,10 +560,10 @@ function ProductReviews({ productTitle, product }) {
                         <div className="flex items-start gap-2">
                           <span className="text-green-500 font-bold">+</span>
                           <div>
-                            <span className="text-xs font-semibold text-gray-700 block">
+                            <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 block">
                               Pros
                             </span>
-                            <span className="text-sm text-gray-600">
+                            <span className="text-sm text-gray-600 dark:text-gray-400">
                               {review.pros}
                             </span>
                           </div>
@@ -575,10 +573,10 @@ function ProductReviews({ productTitle, product }) {
                         <div className="flex items-start gap-2">
                           <span className="text-red-500 font-bold">-</span>
                           <div>
-                            <span className="text-xs font-semibold text-gray-700 block">
+                            <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 block">
                               Cons
                             </span>
-                            <span className="text-sm text-gray-600">
+                            <span className="text-sm text-gray-600 dark:text-gray-400">
                               {review.cons}
                             </span>
                           </div>
@@ -633,10 +631,10 @@ function ProductReviews({ productTitle, product }) {
                   )}
 
                   {/* Helpful Button */}
-                  <div className="flex items-center gap-4 pt-3 border-t border-gray-100">
+                  <div className="flex items-center gap-4 pt-3 border-t border-gray-100 dark:border-gray-700">
                     <button
                       onClick={() => handleHelpful(review.id)}
-                      className="flex items-center gap-2 text-sm text-gray-500 hover:text-indigo-600 transition-colors"
+                      className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                     >
                       <svg
                         className="w-4 h-4"
@@ -659,10 +657,10 @@ function ProductReviews({ productTitle, product }) {
             ) : (
               <div className="text-center py-12">
                 <span className="text-4xl mb-4 block">📝</span>
-                <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                   No reviews yet
                 </h4>
-                <p className="text-gray-500 mb-4">
+                <p className="text-gray-500 dark:text-gray-400 mb-4">
                   Be the first to review this product!
                 </p>
                 {isLoggedIn ? (
@@ -673,7 +671,7 @@ function ProductReviews({ productTitle, product }) {
                     Write a Review
                   </button>
                 ) : (
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-gray-400 dark:text-gray-500">
                     Please log in to write a review
                   </p>
                 )}

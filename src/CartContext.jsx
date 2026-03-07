@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, useRef } from "react";
+import { useAuth } from "./AuthContext";
 
 const CartContext = createContext();
 
@@ -7,22 +8,17 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-  const [userEmail, setUserEmail] = useState(localStorage.getItem("userEmail") || "guest");
+  const { user } = useAuth();
+  // Determine current email based on AuthContext, defaulting to guest
+  const userEmail = user?.email || "guest";
+
   const [cart, setCart] = useState(() => {
-    const email = localStorage.getItem("userEmail") || "guest";
+    // Try to initialize from storage based on potential auth state to avoid flash
+    const email = localStorage.getItem("userEmail") || sessionStorage.getItem("userEmail") || "guest";
     const savedCart = localStorage.getItem(`cart_${email}`);
     return savedCart ? JSON.parse(savedCart) : [];
   });
   const isInitialized = useRef(false);
-
-  // Listen for user login/logout to switch carts
-  useEffect(() => {
-    const handleUserUpdate = () => {
-      setUserEmail(localStorage.getItem("userEmail") || "guest");
-    };
-    window.addEventListener("userUpdated", handleUserUpdate);
-    return () => window.removeEventListener("userUpdated", handleUserUpdate);
-  }, []);
 
   // Load cart when user changes
   useEffect(() => {
@@ -42,7 +38,7 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem(key, JSON.stringify(cart));
   }, [cart, userEmail]);
 
-  const addToCart = (product) => {
+  const addToCart = (product, quantity = 1) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find(
         (item) => item.title === product.title,
@@ -50,11 +46,11 @@ export const CartProvider = ({ children }) => {
       if (existingItem) {
         return prevCart.map((item) =>
           item.title === product.title
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + quantity }
             : item,
         );
       }
-      return [...prevCart, { ...product, quantity: 1 }];
+      return [...prevCart, { ...product, quantity: quantity }];
     });
   };
 

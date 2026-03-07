@@ -1,4 +1,4 @@
-const products = [
+const rawProducts = [
   // CATEGORY: TV
   {
     src: "/EProducts/Samsung 65inch.jpg",
@@ -6,6 +6,24 @@ const products = [
     OriginalPrice: 45999,
     MRP: 65999,
     category: "TVs",
+    description:
+      "Experience the ultimate in home entertainment with the Samsung Crystal 4K Vision AI Smart TV. Powered by the Crystal Processor 4K, this TV upscales your favorite content to 4K resolution, ensuring sharp and vivid images. The Vision AI feature automatically adjusts picture and sound settings based on your viewing environment. With OTS Lite, sound moves with the action on screen for a dynamic audio experience.",
+    features: [
+      "Crystal Processor 4K for superior upscaling",
+      "PurColor for a wider range of colors",
+      "Vision AI for optimized picture and sound",
+      "Object Tracking Sound Lite (OTS Lite)",
+      "Motion Xcelerator for smooth gaming",
+    ],
+    specifications: {
+      "Screen Size": "55 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "50 Hz",
+      "Operating System": "Tizen Smart TV",
+      "Sound Output": "20 W",
+      "HDMI Ports": "3",
+      "USB Ports": "1",
+    },
   },
   {
     src: "/EProducts/OnePlus TV.jpg",
@@ -13,6 +31,24 @@ const products = [
     OriginalPrice: 32999,
     MRP: 45999,
     category: "TVs",
+    description:
+      "The OnePlus TV U1 Series offers a flagship 4K cinematic experience with 93% DCI-P3 color gamut and Gamma Engine for superior visual quality. With Dolby Vision and HDR10+, enjoy lifelike colors and contrast. The sleek bezel-less design and 30W speakers with Dolby Audio make it a perfect addition to your living room.",
+    features: [
+      "4K Ultra HD with 93% DCI-P3 Color Gamut",
+      "Gamma Engine for picture optimization",
+      "Dolby Vision & HDR10+ support",
+      "30W Speakers with Dolby Audio",
+      "OxygenPlay with Android TV 10",
+    ],
+    specifications: {
+      "Screen Size": "55 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Android TV 10",
+      "Sound Output": "30 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/LG 164cm.jpg",
@@ -20,6 +56,24 @@ const products = [
     OriginalPrice: 42990,
     MRP: 62990,
     category: "TVs",
+    description:
+      "The LG UHD 4K TV enhances your viewing experience with vivid colors and fine detail. The α5 Gen5 AI Processor 4K analyzes the original content and optimizes it for improved quality. With ThinQ AI and WebOS, enjoy personalized content recommendations and control your smart home devices.",
+    features: [
+      "Real 4K Display for pure colors",
+      "α5 Gen5 AI Processor 4K",
+      "ThinQ AI & WebOS for smart control",
+      "Active HDR for realistic details",
+      "Game Optimizer & Dashboard",
+    ],
+    specifications: {
+      "Screen Size": "55 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "WebOS",
+      "Sound Output": "20 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/MI Q1 75inch.png",
@@ -27,6 +81,24 @@ const products = [
     OriginalPrice: 49999,
     MRP: 69999,
     category: "TVs",
+    description:
+      "The Xiaomi Mi TV 5X brings a cinematic experience home with its 4K QLED display and Dolby Vision support. Powered by Android TV 10 with PatchWall, it offers seamless navigation and smart recommendations. The 40W stereo speakers with Dolby Atmos ensure immersive audio.",
+    features: [
+      "4K QLED Display with Dolby Vision",
+      "40W Stereo Speakers with Dolby Atmos",
+      "Android TV 10 with PatchWall",
+      "Far-field Mics for Google Assistant",
+      "Premium Metal Bezel-less Design",
+    ],
+    specifications: {
+      "Screen Size": "55 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Android TV 10",
+      "Sound Output": "40 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/VU 55inch.jpg",
@@ -34,6 +106,24 @@ const products = [
     OriginalPrice: 35999,
     MRP: 49999,
     category: "TVs",
+    description:
+      "The Vu Premium QLED TV features a 4K Quantum Dot display with 94% color gamut for vibrant visuals. It comes with a built-in 100W soundbar for powerful audio. The TV runs on Android 11 and supports Dolby Vision and HDR10+.",
+    features: [
+      "4K QLED Display with 94% Color Gamut",
+      "Built-in 100W Soundbar",
+      "Dolby Vision & HDR10+ Support",
+      "Android 11 OS",
+      "Cricket Mode & Cinema Mode",
+    ],
+    specifications: {
+      "Screen Size": "55 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Android 11",
+      "Sound Output": "100 W",
+      "HDMI Ports": "4",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/Sony Bravia XR 85-inch 4K HDR OLED.jpg",
@@ -41,6 +131,24 @@ const products = [
     OriginalPrice: 54990,
     MRP: 74990,
     category: "TVs",
+    description:
+      "Sony Bravia 2 delivers stunning 4K visuals with the X1 4K Processor. Live Color technology expands the color spectrum for realistic images. With Google TV, access all your favorite apps and content in one place. Open Baffle Speakers produce clear sound.",
+    features: [
+      "X1 4K Processor for detail and texture",
+      "Live Color Technology",
+      "Google TV with Voice Search",
+      "Open Baffle Speaker with Dolby Audio",
+      "Motionflow XR 200",
+    ],
+    specifications: {
+      "Screen Size": "55 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Google TV",
+      "Sound Output": "20 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/TCL C655 138cm (55 inch) QLED 4K Google TV.webp",
@@ -48,6 +156,24 @@ const products = [
     OriginalPrice: 42990,
     MRP: 59990,
     category: "TVs",
+    description:
+      "The TCL C655 QLED TV offers exceptional color volume and brightness. It features the AiPQ Processor 3.0 for optimized picture quality. With ONKYO 2.1ch sound system, enjoy theater-like audio. It supports 120Hz Game Accelerator for smooth gaming.",
+    features: [
+      "QLED Pro with 95% DCI-P3",
+      "AiPQ Processor 3.0",
+      "ONKYO 2.1ch Subwoofer",
+      "120Hz Game Accelerator",
+      "TUV Low Blue Light",
+    ],
+    specifications: {
+      "Screen Size": "55 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Google TV",
+      "Sound Output": "35 W",
+      "HDMI Ports": "3",
+      "USB Ports": "1",
+    },
   },
   {
     src: "/EProducts/Hisense 139cm (55 inch) Ultra HD 4K Smart Google TV.jpg",
@@ -55,6 +181,24 @@ const products = [
     OriginalPrice: 37990,
     MRP: 52990,
     category: "TVs",
+    description:
+      "Hisense 4K Ultra HD Smart TV delivers sharp images with 4K upscaling. Precision Color ensures accurate and natural colors. It features DTS Virtual:X for immersive audio. The bezel-less design maximizes your viewing area.",
+    features: [
+      "4K Precision Color",
+      "DTS Virtual:X Audio",
+      "Bezel-less Design",
+      "Sports Mode & Game Mode",
+      "Dual Band Wi-Fi",
+    ],
+    specifications: {
+      "Screen Size": "55 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Google TV",
+      "Sound Output": "24 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/Philips 139cm (55 inch) Ultra HD 4K Android Smart TV.jpg",
@@ -62,6 +206,24 @@ const products = [
     OriginalPrice: 34990,
     MRP: 49990,
     category: "TVs",
+    description:
+      "Philips 4K UHD LED Android TV brings content to life with Dolby Vision and Dolby Atmos. The Pixel Precise Ultra HD engine optimizes picture quality. It supports major HDR formats and offers voice control via Google Assistant.",
+    features: [
+      "Pixel Precise Ultra HD Engine",
+      "Dolby Vision and Dolby Atmos",
+      "Android TV with Google Assistant",
+      "HDR10+ Supported",
+      "Border-less Design",
+    ],
+    specifications: {
+      "Screen Size": "55 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Android TV",
+      "Sound Output": "20 W",
+      "HDMI Ports": "4",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/Acer 109cm (43 inch) Full HD Smart LED TV.webp",
@@ -69,6 +231,24 @@ const products = [
     OriginalPrice: 19999,
     MRP: 29999,
     category: "TVs",
+    description:
+      "Acer Advanced I Series Full HD TV offers a crisp display with 1.07 billion colors. It features 30W High Fidelity Speakers with Dolby Audio. The frameless design provides an immersive viewing experience.",
+    features: [
+      "Full HD Display with 1.07 Billion Colors",
+      "30W High Fidelity Speakers",
+      "Dolby Audio",
+      "Frameless Design",
+      "Google TV",
+    ],
+    specifications: {
+      "Screen Size": "43 Inch",
+      Resolution: "Full HD (1920 x 1080)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Google TV",
+      "Sound Output": "30 W",
+      "HDMI Ports": "2",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/Toshiba 108cm (43 inch) Ultra HD 4K Smart LED TV.webp",
@@ -76,6 +256,24 @@ const products = [
     OriginalPrice: 28990,
     MRP: 42990,
     category: "TVs",
+    description:
+      "Toshiba C350LP series offers 4K resolution with the REGZA Engine 4K for stunning picture quality. Color Re-master technology restores original colors. It includes Dolby Vision HDR and Dolby Atmos for a complete entertainment package.",
+    features: [
+      "REGZA Engine 4K",
+      "Color Re-master Technology",
+      "Dolby Vision HDR",
+      "Dolby Atmos Audio",
+      "Ultimate Motion",
+    ],
+    specifications: {
+      "Screen Size": "43 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Google TV",
+      "Sound Output": "24 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/Motorola EnvisionX 108cm (43 inch) HD Ready Smart LED TV.webp",
@@ -83,6 +281,24 @@ const products = [
     OriginalPrice: 15999,
     MRP: 24999,
     category: "TVs",
+    description:
+      "Motorola EnvisionX features an HD Ready display with vibrant colors. Powered by a Quad-core processor, it ensures smooth performance. The 20W speakers provide clear audio for movies and music.",
+    features: [
+      "HD Ready MediaTek Processor",
+      "20W Speakers",
+      "Built-in Chromecast",
+      "Android 11",
+      "Wide Viewing Angle",
+    ],
+    specifications: {
+      "Screen Size": "43 Inch",
+      Resolution: "HD Ready (1366 x 768)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Android 11",
+      "Sound Output": "20 W",
+      "HDMI Ports": "2",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/Nokia 108cm (43 inch) Ultra HD 4K Smart Android TV.jpg",
@@ -90,6 +306,24 @@ const products = [
     OriginalPrice: 24999,
     MRP: 35999,
     category: "TVs",
+    description:
+      "Nokia 4K UHD Smart TV delivers detailed visuals with HDR10 support. Sound by Onkyo ensures rich audio quality. It features a sleek design and runs on Android TV for access to thousands of apps.",
+    features: [
+      "4K UHD with HDR10",
+      "Sound by Onkyo",
+      "Android TV 9.0",
+      "Micro Dimming",
+      "5000+ Apps on Play Store",
+    ],
+    specifications: {
+      "Screen Size": "43 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Android TV",
+      "Sound Output": "24 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/Blaupunkt 55inch.webp",
@@ -97,6 +331,24 @@ const products = [
     OriginalPrice: 12999,
     MRP: 19999,
     category: "TVs",
+    description:
+      "Blaupunkt CyberSound series offers HD Ready resolution with powerful 40W speakers. It provides a cinematic sound experience. The bezel-less design adds a modern touch to your room.",
+    features: [
+      "HD Ready Display",
+      "40W CyberSound Speakers",
+      "Surround Sound",
+      "Android TV",
+      "Voice Remote",
+    ],
+    specifications: {
+      "Screen Size": "43 Inch",
+      Resolution: "HD Ready (1366 x 768)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Android TV",
+      "Sound Output": "40 W",
+      "HDMI Ports": "2",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/Samsung 163cm (65 inch) Crystal 4K Ultra HD Smart TV.webp",
@@ -104,6 +356,24 @@ const products = [
     OriginalPrice: 79999,
     MRP: 119999,
     category: "TVs",
+    description:
+      "Samsung Crystal 4K UHD TV features a massive 65-inch screen with PurColor for lifelike colors. The Crystal Processor 4K ensures powerful upscaling. Q-Symphony allows TV and soundbar speakers to operate simultaneously.",
+    features: [
+      "Crystal Processor 4K",
+      "PurColor Technology",
+      "Q-Symphony Audio",
+      "3-Side Bezel-less Design",
+      "PC on TV Feature",
+    ],
+    specifications: {
+      "Screen Size": "65 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "50 Hz",
+      "Operating System": "Tizen",
+      "Sound Output": "20 W",
+      "HDMI Ports": "3",
+      "USB Ports": "1",
+    },
   },
   {
     src: "/EProducts/Sony Bravia 164cm (65 inch) 4K Ultra HD Smart LED TV.jpeg",
@@ -111,6 +381,24 @@ const products = [
     OriginalPrice: 109990,
     MRP: 149990,
     category: "TVs",
+    description:
+      "Sony Bravia X74L series delivers 4K HDR visuals with the X1 Processor. Google TV organizes content for you. X-Balanced Speaker drives clear sound and deep bass.",
+    features: [
+      "X1 4K Processor",
+      "Google TV",
+      "X-Balanced Speaker",
+      "Motionflow XR",
+      "Apple AirPlay Compatible",
+    ],
+    specifications: {
+      "Screen Size": "65 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "50 Hz",
+      "Operating System": "Google TV",
+      "Sound Output": "20 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/LG 164cm (65 inch) Ultra HD 4K Smart LED TV.jpg",
@@ -118,6 +406,24 @@ const products = [
     OriginalPrice: 84990,
     MRP: 119990,
     category: "TVs",
+    description:
+      "LG UR7500 Series 4K TV offers vivid colors and remarkable detail with HDR10 Pro. The α5 AI Processor 4K Gen6 enhances the viewing experience. AI Sound Pro provides virtual 5.1.2 up-mix sound.",
+    features: [
+      "α5 AI Processor 4K Gen6",
+      "HDR10 Pro",
+      "AI Sound Pro",
+      "Filmmaker Mode",
+      "Game Optimizer",
+    ],
+    specifications: {
+      "Screen Size": "65 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "WebOS",
+      "Sound Output": "20 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/Samsung 189cm (75 inch) QLED 4K Smart TV.jpg",
@@ -125,6 +431,24 @@ const products = [
     OriginalPrice: 149990,
     MRP: 219990,
     category: "TVs",
+    description:
+      "Samsung QLED 4K TV features Quantum Dot technology for 100% color volume. The Quantum Processor Lite 4K optimizes sound and picture. Dual LED backlighting technology adjusts color tone to suit the content.",
+    features: [
+      "100% Color Volume with Quantum Dot",
+      "Quantum Processor Lite 4K",
+      "Dual LED Backlight",
+      "SolarCell Remote",
+      "Adjustable Stand",
+    ],
+    specifications: {
+      "Screen Size": "75 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "50 Hz",
+      "Operating System": "Tizen",
+      "Sound Output": "20 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/Xiaomi Mi TV 5 Pro 139cm (55 inch) QLED 4K.jpg",
@@ -132,6 +456,24 @@ const products = [
     OriginalPrice: 44999,
     MRP: 64999,
     category: "TVs",
+    description:
+      "Xiaomi Mi TV 5 Pro features a Quantum Dot screen for superior color accuracy. It has a slim metal body and supports 8K video playback. The 4GB RAM and 64GB storage ensure smooth performance.",
+    features: [
+      "Quantum Dot Display",
+      "8K Video Playback Support",
+      "4GB RAM + 64GB Storage",
+      "MEMC Technology",
+      "Far-field Voice Control",
+    ],
+    specifications: {
+      "Screen Size": "55 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Android TV",
+      "Sound Output": "20 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/TCL 164cm (65 inch) C745 QLED 4K Google TV.webp",
@@ -139,6 +481,24 @@ const products = [
     OriginalPrice: 89990,
     MRP: 129990,
     category: "TVs",
+    description:
+      "TCL C745 QLED TV is designed for gamers with 144Hz VRR. It features Full Array Local Dimming for high contrast. IMAX Enhanced certification ensures a cinematic experience.",
+    features: [
+      "144Hz VRR for Gaming",
+      "Full Array Local Dimming",
+      "IMAX Enhanced",
+      "Dolby Vision IQ",
+      "AMD FreeSync Premium Pro",
+    ],
+    specifications: {
+      "Screen Size": "65 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "144 Hz",
+      "Operating System": "Google TV",
+      "Sound Output": "30 W",
+      "HDMI Ports": "4",
+      "USB Ports": "1",
+    },
   },
   {
     src: "/EProducts/OnePlus U1S 164cm (65 inch) 4K Ultra HD Smart TV.jpg",
@@ -146,6 +506,24 @@ const products = [
     OriginalPrice: 54999,
     MRP: 79999,
     category: "TVs",
+    description:
+      "OnePlus TV U1S offers a cinematic 4K experience with Dynaudio sound. It features a bezel-less design with a 95.7% screen-to-body ratio. Speak Now allows hands-free voice control.",
+    features: [
+      "Cinematic 4K Display",
+      "Co-tuned with Dynaudio",
+      "Hands-free Voice Control",
+      "OxygenPlay 2.0",
+      "Data Saver Plus",
+    ],
+    specifications: {
+      "Screen Size": "65 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Android TV 10",
+      "Sound Output": "30 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/Mi TV 4A Pro 108cm (43 inch) HD Ready Smart TV.avif",
@@ -153,6 +531,24 @@ const products = [
     OriginalPrice: 17999,
     MRP: 27999,
     category: "TVs",
+    description:
+      "Mi TV 4A Pro offers Full HD resolution and PatchWall with a massive content catalog. It features 20W stereo speakers and a 64-bit quad-core processor.",
+    features: [
+      "Full HD Display",
+      "PatchWall with Content Catalog",
+      "20W Stereo Speakers",
+      "Google Data Saver",
+      "Smart Home Control",
+    ],
+    specifications: {
+      "Screen Size": "43 Inch",
+      Resolution: "Full HD (1920 x 1080)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Android TV",
+      "Sound Output": "20 W",
+      "HDMI Ports": "3",
+      "USB Ports": "3",
+    },
   },
   {
     src: "/EProducts/Philips 164cm (65 inch) 4K Ultra HD Android TV.webp",
@@ -160,6 +556,24 @@ const products = [
     OriginalPrice: 69990,
     MRP: 99990,
     category: "TVs",
+    description:
+      "Philips 65-inch 4K Android TV features Ambilight technology that projects on-screen colors onto the wall. It supports Dolby Vision and Atmos for a premium experience.",
+    features: [
+      "3-sided Ambilight",
+      "Dolby Vision & Atmos",
+      "P5 Perfect Picture Engine",
+      "DTS Play-Fi",
+      "Android TV",
+    ],
+    specifications: {
+      "Screen Size": "65 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Android TV",
+      "Sound Output": "20 W",
+      "HDMI Ports": "4",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/Motorola 164cm (65 inch) 4K Ultra HD Smart TV.webp",
@@ -167,6 +581,24 @@ const products = [
     OriginalPrice: 49999,
     MRP: 74999,
     category: "TVs",
+    description:
+      "Motorola Revou 2 4K TV features a Dolby Vision HDR display and 24W speakers with Dolby Atmos. It runs on Android 11 and offers a smooth gaming experience with Auto Low Latency Mode.",
+    features: [
+      "Dolby Vision HDR",
+      "24W Dolby Atmos Speakers",
+      "Android 11",
+      "Auto Low Latency Mode",
+      "Dual Band Wi-Fi",
+    ],
+    specifications: {
+      "Screen Size": "65 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Android 11",
+      "Sound Output": "24 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
   {
     src: "/EProducts/Nokia 139cm (55 inch) 4K Ultra HD Smart TV.jpg",
@@ -174,6 +606,24 @@ const products = [
     OriginalPrice: 32999,
     MRP: 49999,
     category: "TVs",
+    description:
+      "Nokia 55-inch 4K TV delivers pure sound with JBL speakers. It features a diamond-cut bezel design and supports HDR10. The intelligent dimming technology enhances contrast.",
+    features: [
+      "Sound by JBL",
+      "HDR10 & Dolby Vision",
+      "Intelligent Dimming",
+      "Android TV",
+      "Pronto Focal AI Engine",
+    ],
+    specifications: {
+      "Screen Size": "55 Inch",
+      Resolution: "4K Ultra HD (3840 x 2160)",
+      "Refresh Rate": "60 Hz",
+      "Operating System": "Android TV",
+      "Sound Output": "24 W",
+      "HDMI Ports": "3",
+      "USB Ports": "2",
+    },
   },
 
   // CATEGORY: SMARTPHONES
@@ -183,6 +633,24 @@ const products = [
     OriginalPrice: 69900,
     MRP: 79900,
     category: "Smartphones",
+    description:
+      "The iPhone 16 brings you the latest in Apple innovation with the powerful A18 Bionic chip, ensuring lightning-fast performance and efficiency. Capture stunning photos with the advanced dual-camera system featuring a 48MP Main camera. The durable design with Ceramic Shield and water resistance makes it built to last. Enjoy all-day battery life and the seamless iOS 18 experience.",
+    features: [
+      "A18 Bionic chip for blazing speed",
+      "Advanced dual-camera system with 48MP Main camera",
+      "Durable design with Ceramic Shield",
+      "All-day battery life for extended use",
+      "iOS 18 with new personalization features",
+    ],
+    specifications: {
+      Display: "6.1-inch Super Retina XDR",
+      Processor: "A18 Bionic chip",
+      Storage: "128GB",
+      "Rear Camera": "48MP + 12MP",
+      "Front Camera": "12MP TrueDepth",
+      Battery: "Up to 20 hours video playback",
+      OS: "iOS 18",
+    },
   },
   {
     src: "/EProducts/Vivo V60e 5G pink.jpg",
@@ -190,6 +658,24 @@ const products = [
     OriginalPrice: 27999,
     MRP: 34999,
     category: "Smartphones",
+    description:
+      "The Vivo V60e 5G combines style and performance. With its stunning 3D Curved Screen and ultra-slim design, it feels great in hand. Capture beautiful portraits with the Aura Light Portrait system. The Snapdragon processor ensures smooth multitasking and gaming performance.",
+    features: [
+      "3D Curved AMOLED Display",
+      "Aura Light Portrait System",
+      "50MP Eye AF Selfie Camera",
+      "Snapdragon 6 Gen 1 Processor",
+      "5500mAh Battery with 44W FlashCharge",
+    ],
+    specifications: {
+      Display: "6.78-inch AMOLED",
+      Processor: "Snapdragon 6 Gen 1",
+      RAM: "8GB",
+      Storage: "256GB",
+      "Rear Camera": "50MP + 8MP",
+      "Front Camera": "50MP",
+      Battery: "5500mAh",
+    },
   },
   {
     src: "/EProducts/Samsung Galaxy S24 Ultra 5G (12GB RAM, 256GB) - Titanium Black.jpg",
@@ -197,6 +683,24 @@ const products = [
     OriginalPrice: 129999,
     MRP: 149999,
     category: "Smartphones",
+    description:
+      "Unleash the power of AI with the Samsung Galaxy S24 Ultra. Featuring a titanium frame and a flat 6.8-inch display, it's built to last. The 200MP camera captures incredible detail, while the Snapdragon 8 Gen 3 for Galaxy delivers unparalleled performance. Galaxy AI features like Circle to Search and Live Translate redefine how you use your phone.",
+    features: [
+      "Titanium Frame for durability",
+      "200MP Main Camera with AI processing",
+      "Snapdragon 8 Gen 3 for Galaxy",
+      "Galaxy AI Features (Circle to Search, Live Translate)",
+      "Built-in S Pen for productivity",
+    ],
+    specifications: {
+      Display: "6.8-inch QHD+ Dynamic AMOLED 2X",
+      Processor: "Snapdragon 8 Gen 3",
+      RAM: "12GB",
+      Storage: "256GB",
+      "Rear Camera": "200MP + 50MP + 12MP + 10MP",
+      "Front Camera": "12MP",
+      Battery: "5000mAh",
+    },
   },
   {
     src: "/EProducts/Google Pixel 9 Pro (16GB RAM, 256GB) - Obsidian.webp",
@@ -204,6 +708,24 @@ const products = [
     OriginalPrice: 99999,
     MRP: 119999,
     category: "Smartphones",
+    description:
+      "The Google Pixel 9 Pro features the advanced Tensor G4 chip and Gemini AI for smarter assistance. It has a pro-level triple rear camera system and a stunning Super Actua display.",
+    features: [
+      "Tensor G4 Processor",
+      "Gemini AI Integration",
+      "Super Actua Display",
+      "7 years of OS updates",
+      "Pro-level Camera Controls",
+    ],
+    specifications: {
+      Display: "6.3-inch LTPO OLED",
+      Processor: "Google Tensor G4",
+      RAM: "16GB",
+      Storage: "256GB",
+      "Rear Camera": "50MP + 48MP + 48MP",
+      "Front Camera": "42MP",
+      Battery: "4700mAh",
+    },
   },
   {
     src: "/EProducts/OnePlus 13 (16GB RAM, 512GB) - Flowy Emerald.jpg",
@@ -211,6 +733,24 @@ const products = [
     OriginalPrice: 69999,
     MRP: 89999,
     category: "Smartphones",
+    description:
+      "OnePlus 13 delivers flagship performance with Snapdragon 8 Gen 4 and Hasselblad camera system. It features a 2K 120Hz display and 100W SuperVOOC charging.",
+    features: [
+      "Snapdragon 8 Gen 4 Processor",
+      "Hasselblad Camera for Mobile",
+      "100W SuperVOOC Charging",
+      "2K 120Hz ProXDR Display",
+      "Aqua Touch Technology",
+    ],
+    specifications: {
+      Display: "6.82-inch AMOLED",
+      Processor: "Snapdragon 8 Gen 4",
+      RAM: "16GB",
+      Storage: "512GB",
+      "Rear Camera": "50MP + 50MP + 50MP",
+      "Front Camera": "32MP",
+      Battery: "5400mAh",
+    },
   },
   {
     src: "/EProducts/Iphone 15 Pro Max (256GB) - Natural Titanium.jpg",
@@ -218,6 +758,24 @@ const products = [
     OriginalPrice: 159900,
     MRP: 179900,
     category: "Smartphones",
+    description:
+      "iPhone 15 Pro Max features a strong and lightweight titanium design with a new Action button. The A17 Pro chip delivers next-level gaming performance.",
+    features: [
+      "Titanium Design",
+      "A17 Pro Chip",
+      "Action Button",
+      "USB-C Connector",
+      "5x Telephoto Camera",
+    ],
+    specifications: {
+      Display: "6.7-inch Super Retina XDR",
+      Processor: "A17 Pro chip",
+      Storage: "256GB",
+      "Rear Camera": "48MP + 12MP + 12MP",
+      "Front Camera": "12MP TrueDepth",
+      Battery: "Up to 29 hours video playback",
+      OS: "iOS 17",
+    },
   },
   {
     src: "/EProducts/Samsung Galaxy Z Fold 6 (12GB RAM, 512GB) - Navy.webp",
@@ -225,6 +783,24 @@ const products = [
     OriginalPrice: 149999,
     MRP: 179999,
     category: "Smartphones",
+    description:
+      "Unfold your potential with the Galaxy Z Fold 6. It features a lighter, thinner design and Galaxy AI for enhanced productivity on the large main screen.",
+    features: [
+      "Foldable Design",
+      "Galaxy AI Features",
+      "Snapdragon 8 Gen 3 for Galaxy",
+      "IP48 Water Resistance",
+      "Multi-window Multitasking",
+    ],
+    specifications: {
+      "Main Display": "7.6-inch Dynamic AMOLED 2X",
+      "Cover Display": "6.3-inch Dynamic AMOLED 2X",
+      Processor: "Snapdragon 8 Gen 3",
+      RAM: "12GB",
+      Storage: "512GB",
+      "Rear Camera": "50MP + 12MP + 10MP",
+      Battery: "4400mAh",
+    },
   },
   {
     src: "/EProducts/Xiaomi 14 Ultra (16GB RAM, 512GB) - Black.webp",
@@ -232,6 +808,24 @@ const products = [
     OriginalPrice: 99999,
     MRP: 129999,
     category: "Smartphones",
+    description:
+      "Xiaomi 14 Ultra redefines mobile photography with its Leica quad-camera system and 1-inch main sensor. Powered by Snapdragon 8 Gen 3 for top-tier performance.",
+    features: [
+      "Leica Quad Camera System",
+      "1-inch Main Sensor",
+      "Snapdragon 8 Gen 3",
+      "WQHD+ LTPO AMOLED",
+      "Xiaomi Shield Glass",
+    ],
+    specifications: {
+      Display: "6.73-inch AMOLED",
+      Processor: "Snapdragon 8 Gen 3",
+      RAM: "16GB",
+      Storage: "512GB",
+      "Rear Camera": "50MP Quad Camera",
+      "Front Camera": "32MP",
+      Battery: "5000mAh",
+    },
   },
   {
     src: "/EProducts/iQOO 13 (12GB RAM, 256GB) - Legend.jpg",
@@ -239,6 +833,24 @@ const products = [
     OriginalPrice: 52999,
     MRP: 69999,
     category: "Smartphones",
+    description:
+      "iQOO 13 is a performance beast designed for gamers, featuring the Snapdragon 8 Gen 4 and a dedicated Q2 gaming chip.",
+    features: [
+      "Snapdragon 8 Gen 4",
+      "Q2 Gaming Chip",
+      "144Hz LTPO Display",
+      "120W FlashCharge",
+      "Monster Halo Lighting",
+    ],
+    specifications: {
+      Display: "6.78-inch AMOLED",
+      Processor: "Snapdragon 8 Gen 4",
+      RAM: "12GB",
+      Storage: "256GB",
+      "Rear Camera": "50MP + 50MP + 50MP",
+      "Front Camera": "16MP",
+      Battery: "6000mAh",
+    },
   },
   {
     src: "/EProducts/Nothing Phone 2a Plus (12GB RAM, 256GB) - Grey.webp",
@@ -246,6 +858,24 @@ const products = [
     OriginalPrice: 27999,
     MRP: 35999,
     category: "Smartphones",
+    description:
+      "Nothing Phone 2a Plus offers a unique transparent design with Glyph Interface. It features a powerful MediaTek Dimensity 7350 Pro processor and dual 50MP cameras.",
+    features: [
+      "Glyph Interface",
+      "Dimensity 7350 Pro Processor",
+      "Dual 50MP Rear Cameras",
+      "50MP Front Camera",
+      "Nothing OS",
+    ],
+    specifications: {
+      Display: "6.7-inch AMOLED",
+      Processor: "Dimensity 7350 Pro",
+      RAM: "12GB",
+      Storage: "256GB",
+      "Rear Camera": "50MP + 50MP",
+      "Front Camera": "50MP",
+      Battery: "5000mAh",
+    },
   },
   {
     src: "/EProducts/Motorola Edge 50 Pro (8GB RAM, 256GB) - Luxe Lavender.jpg",
@@ -253,6 +883,24 @@ const products = [
     OriginalPrice: 29999,
     MRP: 42999,
     category: "Smartphones",
+    description:
+      "Motorola Edge 50 Pro features a Pantone Validated camera and display for true-to-life colors. It has a beautiful curved design and 125W TurboPower charging.",
+    features: [
+      "Pantone Validated Camera & Display",
+      "125W TurboPower Charging",
+      "Curved pOLED Display",
+      "IP68 Water Protection",
+      "Hello UI",
+    ],
+    specifications: {
+      Display: "6.7-inch pOLED",
+      Processor: "Snapdragon 7 Gen 3",
+      RAM: "8GB",
+      Storage: "256GB",
+      "Rear Camera": "50MP + 13MP + 10MP",
+      "Front Camera": "50MP",
+      Battery: "4500mAh",
+    },
   },
   {
     src: "/EProducts/Realme GT 7 Pro (16GB RAM, 512GB) - Galaxy Grey.webp",
@@ -260,6 +908,24 @@ const products = [
     OriginalPrice: 59999,
     MRP: 79999,
     category: "Smartphones",
+    description:
+      "Realme GT 7 Pro is a flagship killer with Snapdragon 8 Gen 4 and a super-bright display. It offers incredible performance and fast charging at a competitive price.",
+    features: [
+      "Snapdragon 8 Gen 4",
+      "6000nit Peak Brightness",
+      "120W SuperVOOC Charging",
+      "AI Features",
+      "Underwater Photography Mode",
+    ],
+    specifications: {
+      Display: "6.78-inch AMOLED",
+      Processor: "Snapdragon 8 Gen 4",
+      RAM: "16GB",
+      Storage: "512GB",
+      "Rear Camera": "50MP + 50MP + 8MP",
+      "Front Camera": "16MP",
+      Battery: "5400mAh",
+    },
   },
   {
     src: "/EProducts/Poco F6 Pro (12GB RAM, 512GB) - White.jpg",
@@ -267,6 +933,24 @@ const products = [
     OriginalPrice: 41999,
     MRP: 55999,
     category: "Smartphones",
+    description:
+      "Poco F6 Pro delivers hyper performance with Snapdragon 8 Gen 2 and a WQHD+ 120Hz AMOLED display. It features 120W HyperCharge for rapid refueling.",
+    features: [
+      "Snapdragon 8 Gen 2",
+      "WQHD+ Flow AMOLED",
+      "120W HyperCharge",
+      "Premium Metal Design",
+      "WildBoost Optimization 3.0",
+    ],
+    specifications: {
+      Display: "6.67-inch AMOLED",
+      Processor: "Snapdragon 8 Gen 2",
+      RAM: "12GB",
+      Storage: "512GB",
+      "Rear Camera": "50MP + 8MP + 2MP",
+      "Front Camera": "16MP",
+      Battery: "5000mAh",
+    },
   },
   {
     src: "/EProducts/Oppo Find X8 Pro (16GB RAM, 512GB) - Pearl White.webp",
@@ -274,6 +958,24 @@ const products = [
     OriginalPrice: 79999,
     MRP: 99999,
     category: "Smartphones",
+    description:
+      "Oppo Find X8 Pro features a Hasselblad Master Camera system for professional-grade photography. The sleek design and powerful Dimensity 9400 chip make it a premium choice.",
+    features: [
+      "Hasselblad Master Camera",
+      "Dimensity 9400 Processor",
+      "120Hz LTPO Display",
+      "80W SuperVOOC Charging",
+      "AI Eraser",
+    ],
+    specifications: {
+      Display: "6.82-inch AMOLED",
+      Processor: "Dimensity 9400",
+      RAM: "16GB",
+      Storage: "512GB",
+      "Rear Camera": "50MP Quad Camera",
+      "Front Camera": "32MP",
+      Battery: "5000mAh",
+    },
   },
   {
     src: "/EProducts/Asus ROG Phone 9 (16GB RAM, 512GB) - Phantom Black.avif",
@@ -281,6 +983,24 @@ const products = [
     OriginalPrice: 99999,
     MRP: 129999,
     category: "Smartphones",
+    description:
+      "The ultimate gaming phone, ROG Phone 9 features the Snapdragon 8 Gen 4, advanced cooling, and AirTrigger controls for console-like gaming on the go.",
+    features: [
+      "Snapdragon 8 Gen 4",
+      "AirTrigger Controls",
+      "GameCool System",
+      "165Hz AMOLED Display",
+      "AniMe Vision Display",
+    ],
+    specifications: {
+      Display: "6.78-inch AMOLED",
+      Processor: "Snapdragon 8 Gen 4",
+      RAM: "16GB",
+      Storage: "512GB",
+      "Rear Camera": "50MP + 13MP + 5MP",
+      "Front Camera": "32MP",
+      Battery: "6000mAh",
+    },
   },
   {
     src: "/EProducts/Samsung Galaxy A55 5G (8GB RAM, 256GB) - Awesome Iceblue.jpg",
@@ -288,6 +1008,24 @@ const products = [
     OriginalPrice: 35999,
     MRP: 47999,
     category: "Smartphones",
+    description:
+      "Galaxy A55 5G features a premium metal frame and a vibrant Super AMOLED display. Capture awesome photos with the 50MP wide-angle camera and enjoy 2-day battery life.",
+    features: [
+      "Premium Metal Frame",
+      "Super AMOLED Display",
+      "Knox Security",
+      "Nightography",
+      "IP67 Water Resistance",
+    ],
+    specifications: {
+      Display: "6.6-inch Super AMOLED",
+      Processor: "Exynos 1480",
+      RAM: "8GB",
+      Storage: "256GB",
+      "Rear Camera": "50MP + 12MP + 5MP",
+      "Front Camera": "32MP",
+      Battery: "5000mAh",
+    },
   },
   {
     src: "/EProducts/OnePlus Nord CE 4 (8GB RAM, 256GB) - Celadon Marble.webp",
@@ -295,6 +1033,24 @@ const products = [
     OriginalPrice: 22999,
     MRP: 29999,
     category: "Smartphones",
+    description:
+      "OnePlus Nord CE 4 combines performance and style with Snapdragon 7 Gen 3 and 100W SUPERVOOC charging. The Aqua Touch display works even when wet.",
+    features: [
+      "Snapdragon 7 Gen 3",
+      "100W SUPERVOOC Charging",
+      "Aqua Touch Display",
+      "120Hz AMOLED",
+      "Raw HDR Algorithm",
+    ],
+    specifications: {
+      Display: "6.7-inch AMOLED",
+      Processor: "Snapdragon 7 Gen 3",
+      RAM: "8GB",
+      Storage: "256GB",
+      "Rear Camera": "50MP + 8MP",
+      "Front Camera": "16MP",
+      Battery: "5500mAh",
+    },
   },
   {
     src: "/EProducts/iPhone 14 (128GB) - Midnight.webp",
@@ -302,6 +1058,23 @@ const products = [
     OriginalPrice: 54999,
     MRP: 69900,
     category: "Smartphones",
+    description:
+      "iPhone 14 features a durable design with Ceramic Shield and water resistance. It offers impressive battery life and vital safety features like Crash Detection.",
+    features: [
+      "A15 Bionic Chip",
+      "Crash Detection",
+      "Advanced Dual-camera System",
+      "All-day Battery Life",
+      "Ceramic Shield",
+    ],
+    specifications: {
+      Display: "6.1-inch Super Retina XDR",
+      Processor: "A15 Bionic",
+      Storage: "128GB",
+      "Rear Camera": "12MP + 12MP",
+      "Front Camera": "12MP TrueDepth",
+      OS: "iOS 16",
+    },
   },
   {
     src: "/EProducts/Google Pixel 8a (8GB RAM, 128GB) - Bay Blue.webp",
@@ -309,6 +1082,24 @@ const products = [
     OriginalPrice: 35999,
     MRP: 49999,
     category: "Smartphones",
+    description:
+      "Pixel 8a brings Google AI to a more affordable phone. It features the Tensor G3 chip, a great camera with Magic Editor, and 7 years of security updates.",
+    features: [
+      "Google Tensor G3",
+      "Google AI Features",
+      "Magic Editor",
+      "120Hz Actua Display",
+      "7 Years of Updates",
+    ],
+    specifications: {
+      Display: "6.1-inch OLED",
+      Processor: "Google Tensor G3",
+      RAM: "8GB",
+      Storage: "128GB",
+      "Rear Camera": "64MP + 13MP",
+      "Front Camera": "13MP",
+      Battery: "4492mAh",
+    },
   },
   {
     src: "/EProducts/Redmi Note 14 Pro+ 5G (12GB RAM, 256GB) - Titan Gold.png",
@@ -316,6 +1107,24 @@ const products = [
     OriginalPrice: 29999,
     MRP: 42999,
     category: "Smartphones",
+    description:
+      "Redmi Note 14 Pro+ features a curved AMOLED display and IP69 rating for durability. It's powered by Snapdragon 7s Gen 3 and has a massive 6200mAh battery.",
+    features: [
+      "IP69 Dust & Water Resistance",
+      "Curved AMOLED Display",
+      "6200mAh Battery",
+      "90W Fast Charging",
+      "Corning Gorilla Glass Victus 2",
+    ],
+    specifications: {
+      Display: "6.67-inch AMOLED",
+      Processor: "Snapdragon 7s Gen 3",
+      RAM: "12GB",
+      Storage: "256GB",
+      "Rear Camera": "50MP + 8MP + 50MP",
+      "Front Camera": "20MP",
+      Battery: "6200mAh",
+    },
   },
   {
     src: "/EProducts/Nothing Phone 2a (8GB RAM, 128GB) - White.jpg",
@@ -323,6 +1132,24 @@ const products = [
     OriginalPrice: 19999,
     MRP: 27999,
     category: "Smartphones",
+    description:
+      "Nothing Phone 2a offers a unique design and great performance with the Dimensity 7200 Pro. The Glyph Interface adds a fun and functional way to interact with your phone.",
+    features: [
+      "Unique Transparent Design",
+      "Glyph Interface",
+      "Dimensity 7200 Pro",
+      "120Hz Flexible AMOLED",
+      "Dual 50MP Cameras",
+    ],
+    specifications: {
+      Display: "6.7-inch AMOLED",
+      Processor: "Dimensity 7200 Pro",
+      RAM: "8GB",
+      Storage: "128GB",
+      "Rear Camera": "50MP + 50MP",
+      "Front Camera": "32MP",
+      Battery: "5000mAh",
+    },
   },
   {
     src: "/EProducts/Samsung Galaxy Z Flip 6 (12GB RAM, 256GB) - Mint.webp",
@@ -330,6 +1157,25 @@ const products = [
     OriginalPrice: 89999,
     MRP: 109999,
     category: "Smartphones",
+    description:
+      "Galaxy Z Flip 6 is compact and powerful with Galaxy AI. The FlexWindow allows you to do more without opening the phone, and the 50MP camera captures stunning detail.",
+    features: [
+      "Compact Foldable Design",
+      "FlexWindow Cover Screen",
+      "Galaxy AI",
+      "50MP Main Camera",
+      "FlexCam with Auto Zoom",
+    ],
+    specifications: {
+      "Main Display": "6.7-inch Dynamic AMOLED 2X",
+      "Cover Display": "3.4-inch Super AMOLED",
+      Processor: "Snapdragon 8 Gen 3",
+      RAM: "12GB",
+      Storage: "256GB",
+      "Rear Camera": "50MP + 12MP",
+      "Front Camera": "10MP",
+      Battery: "4000mAh",
+    },
   },
   {
     src: "/EProducts/Motorola Razr 50 Ultra (12GB RAM, 512GB) - Hot Pink.webp",
@@ -337,6 +1183,25 @@ const products = [
     OriginalPrice: 79999,
     MRP: 99999,
     category: "Smartphones",
+    description:
+      "Motorola Razr 50 Ultra features the largest external display on a flip phone. It has a stylish design with vegan leather finish and powerful Snapdragon 8s Gen 3 performance.",
+    features: [
+      "4.0-inch External Display",
+      "Snapdragon 8s Gen 3",
+      "Moto AI",
+      "45W TurboPower Charging",
+      "Vegan Leather Finish",
+    ],
+    specifications: {
+      "Main Display": "6.9-inch pOLED",
+      "Cover Display": "4.0-inch pOLED",
+      Processor: "Snapdragon 8s Gen 3",
+      RAM: "12GB",
+      Storage: "512GB",
+      "Rear Camera": "50MP + 50MP",
+      "Front Camera": "32MP",
+      Battery: "4000mAh",
+    },
   },
   {
     src: "/EProducts/Vivo X100 Pro (16GB RAM, 512GB) - Asteroid Black.png",
@@ -344,6 +1209,24 @@ const products = [
     OriginalPrice: 89999,
     MRP: 119999,
     category: "Smartphones",
+    description:
+      "Vivo X100 Pro is a photography powerhouse co-engineered with Zeiss. It features a 1-inch main sensor and APO Floating Telephoto camera for exceptional zoom and portraits.",
+    features: [
+      "Zeiss APO Floating Telephoto",
+      "Dimensity 9300 Processor",
+      "V3 Imaging Chip",
+      "IP68 Water Resistance",
+      "100W FlashCharge",
+    ],
+    specifications: {
+      Display: "6.78-inch AMOLED",
+      Processor: "Dimensity 9300",
+      RAM: "16GB",
+      Storage: "512GB",
+      "Rear Camera": "50MP + 50MP + 50MP",
+      "Front Camera": "32MP",
+      Battery: "5400mAh",
+    },
   },
   {
     src: "/EProducts/iQOO Neo 9 Pro (12GB RAM, 256GB) - Conqueror Black.jpg",
@@ -351,6 +1234,24 @@ const products = [
     OriginalPrice: 34999,
     MRP: 47999,
     category: "Smartphones",
+    description:
+      "iQOO Neo 9 Pro offers flagship performance with Snapdragon 8 Gen 2 at a great value. It features a dual-tone design and a dedicated Q1 chip for enhanced gaming.",
+    features: [
+      "Snapdragon 8 Gen 2",
+      "Q1 Supercomputing Chip",
+      "144Hz LTPO Display",
+      "120W FlashCharge",
+      "Premium Leather Design",
+    ],
+    specifications: {
+      Display: "6.78-inch AMOLED",
+      Processor: "Snapdragon 8 Gen 2",
+      RAM: "12GB",
+      Storage: "256GB",
+      "Rear Camera": "50MP + 8MP",
+      "Front Camera": "16MP",
+      Battery: "5160mAh",
+    },
   },
 
   // CATEGORY: LAPTOPS
@@ -360,6 +1261,23 @@ const products = [
     OriginalPrice: 92900,
     MRP: 114900,
     category: "Laptops",
+    description:
+      "The MacBook Air M3 is the ultimate ultra-portable laptop. Supercharged by the M3 chip, it delivers incredible performance and up to 18 hours of battery life in a fanless, silent design. The stunning 13.6-inch Liquid Retina display features 500 nits of brightness and P3 wide color for vibrant images. With a 1080p FaceTime HD camera, MagSafe charging, and a durable aluminum enclosure, it's perfect for work and play.",
+    features: [
+      "Supercharged by the Apple M3 chip",
+      "Up to 18 hours of battery life",
+      "Fanless design for silent operation",
+      "13.6-inch Liquid Retina display",
+      "MagSafe 3 charging port",
+    ],
+    specifications: {
+      Processor: "Apple M3 (8-core CPU, 8-core GPU)",
+      RAM: "8GB Unified Memory",
+      Storage: "256GB SSD",
+      Display: "13.6-inch Liquid Retina",
+      Weight: "1.24 kg",
+      OS: "macOS Sonoma",
+    },
   },
   {
     src: "/EProducts/ASUS ROG Strix G16 (RTX 4070, 16GB RAM, 1TB SSD).jpg",
@@ -367,6 +1285,23 @@ const products = [
     OriginalPrice: 149990,
     MRP: 189990,
     category: "Laptops",
+    description:
+      "Dominate the competition with the ASUS ROG Strix G16. Powered by the latest Intel Core i9 processor and NVIDIA GeForce RTX 4070 GPU, it handles AAA games with ease. The Nebula Display offers a fast 240Hz refresh rate for smooth visuals. Intelligent Cooling keeps the system running cool during intense gaming sessions.",
+    features: [
+      "Intel Core i9-13980HX Processor",
+      "NVIDIA GeForce RTX 4070 Laptop GPU",
+      "16-inch QHD+ 240Hz Nebula Display",
+      "ROG Intelligent Cooling with Liquid Metal",
+      "Per-key RGB Keyboard",
+    ],
+    specifications: {
+      Processor: "Intel Core i9-13980HX",
+      GPU: "NVIDIA GeForce RTX 4070 8GB",
+      RAM: "16GB DDR5",
+      Storage: "1TB PCIe 4.0 NVMe M.2 SSD",
+      Display: "16-inch QHD+ 240Hz",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/Dell XPS 15 (Intel Core i7, 16GB RAM, 512GB SSD).avif",
@@ -374,6 +1309,23 @@ const products = [
     OriginalPrice: 149990,
     MRP: 199990,
     category: "Laptops",
+    description:
+      "The Dell XPS 15 is the perfect balance of power and portability. With a stunning 4-sided InfinityEdge display and high-performance Intel processors, it fuels your creativity. The immersive sound and precision craftsmanship make it a premium choice for creators.",
+    features: [
+      "4-sided InfinityEdge Display",
+      "CNC Machined Aluminum Chassis",
+      "Carbon Fiber Palm Rest",
+      "Studio Quality Sound with Waves Nx",
+      "High-performance Thermal Design",
+    ],
+    specifications: {
+      Processor: "Intel Core i7-13700H",
+      RAM: "16GB DDR5",
+      Storage: "512GB PCIe NVMe SSD",
+      Display: "15.6-inch FHD+ (1920 x 1200)",
+      Graphics: "Intel Arc A370M Graphics",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/HP Spectre x360 (Intel Core i7, 16GB RAM, 1TB SSD).jpg",
@@ -381,6 +1333,23 @@ const products = [
     OriginalPrice: 129990,
     MRP: 169990,
     category: "Laptops",
+    description:
+      "The HP Spectre x360 2-in-1 Laptop automatically adjusts to your surroundings for the best on-screen image. The 360-degree hinge allows you to use it as a laptop or a tablet. With an AI-enhanced camera and audio, you always look and sound your best.",
+    features: [
+      "360-degree Hinge Design",
+      "AI-enhanced 5MP Camera",
+      "OLED Touch Display",
+      "HP Rechargeable MPP 2.0 Tilt Pen included",
+      "Bang & Olufsen Audio",
+    ],
+    specifications: {
+      Processor: "Intel Core i7-1355U",
+      RAM: "16GB LPDDR4x",
+      Storage: "1TB PCIe Gen4 NVMe SSD",
+      Display: "13.5-inch 3K2K OLED Touch",
+      Graphics: "Intel Iris Xe Graphics",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/Apple MacBook Pro 16 M3 Max (36GB RAM, 1TB SSD).jpg",
@@ -388,6 +1357,23 @@ const products = [
     OriginalPrice: 299900,
     MRP: 349900,
     category: "Laptops",
+    description:
+      "The MacBook Pro 16 with M3 Max delivers extreme performance for pro workflows. It features the best laptop display and up to 22 hours of battery life. The M3 Max chip brings massive GPU performance for rendering and simulation.",
+    features: [
+      "M3 Max chip for extreme performance",
+      "Liquid Retina XDR display with ProMotion",
+      "Up to 22 hours of battery life",
+      "1080p FaceTime HD camera",
+      "Six-speaker sound system with Spatial Audio",
+    ],
+    specifications: {
+      Processor: "Apple M3 Max (14-core CPU, 30-core GPU)",
+      RAM: "36GB Unified Memory",
+      Storage: "1TB SSD",
+      Display: "16.2-inch Liquid Retina XDR",
+      "Battery Life": "Up to 22 hours",
+      OS: "macOS Sonoma",
+    },
   },
   {
     src: "/EProducts/Lenovo ThinkPad X1 Carbon (Intel Core i7, 16GB RAM, 512GB).jpg",
@@ -395,6 +1381,23 @@ const products = [
     OriginalPrice: 135000,
     MRP: 175000,
     category: "Laptops",
+    description:
+      "The ThinkPad X1 Carbon Gen 11 is an ultralight marvel. It's Intel Evo certified for mobile performance and features legendary durability. The Communications Bar houses a high-res camera and microphones for seamless collaboration.",
+    features: [
+      "Ultralight Carbon Fiber Chassis",
+      "Intel Evo Certified",
+      "ThinkShield Security Features",
+      "Communications Bar with FHD Camera",
+      "Military-grade Durability (MIL-STD 810H)",
+    ],
+    specifications: {
+      Processor: "Intel Core i7-1355U",
+      RAM: "16GB LPDDR5",
+      Storage: "512GB SSD",
+      Display: "14-inch WUXGA (1920 x 1200) IPS",
+      Graphics: "Intel Iris Xe Graphics",
+      OS: "Windows 11 Pro",
+    },
   },
   {
     src: "/EProducts/Acer Predator Helios Neo 16 (RTX 4060, 16GB RAM).jpg",
@@ -402,6 +1405,23 @@ const products = [
     OriginalPrice: 109990,
     MRP: 149990,
     category: "Laptops",
+    description:
+      "Unlock your potential with the Predator Helios Neo 16. Equipped with superior cooling technology and high-performance components, it's built for gaming. The fast refresh rate display ensures smooth visuals in fast-paced games.",
+    features: [
+      "165Hz Refresh Rate Display",
+      "AeroBlade 3D Fan Technology",
+      "4-Zone RGB Keyboard",
+      "NVIDIA DLSS 3 Support",
+      "Liquid Metal Thermal Grease",
+    ],
+    specifications: {
+      Processor: "Intel Core i7-13700HX",
+      GPU: "NVIDIA GeForce RTX 4060 8GB",
+      RAM: "16GB DDR5",
+      Storage: "1TB PCIe Gen4 SSD",
+      Display: "16-inch WUXGA (1920 x 1200) 165Hz",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/MSI Stealth 14 AI (Intel Core Ultra 7, 16GB RAM).jpg",
@@ -409,6 +1429,23 @@ const products = [
     OriginalPrice: 129990,
     MRP: 169990,
     category: "Laptops",
+    description:
+      "The MSI Stealth 14 AI Studio is a combination of sharp appearance and excellent performance. Weighing just 1.7kg, it allows you to work and play anywhere. The AI Engine optimizes performance based on your usage.",
+    features: [
+      "Ultra-light 1.7kg Chassis",
+      "Vapor Chamber Cooler",
+      "Per-Key RGB Gaming Keyboard by SteelSeries",
+      "MSI AI Engine",
+      "Magnesium-Aluminum Alloy Body",
+    ],
+    specifications: {
+      Processor: "Intel Core Ultra 7 155H",
+      GPU: "NVIDIA GeForce RTX 4060 8GB",
+      RAM: "16GB DDR5",
+      Storage: "1TB NVMe SSD",
+      Display: "14-inch FHD+ (1920 x 1200) 144Hz",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/Microsoft Surface Laptop 6 (Intel Core Ultra 7, 16GB).jpg",
@@ -416,6 +1453,23 @@ const products = [
     OriginalPrice: 119990,
     MRP: 159990,
     category: "Laptops",
+    description:
+      "The Surface Laptop 6 for Business is powered by Intel Core Ultra processors. It's designed for productivity with a sleek design, all-day battery life, and a dedicated Copilot key for AI assistance.",
+    features: [
+      "Touchscreen PixelSense Display",
+      "Dedicated Copilot Key",
+      "Anti-reflective Coating",
+      "Thunderbolt 4 Ports",
+      "Studio Mic and Camera",
+    ],
+    specifications: {
+      Processor: "Intel Core Ultra 7 165H",
+      RAM: "16GB LPDDR5x",
+      Storage: "512GB SSD",
+      Display: "13.5-inch PixelSense",
+      Graphics: "Intel Arc Graphics",
+      OS: "Windows 11 Pro",
+    },
   },
   {
     src: "/EProducts/Razer Blade 16 (RTX 4080, 32GB RAM, 1TB SSD).jpg",
@@ -423,6 +1477,23 @@ const products = [
     OriginalPrice: 289990,
     MRP: 349990,
     category: "Laptops",
+    description:
+      "The Razer Blade 16 features the world's first dual-mode mini-LED display, allowing you to switch between UHD+ 120Hz and FHD+ 240Hz. It packs incredible power in a compact, anodized aluminum chassis.",
+    features: [
+      "Dual-mode Mini-LED Display",
+      "Anodized Aluminum Unibody",
+      "Vapor Chamber Cooling",
+      "THX Spatial Audio",
+      "Per-key RGB Chroma Lighting",
+    ],
+    specifications: {
+      Processor: "Intel Core i9-13950HX",
+      GPU: "NVIDIA GeForce RTX 4080 12GB",
+      RAM: "32GB DDR5",
+      Storage: "1TB PCIe 4.0 SSD",
+      Display: "16-inch Dual Mode Mini-LED",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/Samsung Galaxy Book4 Pro 360 (Intel Core Ultra 7).jpg",
@@ -430,6 +1501,23 @@ const products = [
     OriginalPrice: 134990,
     MRP: 174990,
     category: "Laptops",
+    description:
+      "The Galaxy Book4 Pro 360 is a versatile 2-in-1 laptop with a stunning Dynamic AMOLED 2X touchscreen. It comes with an S Pen in the box for creativity. Seamlessly connect with your Galaxy devices for a unified experience.",
+    features: [
+      "360-degree Hinge Design",
+      "S Pen Included",
+      "Dynamic AMOLED 2X Touchscreen",
+      "Galaxy Ecosystem Integration",
+      "Vision Booster Technology",
+    ],
+    specifications: {
+      Processor: "Intel Core Ultra 7 155H",
+      RAM: "16GB LPDDR5X",
+      Storage: "1TB SSD",
+      Display: "16-inch Dynamic AMOLED 2X",
+      Graphics: "Intel Arc Graphics",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/LG Gram 17 (Intel Core i7, 16GB RAM, 1TB SSD).jpg",
@@ -437,6 +1525,23 @@ const products = [
     OriginalPrice: 159990,
     MRP: 199990,
     category: "Laptops",
+    description:
+      "The LG Gram 17 is incredibly lightweight yet durable. It offers a massive 17-inch screen for productivity without the weight. With military-grade durability and long battery life, it's perfect for work on the go.",
+    features: [
+      "Ultra-lightweight (1.35kg)",
+      "17-inch IPS Display",
+      "Military-grade Durability (MIL-STD-810H)",
+      "Long Battery Life (80Wh)",
+      "Anti-glare Panel",
+    ],
+    specifications: {
+      Processor: "Intel Core i7-1360P",
+      RAM: "16GB LPDDR5",
+      Storage: "1TB NVMe SSD",
+      Display: "17-inch WQXGA (2560 x 1600) IPS",
+      Graphics: "Intel Iris Xe Graphics",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/Gigabyte AORUS 16X (RTX 4070, 16GB RAM).jpg",
@@ -444,6 +1549,23 @@ const products = [
     OriginalPrice: 149990,
     MRP: 199990,
     category: "Laptops",
+    description:
+      "The AORUS 16X is equipped with exclusive GIGABYTE AI Gaming technologies. It features a 16-inch display in a 15-inch chassis for maximum immersion. The WINDFORCE Infinity Cooling system keeps it running cool.",
+    features: [
+      "WINDFORCE Infinity Cooling",
+      "AI Nexus Technology",
+      "Dolby Vision & Atmos Support",
+      "165Hz Refresh Rate",
+      "Pantone Validated Display",
+    ],
+    specifications: {
+      Processor: "Intel Core i7-14650HX",
+      GPU: "NVIDIA GeForce RTX 4070 8GB",
+      RAM: "16GB DDR5",
+      Storage: "1TB PCIe Gen4 SSD",
+      Display: "16-inch WQXGA (2560 x 1600) 165Hz",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/Alienware m18 R2 (RTX 4090, 64GB RAM, 2TB SSD).jpg",
@@ -451,6 +1573,23 @@ const products = [
     OriginalPrice: 349990,
     MRP: 429990,
     category: "Laptops",
+    description:
+      "The Alienware m18 R2 is a desktop replacement gaming laptop with uncompromising performance. It features a massive 18-inch display and Cryo-tech cooling with Element 31 thermal interface material.",
+    features: [
+      "18-inch QHD+ Display",
+      "Alienware Cryo-tech Cooling",
+      "Element 31 Thermal Interface Material",
+      "AlienFX Lighting",
+      "CherryMX Mechanical Keyboard Option",
+    ],
+    specifications: {
+      Processor: "Intel Core i9-14900HX",
+      GPU: "NVIDIA GeForce RTX 4090 16GB",
+      RAM: "64GB DDR5",
+      Storage: "2TB PCIe NVMe SSD",
+      Display: "18-inch QHD+ (2560 x 1600) 165Hz",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/Lenovo IdeaPad Pro 5 (AMD Ryzen 7, 16GB RAM, 512GB).jpg",
@@ -458,6 +1597,23 @@ const products = [
     OriginalPrice: 79990,
     MRP: 109990,
     category: "Laptops",
+    description:
+      "The IdeaPad Pro 5 is built for creators and gamers. It features a high-resolution 120Hz display and powerful AMD Ryzen processors. With military-grade toughness and fast charging, it's ready for anything.",
+    features: [
+      "Military-grade Toughness",
+      "Smart Power Technology",
+      "Rapid Charge Express",
+      "High-res 120Hz Display",
+      "Privacy Shutter Camera",
+    ],
+    specifications: {
+      Processor: "AMD Ryzen 7 8845HS",
+      RAM: "16GB LPDDR5x",
+      Storage: "512GB SSD",
+      Display: "14-inch 2.8K (2880 x 1800) 120Hz",
+      Graphics: "AMD Radeon 780M Graphics",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/Apple MacBook Air 15 M3 (16GB RAM, 512GB SSD).webp",
@@ -465,6 +1621,23 @@ const products = [
     OriginalPrice: 134900,
     MRP: 164900,
     category: "Laptops",
+    description:
+      "The 15-inch MacBook Air makes room for more of what you love with a spacious Liquid Retina display. Supercharged by the M3 chip, it delivers blazing-fast performance in an impossibly thin design.",
+    features: [
+      "M3 chip for supercharged performance",
+      "15.3-inch Liquid Retina display",
+      "Fanless silent design",
+      "1080p FaceTime HD camera",
+      "MagSafe 3 charging",
+    ],
+    specifications: {
+      Processor: "Apple M3 (8-core CPU, 10-core GPU)",
+      RAM: "16GB Unified Memory",
+      Storage: "512GB SSD",
+      Display: "15.3-inch Liquid Retina",
+      "Battery Life": "Up to 18 hours",
+      OS: "macOS Sonoma",
+    },
   },
   {
     src: "/EProducts/ASUS TUF Gaming F15 (RTX 4060, 16GB RAM, 512GB SSD).webp",
@@ -472,6 +1645,23 @@ const products = [
     OriginalPrice: 99990,
     MRP: 139990,
     category: "Laptops",
+    description:
+      "The TUF Gaming F15 is geared for serious gaming and real-world durability. It features a high-refresh rate display and efficient cooling. With Thunderbolt 4 support, you can connect to the latest devices.",
+    features: [
+      "Military-grade Durability (MIL-STD-810H)",
+      "144Hz Refresh Rate",
+      "Thunderbolt 4 Support",
+      "Two-way AI Noise Cancelation",
+      "Self-cleaning Cooling 2.0",
+    ],
+    specifications: {
+      Processor: "Intel Core i7-13620H",
+      GPU: "NVIDIA GeForce RTX 4060 8GB",
+      RAM: "16GB DDR5",
+      Storage: "512GB PCIe NVMe SSD",
+      Display: "15.6-inch FHD (1920 x 1080) 144Hz",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/Dell Inspiron 16 Plus (Intel Core i7, 16GB RAM, 1TB).webp",
@@ -479,6 +1669,23 @@ const products = [
     OriginalPrice: 109990,
     MRP: 149990,
     category: "Laptops",
+    description:
+      "The Inspiron 16 Plus brings your ideas to life with a 16-inch display and high-performance processors. It features a 16:10 aspect ratio for more screen space and ComfortView Plus to reduce eye strain.",
+    features: [
+      "16:10 Aspect Ratio Display",
+      "ComfortView Plus Technology",
+      "ExpressCharge Capable",
+      "Spatial Audio with Dolby Atmos",
+      "Thunderbolt 4 Port",
+    ],
+    specifications: {
+      Processor: "Intel Core i7-13700H",
+      GPU: "NVIDIA GeForce RTX 4050 6GB",
+      RAM: "16GB DDR5",
+      Storage: "1TB SSD",
+      Display: "16-inch 2.5K (2560 x 1600)",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/HP Pavilion Plus 14 (Intel Core i7, 16GB RAM, 1TB SSD).webp",
@@ -486,6 +1693,23 @@ const products = [
     OriginalPrice: 89990,
     MRP: 129990,
     category: "Laptops",
+    description:
+      "The HP Pavilion Plus 14 is designed for dynamic lifestyles. It packs powerful performance in a compact, recycled metal design. The OLED display delivers vibrant colors for entertainment and creation.",
+    features: [
+      "OLED Display for True Blacks",
+      "5MP Camera with Auto Frame",
+      "Recycled Metal Design",
+      "HP Fast Charge",
+      "Bang & Olufsen Audio",
+    ],
+    specifications: {
+      Processor: "Intel Core i7-1355U",
+      RAM: "16GB LPDDR5x",
+      Storage: "1TB PCIe NVMe SSD",
+      Display: "14-inch 2.8K OLED (2880 x 1800)",
+      Graphics: "Intel Iris Xe Graphics",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/Acer Swift Go 14 OLED (AMD Ryzen 7, 16GB RAM, 512GB).webp",
@@ -493,6 +1717,23 @@ const products = [
     OriginalPrice: 84990,
     MRP: 119990,
     category: "Laptops",
+    description:
+      "The Swift Go 14 is ready to go with you. It features a brilliant OLED display and AI-powered features in a thin and light body. TwinAir cooling keeps it performing at its best.",
+    features: [
+      "OLED Display with 100% DCI-P3",
+      "TwinAir Cooling System",
+      "1440p QHD Camera",
+      "Acer PurifiedVoice with AI Noise Reduction",
+      "Thin and Light Aluminum Body",
+    ],
+    specifications: {
+      Processor: "AMD Ryzen 7 7840U",
+      RAM: "16GB LPDDR5x",
+      Storage: "512GB PCIe Gen4 SSD",
+      Display: "14-inch 2.8K OLED 90Hz",
+      Graphics: "AMD Radeon Graphics",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/MSI Creator Z16 (Intel Core i9, RTX 3060, 32GB RAM).jpg",
@@ -500,6 +1741,23 @@ const products = [
     OriginalPrice: 179990,
     MRP: 229990,
     category: "Laptops",
+    description:
+      "The Creator Z16 combines aesthetic design with top-tier performance for creative professionals. Its True Pixel display delivers accurate colors, and the CNC-milled chassis exudes premium quality.",
+    features: [
+      "True Pixel Display (100% DCI-P3)",
+      "CNC-milled Aluminum Chassis",
+      "Cooler Boost Trinity+ Technology",
+      "90Whr Long-lasting Battery",
+      "MiniLED Backlit Keyboard",
+    ],
+    specifications: {
+      Processor: "Intel Core i9-11900H",
+      GPU: "NVIDIA GeForce RTX 3060 6GB",
+      RAM: "32GB DDR4",
+      Storage: "1TB NVMe SSD",
+      Display: "16-inch QHD+ (2560 x 1600) 120Hz Touch",
+      OS: "Windows 11 Pro",
+    },
   },
   {
     src: "/EProducts/Lenovo Legion Pro 5 (RTX 4070, 16GB RAM, 1TB SSD).webp",
@@ -507,6 +1765,23 @@ const products = [
     OriginalPrice: 149990,
     MRP: 199990,
     category: "Laptops",
+    description:
+      "The Legion Pro 5 is an esports-centric gaming laptop. It features the Lenovo AI Engine+ for optimized performance and Legion Coldfront 5.0 cooling to keep frame rates high.",
+    features: [
+      "Legion Coldfront 5.0 Cooling",
+      "Lenovo AI Engine+",
+      "4-zone RGB Backlit Keyboard",
+      "Nahimic Audio for Gamers",
+      "High Refresh Rate Display",
+    ],
+    specifications: {
+      Processor: "AMD Ryzen 7 7745HX",
+      GPU: "NVIDIA GeForce RTX 4070 8GB",
+      RAM: "16GB DDR5",
+      Storage: "1TB SSD",
+      Display: "16-inch WQXGA (2560 x 1600) 240Hz",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/ASUS Zenbook Pro 14 OLED (Intel Core i7, 16GB RAM).jpg",
@@ -514,6 +1789,23 @@ const products = [
     OriginalPrice: 119990,
     MRP: 159990,
     category: "Laptops",
+    description:
+      "The Zenbook Pro 14 OLED packs best-in-class performance in a compact chassis for creators on the move. It features the ASUS DialPad for intuitive control in creative apps.",
+    features: [
+      "ASUS DialPad Virtual Rotary Control",
+      "120Hz OLED HDR Display",
+      "Harman Kardon Certified Audio",
+      "Military-grade Durability",
+      "Full I/O Ports including SD Express 7.0",
+    ],
+    specifications: {
+      Processor: "Intel Core i9-13900H",
+      GPU: "NVIDIA GeForce RTX 4060 8GB",
+      RAM: "16GB DDR5",
+      Storage: "1TB SSD",
+      Display: "14.5-inch 2.8K 120Hz OLED",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/Dell Alienware x16 R1 (RTX 4090, 32GB RAM).jpg",
@@ -521,6 +1813,23 @@ const products = [
     OriginalPrice: 329990,
     MRP: 399990,
     category: "Laptops",
+    description:
+      "The Alienware x16 is the world's most premium 16-inch gaming laptop. It features a sleek metal chassis, advanced Cryo-tech cooling, and mesmerizing micro-LED stadium lighting.",
+    features: [
+      "Micro-LED Stadium Lighting",
+      "Ultra-low Profile CherryMX Keyboard",
+      "Alienware Cryo-tech Cooling",
+      "Dolby Atmos Audio",
+      "Legend 3 Industrial Design",
+    ],
+    specifications: {
+      Processor: "Intel Core i9-13900HK",
+      GPU: "NVIDIA GeForce RTX 4090 16GB",
+      RAM: "32GB LPDDR5",
+      Storage: "1TB PCIe NVMe SSD",
+      Display: "16-inch QHD+ (2560 x 1600) 240Hz",
+      OS: "Windows 11 Home",
+    },
   },
   {
     src: "/EProducts/Apple MacBook Pro 14 M3 Pro (18GB RAM, 512GB SSD).jpg",
@@ -528,6 +1837,23 @@ const products = [
     OriginalPrice: 199900,
     MRP: 249900,
     category: "Laptops",
+    description:
+      "The 14-inch MacBook Pro with M3 Pro takes power and efficiency further. It delivers exceptional performance for demanding tasks and features a stunning Liquid Retina XDR display.",
+    features: [
+      "M3 Pro chip for demanding workflows",
+      "Liquid Retina XDR display",
+      "Up to 18 hours of battery life",
+      "MagSafe 3 charging",
+      "Three Thunderbolt 4 ports",
+    ],
+    specifications: {
+      Processor: "Apple M3 Pro (11-core CPU, 14-core GPU)",
+      RAM: "18GB Unified Memory",
+      Storage: "512GB SSD",
+      Display: "14.2-inch Liquid Retina XDR",
+      "Battery Life": "Up to 18 hours",
+      OS: "macOS Sonoma",
+    },
   },
 
   // CATEGORY: AUDIO
@@ -537,6 +1863,23 @@ const products = [
     OriginalPrice: 26990,
     MRP: 34990,
     category: "Audio",
+    description:
+      "Experience industry-leading noise cancellation with the Sony WH-1000XM5 headphones. Featuring two processors controlling eight microphones, they deliver unprecedented noise cancellation and exceptional call quality. The newly developed driver unit provides superior sound quality, while the lightweight design and soft fit leather ensure comfort for long listening sessions. Enjoy up to 30 hours of battery life and quick charging.",
+    features: [
+      "Industry-leading noise cancellation",
+      "Crystal clear hands-free calling",
+      "Up to 30 hours of battery life",
+      "Multipoint connection for two devices",
+      "Intuitive touch control settings",
+    ],
+    specifications: {
+      Type: "Over-Ear Wireless Headphones",
+      "Driver Unit": "30mm",
+      "Battery Life": "Max. 30 hours (NC ON)",
+      "Charging Time": "Approx. 3.5 hours",
+      Bluetooth: "Version 5.2",
+      Weight: "250g",
+    },
   },
   {
     src: "/EProducts/Apple AirPods Pro 2nd Gen with USB-C.jpg",
@@ -544,6 +1887,22 @@ const products = [
     OriginalPrice: 24900,
     MRP: 28900,
     category: "Audio",
+    description:
+      "AirPods Pro feature up to 2x more Active Noise Cancellation, plus Adaptive Transparency, and Personalized Spatial Audio with dynamic head tracking for immersive sound. Now with multiple ear tips (XS, S, M, L) and up to 6 hours of listening time.",
+    features: [
+      "Active Noise Cancellation for immersive sound",
+      "Adaptive Transparency to hear the world around you",
+      "Personalized Spatial Audio with dynamic head tracking",
+      "MagSafe Charging Case with Speaker and Lanyard Loop",
+      "Touch Control for easy operation",
+    ],
+    specifications: {
+      Chip: "H2 Headphone Chip",
+      "Battery Life": "Up to 6 hours (30 hours with case)",
+      "Water Resistance": "IPX4 (Earbuds and Case)",
+      Connectivity: "Bluetooth 5.3",
+      Charging: "MagSafe, USB-C, Qi wireless",
+    },
   },
   {
     src: "/EProducts/Bose QuietComfort 45 Noise Cancelling Headphones.webp",
@@ -551,6 +1910,22 @@ const products = [
     OriginalPrice: 26900,
     MRP: 32900,
     category: "Audio",
+    description:
+      "The Bose QuietComfort 45 headphones offer iconic quiet, comfort, and sound. With world-class noise cancelling and high-fidelity audio, they are perfect for travel or work. The lightweight design ensures all-day comfort.",
+    features: [
+      "World-class Noise Cancelling",
+      "High-fidelity Audio",
+      "Quiet and Aware Modes",
+      "Lightweight & Comfortable",
+      "24-hour Battery Life",
+    ],
+    specifications: {
+      Type: "Over-Ear Wireless Headphones",
+      "Battery Life": "Up to 24 hours",
+      "Charging Time": "2.5 hours",
+      Bluetooth: "Version 5.1",
+      Weight: "240g",
+    },
   },
   {
     src: "/EProducts/JBL Flip 6 Portable Bluetooth Speaker.jpg",
@@ -558,6 +1933,22 @@ const products = [
     OriginalPrice: 10999,
     MRP: 14999,
     category: "Audio",
+    description:
+      "JBL Flip 6 delivers powerful JBL Original Pro Sound with exceptional clarity. It's IP67 waterproof and dustproof, so you can bring your speaker anywhere. With up to 12 hours of playtime, the party doesn't stop.",
+    features: [
+      "Louder, more powerful sound",
+      "IP67 waterproof and dustproof",
+      "12 Hours of Playtime",
+      "Bold design",
+      "PartyBoost compatible",
+    ],
+    specifications: {
+      "Output Power": "20W RMS (Woofer), 10W RMS (Tweeter)",
+      "Battery Life": "Up to 12 hours",
+      "Charging Time": "2.5 hours",
+      Bluetooth: "Version 5.1",
+      Weight: "550g",
+    },
   },
   {
     src: "/EProducts/Soundcore Headphone.png",
@@ -565,6 +1956,22 @@ const products = [
     OriginalPrice: 8999,
     MRP: 14999,
     category: "Audio",
+    description:
+      "The Anker Soundcore Space Q45 features an upgraded noise cancelling system that reduces noise by up to 98%. With 50 hours of playtime in ANC mode, it's perfect for long trips. The double-layer diaphragm drivers produce clear sound with strong bass.",
+    features: [
+      "Adaptive Noise Cancelling",
+      "50-Hour Playtime (ANC On)",
+      "Hi-Res Audio Wireless",
+      "AI-Enhanced Calls",
+      "Customizable via App",
+    ],
+    specifications: {
+      Type: "Over-Ear Wireless Headphones",
+      "Battery Life": "Up to 65 hours (ANC Off)",
+      "Charging Time": "2 hours",
+      Bluetooth: "Version 5.3",
+      Weight: "295g",
+    },
   },
   {
     src: "/EProducts/Skullcandy Crusher Evo Wireless Headphones.jpg",
@@ -572,6 +1979,22 @@ const products = [
     OriginalPrice: 15999,
     MRP: 22999,
     category: "Audio",
+    description:
+      "Get ready to feel the bass with Skullcandy Crusher Evo. The adjustable Sensory Bass lets you control your audio experience. Personal Sound by Audiodo tunes the audio to your unique hearing profile.",
+    features: [
+      "Adjustable Sensory Bass",
+      "Personal Sound by Audiodo",
+      "40 Hours Battery Life",
+      "Rapid Charge",
+      "Built-in Tile Finding Technology",
+    ],
+    specifications: {
+      Type: "Over-Ear Wireless Headphones",
+      "Battery Life": "Up to 40 hours",
+      "Charging Time": "Rapid Charge (10 min = 4 hours)",
+      Bluetooth: "Version 5.0",
+      Weight: "312g",
+    },
   },
   {
     src: "/EProducts/boAt Nirvana Ion TWS Earbuds with 120H Playback.jpg",
@@ -579,6 +2002,22 @@ const products = [
     OriginalPrice: 1999,
     MRP: 4999,
     category: "Audio",
+    description:
+      "boAt Nirvana Ion offers a massive 120 hours of total playback time. With Crystal Bionic Sound powered by HiFi DSP, enjoy immersive audio. The ergonomic design ensures a secure fit for all-day wear.",
+    features: [
+      "120 Hours Total Playback",
+      "Crystal Bionic Sound",
+      "Dual EQ Modes",
+      "Quad Mics with ENx Technology",
+      "In-Ear Detection",
+    ],
+    specifications: {
+      Type: "True Wireless Earbuds",
+      "Battery Life": "24 hours per charge",
+      "Charging Time": "2.5 hours",
+      Bluetooth: "Version 5.2",
+      "Water Resistance": "IPX4",
+    },
   },
   {
     src: "/EProducts/Noise Buds VS104 Pro ANC TWS Earbuds.jpg",
@@ -586,6 +2025,22 @@ const products = [
     OriginalPrice: 1499,
     MRP: 3999,
     category: "Audio",
+    description:
+      "Noise Buds VS104 Pro brings Active Noise Cancellation to an affordable price point. Enjoy up to 40 hours of playtime and fast charging. The 13mm drivers deliver powerful sound with deep bass.",
+    features: [
+      "Active Noise Cancellation (up to 25dB)",
+      "Up to 40 Hours Playtime",
+      "Instacharge (10 min = 150 min)",
+      "Quad Mic with ENC",
+      "Hyper Sync Technology",
+    ],
+    specifications: {
+      Type: "True Wireless Earbuds",
+      "Driver Size": "13mm",
+      "Battery Life": "Up to 40 hours",
+      Bluetooth: "Version 5.3",
+      "Water Resistance": "IPX5",
+    },
   },
   {
     src: "/EProducts/Samsung Galaxy Buds 3 Pro Wireless Earbuds.jpg",
@@ -593,6 +2048,22 @@ const products = [
     OriginalPrice: 14999,
     MRP: 19999,
     category: "Audio",
+    description:
+      "Galaxy Buds 3 Pro delivers studio-quality sound with 24-bit Hi-Fi audio. The intelligent ANC automatically switches between noise cancelling and ambient mode. The ergonomic design provides a comfortable fit.",
+    features: [
+      "24-bit Hi-Fi Audio",
+      "Intelligent ANC",
+      "360 Audio with Head Tracking",
+      "Clear Call Quality",
+      "Seamless Connectivity",
+    ],
+    specifications: {
+      Type: "True Wireless Earbuds",
+      "Battery Life": "Up to 5 hours (ANC On)",
+      "Charging Case": "Up to 18 hours",
+      Bluetooth: "Version 5.3",
+      "Water Resistance": "IPX7",
+    },
   },
   {
     src: "/EProducts/JBL Charge 5 Waterproof Portable Speaker.jpg",
@@ -600,6 +2071,22 @@ const products = [
     OriginalPrice: 12999,
     MRP: 17999,
     category: "Audio",
+    description:
+      "Take the party with you no matter the weather. The JBL Charge 5 delivers bold JBL Original Pro Sound. With its built-in powerbank, you can charge your devices without taking a break.",
+    features: [
+      "JBL Original Pro Sound",
+      "20 Hours of Playtime",
+      "IP67 Waterproof and Dustproof",
+      "Built-in Powerbank",
+      "Wireless Bluetooth Streaming",
+    ],
+    specifications: {
+      "Output Power": "30W RMS (Woofer), 10W RMS (Tweeter)",
+      "Battery Life": "Up to 20 hours",
+      "Charging Time": "4 hours",
+      Bluetooth: "Version 5.1",
+      Weight: "960g",
+    },
   },
   {
     src: "/EProducts/Marshall Stanmore III Wireless Bluetooth Speaker.jpg",
@@ -607,6 +2094,23 @@ const products = [
     OriginalPrice: 34999,
     MRP: 45999,
     category: "Audio",
+    description:
+      "The Stanmore III has an even wider soundstage than its predecessor, delivering expansive Marshall sound. It has been re-engineered for a more immersive experience and works as a powerful home speaker system.",
+    features: [
+      "Room-filling Sound",
+      "Iconic Marshall Design",
+      "Dynamic Loudness",
+      "Next-generation Bluetooth 5.2",
+      "Sustainable Materials",
+    ],
+    specifications: {
+      "Frequency Range": "45–20,000 Hz",
+      "Stereo/Mono": "Stereo",
+      "Maximum Sound Pressure Level": "97 dB @ 1 m",
+      "Power Amplifiers":
+        "One 50 Watt Class D (Woofer), Two 15 Watt Class D (Tweeters)",
+      Weight: "4.25 kg",
+    },
   },
   {
     src: "/EProducts/Beats Studio Pro Wireless Headphones.webp",
@@ -614,6 +2118,22 @@ const products = [
     OriginalPrice: 34900,
     MRP: 44900,
     category: "Audio",
+    description:
+      "Beats Studio Pro delivers an immersive listening experience with a custom acoustic platform. Active Noise Cancelling and Transparency mode let you control your sound. Enjoy up to 40 hours of battery life.",
+    features: [
+      "Custom Acoustic Platform",
+      "Active Noise Cancelling",
+      "Transparency Mode",
+      "Personalized Spatial Audio",
+      "Up to 40 Hours Battery Life",
+    ],
+    specifications: {
+      Type: "Over-Ear Wireless Headphones",
+      "Battery Life": "Up to 40 hours",
+      "Charging Time": "Fast Fuel (10 min = 4 hours)",
+      Bluetooth: "Class 1 Bluetooth",
+      Weight: "260g",
+    },
   },
   {
     src: "/EProducts/Jabra Elite 8 Active ANC True Wireless Earbuds.webp",
@@ -621,6 +2141,22 @@ const products = [
     OriginalPrice: 14999,
     MRP: 19999,
     category: "Audio",
+    description:
+      "Tested to be the world's toughest earbuds, Jabra Elite 8 Active are dustproof, waterproof, and sweatproof. Adaptive Hybrid ANC filters out background noise, while Dolby Audio delivers lifelike sound.",
+    features: [
+      "Military-grade Durability",
+      "Adaptive Hybrid ANC",
+      "Dolby Audio",
+      "ShakeGrip Technology",
+      "Up to 32 Hours Battery Life",
+    ],
+    specifications: {
+      Type: "True Wireless Earbuds",
+      "Battery Life": "Up to 8 hours (earbuds)",
+      "Water Resistance": "IP68 (earbuds), IP54 (case)",
+      Bluetooth: "Version 5.3",
+      Microphones: "6",
+    },
   },
   {
     src: "/EProducts/Sony WF-1000XM5 True Wireless Earbuds.jpg",
@@ -628,6 +2164,22 @@ const products = [
     OriginalPrice: 19990,
     MRP: 27990,
     category: "Audio",
+    description:
+      "The WF-1000XM5 features cutting-edge technology to deliver premium sound quality and the best noise cancelling performance on the market. Real-time audio processors and high-performance mics power the specially designed driver unit.",
+    features: [
+      "Best Noise Cancelling",
+      "Premium Sound Quality",
+      "Sony's Best Call Quality",
+      "Small and Light Design",
+      "Multipoint Connection",
+    ],
+    specifications: {
+      Type: "True Wireless Earbuds",
+      "Battery Life": "Up to 8 hours (NC On)",
+      "Charging Case": "Up to 16 hours",
+      Bluetooth: "Version 5.3",
+      "Water Resistance": "IPX4",
+    },
   },
   {
     src: "/EProducts/Bose SoundLink Revolve+ II Portable Speaker.jpg",
@@ -635,6 +2187,22 @@ const products = [
     OriginalPrice: 22900,
     MRP: 29900,
     category: "Audio",
+    description:
+      "This true 360° speaker was engineered to spread deep, jaw-dropping sound in every direction. It features a flexible handle so it's easy to take the music wherever you go.",
+    features: [
+      "True 360° Sound",
+      "Durable and Water-resistant (IP55)",
+      "Up to 17 Hours Battery Life",
+      "Flexible Fabric Handle",
+      "Bose Connect App",
+    ],
+    specifications: {
+      "Battery Life": "Up to 17 hours",
+      "Charging Time": "4 hours",
+      "Water Resistance": "IP55",
+      Bluetooth: "Range up to 9 m",
+      Weight: "0.9 kg",
+    },
   },
   {
     src: "/EProducts/Marshall Emberton II Portable Speaker.jpg",
@@ -642,6 +2210,22 @@ const products = [
     OriginalPrice: 13999,
     MRP: 18999,
     category: "Audio",
+    description:
+      "Emberton II is a compact portable speaker with the loud and vibrant sound only Marshall can deliver. Two 2'' full range drivers and two passive radiators bring you the heavy Marshall sound you know and love.",
+    features: [
+      "Superior Signature Sound",
+      "30+ Hours of Portable Playtime",
+      "Roadworthy IP67 Design",
+      "Pair, Play and Bring the Loud",
+      "Multi-Directional Control Knob",
+    ],
+    specifications: {
+      "Frequency Range": "60-20,000 Hz",
+      "Stereo/Mono": "Stereo",
+      "Maximum Sound Pressure Level": "87 dB SPL @ 1 m",
+      "Power Amplifiers": "Two 10 Watt Class D",
+      Weight: "0.7 kg",
+    },
   },
   {
     src: "/EProducts/OnePlus Buds Pro 3 ANC TWS Earbuds.jpg",
@@ -649,6 +2233,22 @@ const products = [
     OriginalPrice: 9999,
     MRP: 14999,
     category: "Audio",
+    description:
+      "OnePlus Buds Pro 3 delivers a premium listening experience with dual drivers co-created with Dynaudio. Smart Adaptive Noise Cancellation tunes the noise reduction to your environment.",
+    features: [
+      "Dual Drivers Co-created with Dynaudio",
+      "Smart Adaptive Noise Cancellation (up to 49dB)",
+      "Hi-Res Audio with LHDC 5.0",
+      "Google Fast Pair",
+      "Dual Connection",
+    ],
+    specifications: {
+      Type: "True Wireless Earbuds",
+      "Battery Life": "Up to 9 hours (ANC Off)",
+      "Charging Case": "Up to 39 hours",
+      Bluetooth: "Version 5.3",
+      "Water Resistance": "IP55",
+    },
   },
   {
     src: "/EProducts/Realme Buds Air 6 Pro TWS Earbuds.jpg",
@@ -656,6 +2256,22 @@ const products = [
     OriginalPrice: 4999,
     MRP: 7999,
     category: "Audio",
+    description:
+      "Realme Buds Air 6 Pro features a coaxial dual-driver system for rich bass and clear treble. With 50dB Active Noise Cancellation, you can immerse yourself in music.",
+    features: [
+      "Coaxial Dual-Driver System",
+      "50dB Active Noise Cancellation",
+      "LDAC HD Audio Codec",
+      "40 Hours Total Playback",
+      "6-Mic Call Noise Cancellation",
+    ],
+    specifications: {
+      Type: "True Wireless Earbuds",
+      "Driver Size": "11mm + 6mm",
+      "Battery Life": "Up to 10 hours (earbuds)",
+      Bluetooth: "Version 5.3",
+      "Water Resistance": "IPX5",
+    },
   },
   {
     src: "/EProducts/Nothing Ear (2) True Wireless Earbuds.jpg",
@@ -663,6 +2279,22 @@ const products = [
     OriginalPrice: 9999,
     MRP: 14999,
     category: "Audio",
+    description:
+      "Nothing Ear (2) celebrates the beauty of technology with its transparent design. It delivers authentic sound with a custom driver and Hi-Res Audio certification.",
+    features: [
+      "Transparent Design",
+      "Hi-Res Audio Certified",
+      "Personalized Active Noise Cancellation",
+      "Dual Connection",
+      "Clear Voice Technology",
+    ],
+    specifications: {
+      Type: "True Wireless Earbuds",
+      "Driver Size": "11.6mm",
+      "Battery Life": "Up to 36 hours with case",
+      Bluetooth: "Version 5.3",
+      "Water Resistance": "IP54 (buds) / IP55 (case)",
+    },
   },
   {
     src: "/EProducts/boAt Airdopes 441 Pro TWS Earbuds.jpg",
@@ -670,6 +2302,22 @@ const products = [
     OriginalPrice: 2499,
     MRP: 4499,
     category: "Audio",
+    description:
+      "boAt Airdopes 441 Pro is designed for the adventurous. With IPX7 water resistance and a secure fit, they are perfect for workouts. The massive battery case ensures you never run out of charge.",
+    features: [
+      "Up to 150 Hours Total Playback",
+      "IPX7 Water & Sweat Resistance",
+      "IWP Technology (Insta Wake N' Pair)",
+      "Secure Wingtips",
+      "Type-C Charging",
+    ],
+    specifications: {
+      Type: "True Wireless Earbuds",
+      "Driver Size": "6mm",
+      "Battery Life": "5 hours per charge",
+      Bluetooth: "Version 5.0",
+      "Water Resistance": "IPX7",
+    },
   },
   {
     src: "/EProducts/Sennheiser HD 450BT Active Noise Cancelling.jpg",
@@ -677,6 +2325,22 @@ const products = [
     OriginalPrice: 11990,
     MRP: 17990,
     category: "Audio",
+    description:
+      "The HD 450BT delivers great wireless sound with deep dynamic bass. Active noise cancellation ensures distraction-free listening. The robust design and long battery life make it a great travel companion.",
+    features: [
+      "Active Noise Cancellation",
+      "30-Hour Battery Life",
+      "High-quality Wireless Codec Support (AAC, AptX)",
+      "Intuitive Controls",
+      "Sennheiser Smart Control App",
+    ],
+    specifications: {
+      Type: "Over-Ear Wireless Headphones",
+      "Frequency Response": "18 Hz to 22,000 Hz",
+      "Battery Life": "30 hours",
+      "Charging Time": "2 hours",
+      Bluetooth: "Version 5.0",
+    },
   },
   {
     src: "/EProducts/LG XBOOM Go PL7 Portable Bluetooth Speaker.jpg",
@@ -684,6 +2348,22 @@ const products = [
     OriginalPrice: 9990,
     MRP: 14990,
     category: "Audio",
+    description:
+      "LG XBOOM Go PL7 with Meridian technology gives you premium quality sound. Dual Action Bass lets you feel the beat. The sleek, rounded design with a rubberized finish is easy to hold.",
+    features: [
+      "Meridian Audio Technology",
+      "Dual Action Bass",
+      "24-Hour Battery Life",
+      "Multi-Color Lighting",
+      "IPX5 Water Resistant",
+    ],
+    specifications: {
+      "Output Power": "30W",
+      "Battery Life": "Up to 24 hours",
+      "Charging Time": "5 hours",
+      "Water Resistance": "IPX5",
+      Weight: "1.46 kg",
+    },
   },
   {
     src: "/EProducts/Bowers & Wilkins Pi7 S2 True Wireless Earbuds.jpg",
@@ -691,6 +2371,22 @@ const products = [
     OriginalPrice: 32900,
     MRP: 42900,
     category: "Audio",
+    description:
+      "Pi7 S2 redefines true wireless performance. It features a 24-bit connection and 2-way driver design for high-resolution sound. The smart charging case also functions as an audio retransmission system.",
+    features: [
+      "True 24-bit Audio Connection",
+      "2-way Driver Design",
+      "Adaptive Active Noise Cancellation",
+      "Audio Retransmission Case",
+      "Wireless Charging",
+    ],
+    specifications: {
+      Type: "True Wireless Earbuds",
+      "Battery Life": "Up to 5 hours (earbuds)",
+      "Charging Case": "Up to 16 hours",
+      Bluetooth: "Version 5.0 with AptX",
+      "Water Resistance": "IP54",
+    },
   },
   {
     src: "/EProducts/Apple AirPods 3rd Generation with MagSafe Case.jpg",
@@ -698,6 +2394,22 @@ const products = [
     OriginalPrice: 18900,
     MRP: 22900,
     category: "Audio",
+    description:
+      "AirPods (3rd generation) feature Personalized Spatial Audio that places sound all around you. They have a contoured design, force sensor control, and are sweat and water resistant.",
+    features: [
+      "Personalized Spatial Audio",
+      "Adaptive EQ",
+      "Contoured Design",
+      "Force Sensor Control",
+      "Sweat and Water Resistant",
+    ],
+    specifications: {
+      Chip: "H1 Headphone Chip",
+      "Battery Life": "Up to 6 hours",
+      "Charging Case": "Up to 30 hours",
+      "Water Resistance": "IPX4",
+      Connectivity: "Bluetooth 5.0",
+    },
   },
   {
     src: "/EProducts/boAt Rockerz 550 Over-Ear Wireless Headphones.jpg",
@@ -705,6 +2417,22 @@ const products = [
     OriginalPrice: 1999,
     MRP: 4999,
     category: "Audio",
+    description:
+      "boAt Rockerz 550 offers a powerful audio experience with 50mm dynamic drivers. The plush ear cushions provide comfort for extended listening sessions. Enjoy up to 20 hours of playback time.",
+    features: [
+      "50mm Dynamic Drivers",
+      "20 Hours Playback",
+      "Physical Noise Isolation",
+      "Plush Ear Cushions",
+      "Dual Mode (Bluetooth & AUX)",
+    ],
+    specifications: {
+      Type: "Over-Ear Wireless Headphones",
+      "Battery Life": "Up to 20 hours",
+      "Charging Time": "2.5 hours",
+      Bluetooth: "Version 5.0",
+      Weight: "245g",
+    },
   },
 
   // CATEGORY: WEARABLES
@@ -714,6 +2442,23 @@ const products = [
     OriginalPrice: 41900,
     MRP: 48900,
     category: "Wearables",
+    description:
+      "The Apple Watch Series 9 is smarter, brighter, and mightier. Powered by the S9 SiP, it enables a magical new way to use your watch without touching the screen with the Double Tap gesture. The display is twice as bright as Series 8, making it easier to read in direct sunlight. Advanced health sensors provide deep insights into your mental and physical well-being.",
+    features: [
+      "S9 SiP for powerful performance",
+      "Double Tap gesture control",
+      "Brighter Always-On Retina display (up to 2000 nits)",
+      "Advanced health monitoring (Blood Oxygen, ECG)",
+      "Crash Detection and Fall Detection",
+    ],
+    specifications: {
+      "Case Size": "45mm",
+      Display: "Always-On Retina LTPO OLED",
+      Processor: "S9 SiP",
+      "Water Resistance": "WR50 (50 meters)",
+      "Battery Life": "Up to 18 hours",
+      Connectivity: "GPS",
+    },
   },
   {
     src: "/EProducts/Samsung Galaxy Watch 6 Classic 47mm Smartwatch.jpg",
@@ -721,6 +2466,22 @@ const products = [
     OriginalPrice: 27999,
     MRP: 37999,
     category: "Wearables",
+    description:
+      "The Galaxy Watch 6 Classic brings back the rotating bezel for intuitive navigation. Track your sleep, health, and fitness with advanced sensors. The larger display allows for easier viewing, and the premium stainless steel design fits any occasion.",
+    features: [
+      "Rotating Bezel for easy navigation",
+      "Advanced Sleep Coaching and Tracking",
+      "Personalized Heart Rate Zone",
+      "Sapphire Crystal Glass for durability",
+      "Wear OS Powered by Samsung",
+    ],
+    specifications: {
+      Display: "1.5-inch Super AMOLED",
+      Processor: "Exynos W930",
+      Battery: "425mAh",
+      "Water Resistance": "5ATM + IP68",
+      Sensors: "BioActive Sensor, Temperature Sensor",
+    },
   },
   {
     src: "/EProducts/Apple Watch Ultra 2 GPS + Cellular 49mm.jpg",
@@ -728,6 +2489,22 @@ const products = [
     OriginalPrice: 89900,
     MRP: 99900,
     category: "Wearables",
+    description:
+      "The most rugged and capable Apple Watch pushes the limits again. Featuring the S9 SiP, a magical new way to use your watch without touching the screen, and the brightest Apple display ever. Carbon neutral combinations available.",
+    features: [
+      "49mm Titanium Case",
+      "Brightest Always-On Retina Display (3000 nits)",
+      "S9 SiP with Double Tap Gesture",
+      "Precision Dual-Frequency GPS",
+      "Up to 36 hours battery life",
+    ],
+    specifications: {
+      "Case Material": "Titanium",
+      Display: "Always-On Retina LTPO OLED",
+      "Water Resistance": "100m",
+      "Battery Life": "Up to 36 hours",
+      Connectivity: "GPS + Cellular",
+    },
   },
   {
     src: "/EProducts/Samsung Galaxy Watch 5 Pro LTE Smartwatch.jpg",
@@ -735,6 +2512,22 @@ const products = [
     OriginalPrice: 24999,
     MRP: 34999,
     category: "Wearables",
+    description:
+      "Designed for adventure with Sapphire Crystal glass and Titanium body. Route Workout feature lets you import GPX format workout routes from your smartphone to your watch, syncing your route list.",
+    features: [
+      "Sapphire Crystal & Titanium Body",
+      "Route Workout (GPX Import)",
+      "3-in-1 BioActive Sensor",
+      "Track Back Feature",
+      "Long-lasting Battery for Adventures",
+    ],
+    specifications: {
+      Display: "1.4-inch Super AMOLED",
+      "Body Material": "Titanium",
+      Battery: "590mAh",
+      OS: "Wear OS Powered by Samsung",
+      Connectivity: "LTE + Bluetooth + Wi-Fi",
+    },
   },
   {
     src: "/EProducts/Google Pixel Watch 2 WiFi Smartwatch.jpg",
@@ -742,6 +2535,22 @@ const products = [
     OriginalPrice: 27999,
     MRP: 37999,
     category: "Wearables",
+    description:
+      "The Google Pixel Watch 2 comes with the best of Fitbit built-in. It has advanced heart rate tracking and safety features like Safety Check. The lighter, 100% recycled aluminum housing makes it comfortable to wear all day and night.",
+    features: [
+      "Fitbit Heart Rate Tracking",
+      "Safety Check & Emergency Sharing",
+      "24-hour Battery with Always-on Display",
+      "Stress Management Score",
+      "Skin Temperature Sensor",
+    ],
+    specifications: {
+      Processor: "Qualcomm SW5100",
+      RAM: "2GB",
+      Storage: "32GB",
+      OS: "Wear OS 4.0",
+      "Water Resistance": "5 ATM",
+    },
   },
   {
     src: "/EProducts/Apple Watch SE 2nd Gen GPS 44mm.jpg",
@@ -749,6 +2558,22 @@ const products = [
     OriginalPrice: 24900,
     MRP: 29900,
     category: "Wearables",
+    description:
+      "Essential features to help you stay connected, active, healthy, and safe. Perfect for kids and older adults with Family Setup. It features the same S8 SiP dual-core processor as the Apple Watch Series 8.",
+    features: [
+      "Retina Display (up to 1000 nits)",
+      "S8 SiP Dual-core Processor",
+      "Crash Detection & Fall Detection",
+      "High and Low Heart Rate Notifications",
+      "Sleep Tracking",
+    ],
+    specifications: {
+      "Case Material": "Aluminum",
+      "Water Resistance": "50m",
+      Processor: "S8 SiP",
+      Connectivity: "GPS",
+      "Battery Life": "Up to 18 hours",
+    },
   },
   {
     src: "/EProducts/Fitbit Charge 6 Advanced Fitness Tracker.jpg",
@@ -756,6 +2581,22 @@ const products = [
     OriginalPrice: 7999,
     MRP: 11999,
     category: "Wearables",
+    description:
+      "Give your fitness a boost with Charge 6, the only tracker with Google essentials like Maps and Wallet. Track your heart rate in real-time on connected exercise equipment.",
+    features: [
+      "Heart Rate on Equipment",
+      "Google Maps & Wallet Integration",
+      "40+ Exercise Modes",
+      "ECG & EDA Sensors",
+      "7-day Battery Life",
+    ],
+    specifications: {
+      Display: "Color Touchscreen",
+      "Water Resistance": "50m",
+      Battery: "Up to 7 days",
+      Sensors: "Optical Heart Rate, SpO2",
+      Connectivity: "Bluetooth, GPS (Connected)",
+    },
   },
   {
     src: "/EProducts/Fitbit Versa 3 Smartwatch.jpg",
@@ -763,6 +2604,22 @@ const products = [
     OriginalPrice: 14999,
     MRP: 19999,
     category: "Wearables",
+    description:
+      "Meet Fitbit Versa 3, the smartwatch with everything you need to just go. Track your pace and distance with built-in GPS and leave your phone behind. You can also get call, text and app notifications.",
+    features: [
+      "Built-in GPS",
+      "Active Zone Minutes",
+      "6+ Day Battery Life",
+      "Fast Charging",
+      "Voice Assistant (Google/Alexa)",
+    ],
+    specifications: {
+      Display: "AMOLED",
+      Battery: "6+ days",
+      Connectivity: "GPS + GLONASS",
+      "Water Resistance": "50m",
+      "Music Storage": "Deezer & Spotify Support",
+    },
   },
   {
     src: "/EProducts/Garmin Fenix 7X Pro Sapphire Solar Smartwatch.jpg",
@@ -770,6 +2627,22 @@ const products = [
     OriginalPrice: 89990,
     MRP: 119990,
     category: "Wearables",
+    description:
+      "The ultimate multisport GPS smartwatch with a large 1.4” display, built-in LED flashlight, and solar charging lens. Gain performance insights with hill score and endurance score.",
+    features: [
+      "Solar Charging Lens",
+      "Built-in LED Flashlight",
+      "Hill Score & Endurance Score",
+      "Advanced Training Metrics",
+      "Multi-Band GPS",
+    ],
+    specifications: {
+      Lens: "Power Sapphire",
+      Bezel: "Titanium",
+      Battery: "Up to 37 days (with solar)",
+      "Water Rating": "10 ATM",
+      Display: "1.4-inch MIP",
+    },
   },
   {
     src: "/EProducts/Garmin Venu 3S AMOLED Fitness Watch.jpg",
@@ -777,6 +2650,22 @@ const products = [
     OriginalPrice: 34990,
     MRP: 44990,
     category: "Wearables",
+    description:
+      "Purpose-built with advanced health and fitness features and the ability to make calls and send texts. It acts as an on-wrist coach to help you support your every goal.",
+    features: [
+      "AMOLED Display",
+      "Wheelchair Mode",
+      "Sleep Coach",
+      "Built-in Speaker & Mic",
+      "30+ Sports Apps",
+    ],
+    specifications: {
+      Display: "1.2-inch AMOLED",
+      Battery: "Up to 10 days",
+      Bezel: "Stainless Steel",
+      Connectivity: "GPS, Bluetooth, ANT+",
+      "Water Rating": "5 ATM",
+    },
   },
   {
     src: "/EProducts/Amazfit GTR 4 Premium Smartwatch.jpg",
@@ -784,6 +2673,22 @@ const products = [
     OriginalPrice: 11999,
     MRP: 16999,
     category: "Wearables",
+    description:
+      "Smart fitness made easy with dual-band positioning and route import. Classic design with a large AMOLED display and industry-leading anti-glare technology.",
+    features: [
+      "Dual-band Circular-polarized GPS",
+      "150+ Sports Modes",
+      "Bluetooth Phone Calls",
+      "Music Storage",
+      "14-day Battery Life",
+    ],
+    specifications: {
+      Display: "1.43-inch AMOLED",
+      Battery: "475mAh",
+      "Water Resistance": "5 ATM",
+      Sensor: "BioTracker 4.0",
+      OS: "Zepp OS 2.0",
+    },
   },
   {
     src: "/EProducts/Amazfit T-Rex Ultra Rugged GPS Smartwatch.jpg",
@@ -791,6 +2696,22 @@ const products = [
     OriginalPrice: 19999,
     MRP: 27999,
     category: "Wearables",
+    description:
+      "The ultimate outdoor GPS smartwatch. Constructed with 316L stainless steel and mud-resistant bridge and buttons, it's built to withstand any environment.",
+    features: [
+      "Stainless Steel & Mud-resistant",
+      "30m Freediving Support",
+      "Dual-band GPS",
+      "-30°C Low Temp Operation",
+      "20-day Battery Life",
+    ],
+    specifications: {
+      Display: "1.39-inch AMOLED (1000 nits)",
+      Material: "316L Stainless Steel",
+      "Water Resistance": "10 ATM",
+      Battery: "500mAh",
+      "Military Grade": "MIL-STD-810G",
+    },
   },
   {
     src: "/EProducts/Fastrack FS1 Pro Smartwatch.jpg",
@@ -798,6 +2719,22 @@ const products = [
     OriginalPrice: 5999,
     MRP: 9999,
     category: "Wearables",
+    description:
+      "World's first 1.96\" Super AMOLED Arched Display smartwatch with SingleSync BT Calling. Experience pixel-perfect resolution and vibrant colors.",
+    features: [
+      '1.96" Super AMOLED Arched Display',
+      "SingleSync BT Calling",
+      "110+ Sports Modes",
+      "200+ Watchfaces",
+      "AI Voice Assistant",
+    ],
+    specifications: {
+      Display: "1.96-inch AMOLED (410x502)",
+      Battery: "Up to 7 days",
+      "IP Rating": "IP68",
+      Charging: "NitroFast",
+      Connectivity: "Bluetooth 5.2",
+    },
   },
   {
     src: "/EProducts/Noise ColorFit Pro 5 Max Smartwatch.jpg",
@@ -805,6 +2742,22 @@ const products = [
     OriginalPrice: 3999,
     MRP: 7999,
     category: "Wearables",
+    description:
+      'Experience the view on a 1.96" AMOLED display. Get detailed post-workout analysis and VO2 max tracking to understand your fitness levels better.',
+    features: [
+      '1.96" AMOLED Display',
+      "DIY Watch Faces",
+      "SOS Technology",
+      "Lower Power Consumption",
+      "Post Workout Analysis",
+    ],
+    specifications: {
+      Display: "1.96-inch AMOLED",
+      Connectivity: "Bluetooth 5.3",
+      "IP Rating": "IP68",
+      Battery: "Up to 7 days",
+      "Health Suite": "Noise Health Suite",
+    },
   },
   {
     src: "/EProducts/NoiseFit Halo Premium Round Smartwatch.jpg",
@@ -812,6 +2765,22 @@ const products = [
     OriginalPrice: 3499,
     MRP: 6999,
     category: "Wearables",
+    description:
+      "Premium round dial smartwatch with a metallic build and leather strap options. The Always-on display ensures you never miss important information.",
+    features: [
+      '1.43" AMOLED Display',
+      "Bluetooth Calling",
+      "Metallic Build",
+      "Smart Gesture Control",
+      "100+ Sports Modes",
+    ],
+    specifications: {
+      Display: "1.43-inch AMOLED",
+      Resolution: "466x466",
+      Battery: "Up to 7 days",
+      "IP Rating": "IP68",
+      "Strap Material": "Leather/Silicone",
+    },
   },
   {
     src: "/EProducts/boAt Xtend Pro Calling Smartwatch.jpg",
@@ -819,6 +2788,22 @@ const products = [
     OriginalPrice: 2999,
     MRP: 6999,
     category: "Wearables",
+    description:
+      '1.78" AMOLED display with advanced Bluetooth calling and ASAP Charge. The smooth 60Hz refresh rate provides a fluid user experience.',
+    features: [
+      '1.78" AMOLED Display',
+      "Bluetooth Calling",
+      "ASAP Charge (30 min full charge)",
+      "700+ Active Modes",
+      "Metal Body",
+    ],
+    specifications: {
+      Display: "1.78-inch AMOLED",
+      Battery: "Up to 7 days",
+      "IP Rating": "IP68",
+      Health: "HR & SpO2",
+      "Refresh Rate": "60Hz",
+    },
   },
   {
     src: "/EProducts/boAt Lunar Connect Ace Pro Smartwatch.jpg",
@@ -826,6 +2811,22 @@ const products = [
     OriginalPrice: 7999,
     MRP: 12999,
     category: "Wearables",
+    description:
+      'Round dial smartwatch with a massive 1.43" AMOLED display and localized watch faces. Stay connected with seamless Bluetooth calling.',
+    features: [
+      '1.43" AMOLED Display',
+      "Bluetooth Calling",
+      "100+ Sports Modes",
+      "Voice Assistant",
+      "Crest App Health Ecosystem",
+    ],
+    specifications: {
+      Display: "1.43-inch AMOLED (700 nits)",
+      Battery: "Up to 10 days",
+      "IP Rating": "IP68",
+      Design: "Round Dial",
+      Connectivity: "Bluetooth 5.2",
+    },
   },
   {
     src: "/EProducts/CrossBeats Ignite S4 Max Smartwatch.jpg",
@@ -833,6 +2834,22 @@ const products = [
     OriginalPrice: 4999,
     MRP: 9999,
     category: "Wearables",
+    description:
+      "High-resolution UHD display with 60Hz refresh rate and rotating crown control. The premium metal build adds a touch of elegance.",
+    features: [
+      '1.9" UHD Display',
+      "Bluetooth Calling",
+      "Rotating Crown",
+      "99% Color Gamut",
+      "Password Lock",
+    ],
+    specifications: {
+      Display: "1.9-inch UHD",
+      "Refresh Rate": "60Hz",
+      Battery: "Up to 15 days (standby)",
+      "IP Rating": "IP68",
+      Controls: "Touch + Rotating Crown",
+    },
   },
   {
     src: "/EProducts/Fire-Boltt Invincible Plus Smartwatch.jpg",
@@ -840,6 +2857,22 @@ const products = [
     OriginalPrice: 7999,
     MRP: 12999,
     category: "Wearables",
+    description:
+      'A luxury smartwatch with a 1.43" AMOLED display, 4GB storage for music, and TWS connection. Choose from over 110 watch faces to match your style.',
+    features: [
+      '1.43" AMOLED Display',
+      "4GB Storage",
+      "TWS Connection",
+      "300+ Sports Modes",
+      "110+ Watch Faces",
+    ],
+    specifications: {
+      Display: "1.43-inch AMOLED (460x460)",
+      Storage: "4GB",
+      Battery: "Up to 7 days",
+      "Refresh Rate": "60Hz",
+      Body: "Stainless Steel",
+    },
   },
   {
     src: "/EProducts/Pebble Cosmos Max 1.81 inch Smartwatch.jpg",
@@ -847,6 +2880,22 @@ const products = [
     OriginalPrice: 3999,
     MRP: 7999,
     category: "Wearables",
+    description:
+      'Large 1.81" display with Bluetooth calling and a sleek metal body. The auto speaker cleaner ensures clear audio during calls.',
+    features: [
+      '1.81" Largest Display',
+      "Bluetooth Calling",
+      "Auto Speaker Cleaner",
+      "100+ Watch Faces",
+      "Multi-dial Menu",
+    ],
+    specifications: {
+      Display: "1.81-inch LCD",
+      Battery: "Up to 15 days (standby)",
+      Connectivity: "Bluetooth 5.0",
+      Sensors: "HR & SpO2",
+      Body: "Zinc Alloy",
+    },
   },
   {
     src: "/EProducts/Fossil Gen 6 Wellness Edition Smartwatch.jpg",
@@ -854,6 +2903,22 @@ const products = [
     OriginalPrice: 22999,
     MRP: 32999,
     category: "Wearables",
+    description:
+      "Powered by Wear OS by Google, compatible with iPhone and Android. Tracks heart rate, sleep, and SpO2 with improved sensor accuracy.",
+    features: [
+      "Wear OS 3",
+      "Snapdragon Wear 4100+",
+      "Always-on Display",
+      "Fast Charging",
+      "SpO2 & VO2 Max",
+    ],
+    specifications: {
+      Case: "44mm Stainless Steel",
+      RAM: "1GB",
+      Storage: "8GB",
+      Connectivity: "Bluetooth 5.0 LE, GPS, NFC",
+      "Water Resistance": "3 ATM",
+    },
   },
   {
     src: "/EProducts/Titan Smart 3 Premium Smartwatch.jpg",
@@ -861,6 +2926,22 @@ const products = [
     OriginalPrice: 7990,
     MRP: 11990,
     category: "Wearables",
+    description:
+      'Premium smartwatch with a 1.96" Super AMOLED display and single-sync BT calling. The Neon UI offers a vibrant and smooth user interface.',
+    features: [
+      '1.96" Super AMOLED',
+      "SingleSync BT Calling",
+      "110+ Sports Modes",
+      "Auto Stress Monitor",
+      "Neon UI",
+    ],
+    specifications: {
+      Display: "1.96-inch AMOLED (410x502)",
+      Battery: "Up to 7 days",
+      "IP Rating": "IP68",
+      Strap: "Silicone/Leather",
+      "Voice Assistant": "AI Voice",
+    },
   },
   {
     src: "/EProducts/Xiaomi Smart Band 8 Pro Fitness Tracker.jpg",
@@ -868,6 +2949,22 @@ const products = [
     OriginalPrice: 3999,
     MRP: 5999,
     category: "Wearables",
+    description:
+      'Massive 1.74" AMOLED display with 60Hz refresh rate. Built-in GNSS and 150+ sports modes make it a comprehensive fitness companion.',
+    features: [
+      '1.74" AMOLED Display',
+      "Built-in GNSS",
+      "150+ Sports Modes",
+      "14-day Battery Life",
+      "5ATM Water Resistance",
+    ],
+    specifications: {
+      Display: "1.74-inch AMOLED (336 PPI)",
+      Battery: "289mAh",
+      "Water Resistance": "5 ATM",
+      Sensors: "HR, SpO2, Accelerometer",
+      "Refresh Rate": "60Hz",
+    },
   },
   {
     src: "/EProducts/OnePlus Watch 2R Smartwatch.png",
@@ -875,6 +2972,22 @@ const products = [
     OriginalPrice: 15999,
     MRP: 24999,
     category: "Wearables",
+    description:
+      "Powered by Wear OS 4 with dual-engine architecture for up to 100 hours of battery life. The lightweight aluminum chassis ensures comfort.",
+    features: [
+      "Dual-Engine Architecture",
+      "Wear OS 4",
+      "100-hour Battery Life",
+      "Dual-frequency GPS",
+      '1.43" AMOLED Display',
+    ],
+    specifications: {
+      Processor: "Snapdragon W5 + BES2700",
+      RAM: "2GB",
+      Storage: "32GB",
+      Chassis: "Aluminum Alloy",
+      "Water Resistance": "5 ATM + IP68",
+    },
   },
   {
     src: "/EProducts/Realme Watch 3 Pro AMOLED Smartwatch.jpg",
@@ -882,7 +2995,28 @@ const products = [
     OriginalPrice: 5999,
     MRP: 9999,
     category: "Wearables",
+    description:
+      'Features a 1.78" AMOLED curved display and multi-system standalone GPS for accurate tracking. Clear Bluetooth calling with AI noise cancellation.',
+    features: [
+      '1.78" AMOLED Display',
+      "Multi-system Standalone GPS",
+      "Bluetooth Calling",
+      "110+ Sports Modes",
+      "10-day Battery Life",
+    ],
+    specifications: {
+      Display: "1.78-inch AMOLED (368x448)",
+      "Refresh Rate": "50-60Hz",
+      Battery: "345mAh",
+      Connectivity: "Bluetooth 5.3",
+      Calling: "AI ENC Bluetooth Calling",
+    },
   },
 ];
+
+const products = rawProducts.map((product, index) => ({
+  ...product,
+  id: index + 1,
+}));
 
 export default products;

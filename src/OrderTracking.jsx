@@ -40,6 +40,10 @@ function OrderTracking() {
 
   // Order status timeline
   const getOrderStatus = (orderDate) => {
+    // Check if order has an explicit status (e.g. cancelled)
+    if (order && order.status) {
+      return order.status;
+    }
     const orderTime = new Date(orderDate).getTime();
     const now = new Date().getTime();
     const hoursDiff = (now - orderTime) / (1000 * 60 * 60);
@@ -88,6 +92,13 @@ function OrderTracking() {
         icon: "✅",
         time: "3 days",
       },
+      {
+        key: "cancelled",
+        label: "Cancelled",
+        description: "This order has been cancelled",
+        icon: "❌",
+        time: "",
+      },
     ];
 
     const currentIndex = statuses.findIndex((s) => s.key === currentStatus);
@@ -117,12 +128,30 @@ function OrderTracking() {
     alert("Tracking number copied to clipboard!");
   };
 
+  const handleCancelOrder = () => {
+    if (window.confirm("Are you sure you want to cancel this order?")) {
+      const allOrders = JSON.parse(localStorage.getItem("mockOrders")) || [];
+      const updatedOrders = allOrders.map((o) => {
+        if (o.id === order.id) {
+          return { ...o, status: "cancelled" };
+        }
+        return o;
+      });
+
+      localStorage.setItem("mockOrders", JSON.stringify(updatedOrders));
+      setOrder({ ...order, status: "cancelled" });
+      alert("Order cancelled successfully.");
+    }
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium">Loading order details...</p>
+          <p className="text-gray-600 dark:text-gray-300 font-medium">
+            Loading order details...
+          </p>
         </div>
       </div>
     );
@@ -130,13 +159,13 @@ function OrderTracking() {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <span className="text-6xl mb-4 block">📦</span>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Order Not Found
           </h2>
-          <p className="text-gray-500 mb-6">
+          <p className="text-gray-500 dark:text-gray-400 mb-6">
             The order you're looking for doesn't exist.
           </p>
           <Link
@@ -154,35 +183,39 @@ function OrderTracking() {
   const timeline = getStatusTimeline(currentStatus);
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-16">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-16 transition-colors duration-200">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm mb-6">
           <Link
             to="/"
-            className="text-gray-500 hover:text-indigo-600 transition-colors"
+            className="text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
           >
             Home
           </Link>
           <span className="text-gray-400">/</span>
           <Link
             to="/profile"
-            className="text-gray-500 hover:text-indigo-600 transition-colors"
+            className="text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
           >
             My Account
           </Link>
           <span className="text-gray-400">/</span>
-          <span className="text-gray-900 font-medium">Track Order</span>
+          <span className="text-gray-900 dark:text-white font-medium">
+            Track Order
+          </span>
         </nav>
 
         {/* Header */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-1">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
                 Order #{order.id}
               </h1>
-              <p className="text-gray-500 text-sm">Placed on {order.date}</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">
+                Placed on {order.date}
+              </p>
             </div>
             <div className="flex items-center gap-3">
               <span
@@ -200,18 +233,28 @@ function OrderTracking() {
                 {currentStatus === "out_for_delivery" && "Out for Delivery"}
                 {currentStatus === "delivered" && "Delivered"}
               </span>
+
+              {(currentStatus === "confirmed" ||
+                currentStatus === "processing") && (
+                <button
+                  onClick={handleCancelOrder}
+                  className="text-red-600 hover:text-red-800 text-sm font-semibold underline cursor-pointer"
+                >
+                  Cancel Order
+                </button>
+              )}
             </div>
           </div>
         </div>
 
         {/* Tracking Number */}
-        <div className="bg-indigo-50 rounded-2xl p-6 border border-indigo-100 mb-6">
+        <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl p-6 border border-indigo-100 dark:border-indigo-800 mb-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-sm text-indigo-600 font-medium mb-1">
+              <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium mb-1">
                 Tracking Number
               </p>
-              <p className="text-2xl font-bold text-indigo-900">
+              <p className="text-2xl font-bold text-indigo-900 dark:text-indigo-200">
                 {trackingNumber}
               </p>
             </div>
@@ -238,12 +281,14 @@ function OrderTracking() {
         </div>
 
         {/* Timeline */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-6">Order Status</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6">
+            Order Status
+          </h2>
 
           <div className="relative">
             {/* Timeline Line */}
-            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
 
             {/* Timeline Items */}
             <div className="space-y-8">
@@ -256,7 +301,7 @@ function OrderTracking() {
                         ? "bg-green-500 text-white"
                         : item.state === "current"
                           ? "bg-indigo-600 text-white animate-pulse"
-                          : "bg-gray-200 text-gray-400"
+                          : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
                     }`}
                   >
                     {item.state === "completed" ? "✓" : item.icon}
@@ -268,14 +313,14 @@ function OrderTracking() {
                       <h3
                         className={`font-semibold ${
                           item.state === "pending"
-                            ? "text-gray-400"
-                            : "text-gray-900"
+                            ? "text-gray-400 dark:text-gray-500"
+                            : "text-gray-900 dark:text-white"
                         }`}
                       >
                         {item.label}
                       </h3>
                       {item.actualTime && (
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
                           {item.actualTime}
                         </span>
                       )}
@@ -283,14 +328,14 @@ function OrderTracking() {
                     <p
                       className={`text-sm ${
                         item.state === "pending"
-                          ? "text-gray-400"
-                          : "text-gray-600"
+                          ? "text-gray-400 dark:text-gray-500"
+                          : "text-gray-600 dark:text-gray-300"
                       }`}
                     >
                       {item.description}
                     </p>
                     {item.state === "current" && (
-                      <p className="text-sm text-indigo-600 mt-1 font-medium">
+                      <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1 font-medium">
                         In Progress...
                       </p>
                     )}
@@ -302,15 +347,17 @@ function OrderTracking() {
         </div>
 
         {/* Order Items */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Order Items</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+            Order Items
+          </h2>
           <div className="space-y-4">
             {order.items.map((item, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl"
+                className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl"
               >
-                <div className="w-16 h-16 rounded-lg bg-white border border-gray-200 overflow-hidden shrink-0">
+                <div className="w-16 h-16 rounded-lg bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-600 overflow-hidden shrink-0">
                   <img
                     src={item.src}
                     alt={item.title}
@@ -323,15 +370,15 @@ function OrderTracking() {
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-gray-900 text-sm line-clamp-2">
+                  <h4 className="font-medium text-gray-900 dark:text-white text-sm line-clamp-2">
                     {item.title}
                   </h4>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                     Qty: {item.quantity || 1}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-gray-900">
+                  <p className="font-semibold text-gray-900 dark:text-white">
                     {formatPrice(item.OriginalPrice * (item.quantity || 1))}
                   </p>
                 </div>
@@ -340,22 +387,24 @@ function OrderTracking() {
           </div>
 
           {/* Order Total */}
-          <div className="border-t border-gray-200 mt-4 pt-4">
+          <div className="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4">
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Subtotal</span>
-              <span className="font-medium text-gray-900">
+              <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
+              <span className="font-medium text-gray-900 dark:text-white">
                 {formatPrice(order.total * 0.95)}
               </span>
             </div>
             <div className="flex justify-between items-center mt-2">
-              <span className="text-gray-600">Tax (5%)</span>
-              <span className="font-medium text-gray-900">
+              <span className="text-gray-600 dark:text-gray-400">Tax (5%)</span>
+              <span className="font-medium text-gray-900 dark:text-white">
                 {formatPrice(order.total * 0.05)}
               </span>
             </div>
-            <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
-              <span className="text-lg font-bold text-gray-900">Total</span>
-              <span className="text-xl font-bold text-indigo-600">
+            <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+              <span className="text-lg font-bold text-gray-900 dark:text-white">
+                Total
+              </span>
+              <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
                 {formatPrice(order.total)}
               </span>
             </div>
@@ -363,15 +412,17 @@ function OrderTracking() {
         </div>
 
         {/* Delivery Address */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
             Delivery Address
           </h2>
           <div className="flex items-start gap-3">
             <span className="text-2xl">📍</span>
             <div>
-              <p className="text-gray-700">Delivery to registered address</p>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-gray-700 dark:text-gray-300">
+                Delivery to registered address
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 Estimated delivery: 3-5 business days
               </p>
             </div>
@@ -382,7 +433,7 @@ function OrderTracking() {
         <div className="flex flex-wrap gap-4">
           <Link
             to="/profile"
-            className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+            className="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
           >
             ← Back to Orders
           </Link>
@@ -542,13 +593,13 @@ function OrderTracking() {
                   <div class="invoice-container">
                     <div class="invoice-header">
                       <div class="company-info">
-                        <h1>EXPLORE</h1>
+                        <h1>INTELLIKART</h1>
                         <p>
                           Premium Electronics Store<br>
                           123 Tech Park, Innovation Street<br>
                           Mumbai, Maharashtra - 400001<br>
                           GSTIN: 27AABCU9603R1ZX<br>
-                          Email: support@explore.com | Phone: +91 63550 72986
+                          Email: support@intellikart.com | Phone: +91 63550 72986
                         </p>
                       </div>
                       <div class="invoice-details">
@@ -637,7 +688,7 @@ function OrderTracking() {
                       <p>1. Goods once sold will not be taken back or exchanged</p>
                       <p>2. All disputes are subject to Mumbai jurisdiction</p>
                       <p>3. This is a computer generated invoice and does not require signature</p>
-                      <p style="margin-top: 15px; color: #999;">© 2024 Explore Electronics. All rights reserved.</p>
+                      <p style="margin-top: 15px; color: #999;">© 2024 IntelliKart Electronics. All rights reserved.</p>
                     </div>
                     
                     <div class="no-print" style="text-align: center; margin-top: 30px;">

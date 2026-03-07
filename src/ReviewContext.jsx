@@ -65,12 +65,20 @@ export const ReviewProvider = ({ children }) => {
   const addReview = useCallback((productTitle, reviewData) => {
     setReviews((prevReviews) => {
       const productReviews = prevReviews[productTitle] || [];
+      
+      // 🔹 Check if the user has actually purchased this product
+      const allOrders = JSON.parse(localStorage.getItem("mockOrders")) || [];
+      const hasPurchased = allOrders.some(order => 
+        order.userEmail === reviewData.userEmail && 
+        order.items.some(item => item.title === productTitle)
+      );
+
       const newReview = {
         id: Date.now(),
         ...reviewData,
         createdAt: new Date().toISOString(),
         helpful: 0,
-        verified: Math.random() > 0.3, // 70% chance of being verified purchase
+        verified: hasPurchased, 
       };
       return {
         ...prevReviews,

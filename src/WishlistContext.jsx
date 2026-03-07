@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, useRef } from "react";
+import { useAuth } from "./AuthContext";
 
 const WishlistContext = createContext();
 
@@ -7,22 +8,15 @@ export const useWishlist = () => {
 };
 
 export const WishlistProvider = ({ children }) => {
-  const [userEmail, setUserEmail] = useState(localStorage.getItem("userEmail") || "guest");
+  const { user } = useAuth();
+  const userEmail = user?.email || "guest";
+
   const [wishlist, setWishlist] = useState(() => {
-    const email = localStorage.getItem("userEmail") || "guest";
+    const email = localStorage.getItem("userEmail") || sessionStorage.getItem("userEmail") || "guest";
     const savedWishlist = localStorage.getItem(`wishlist_${email}`);
     return savedWishlist ? JSON.parse(savedWishlist) : [];
   });
   const isInitialized = useRef(false);
-
-  // Listen for user login/logout
-  useEffect(() => {
-    const handleUserUpdate = () => {
-      setUserEmail(localStorage.getItem("userEmail") || "guest");
-    };
-    window.addEventListener("userUpdated", handleUserUpdate);
-    return () => window.removeEventListener("userUpdated", handleUserUpdate);
-  }, []);
 
   // Load wishlist when user changes
   useEffect(() => {

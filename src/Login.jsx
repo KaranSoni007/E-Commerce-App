@@ -1,18 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useAuth } from "./AuthContext";
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [status, setStatus] = useState("idle");
   const [errorMessage, setErrorMessage] = useState(""); // 🔹 NEW: State for dynamic error messages
+  const [showPassword, setShowPassword] = useState(false);
 
   // 🔹 INITIALIZE FORMIK
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: localStorage.getItem("rememberedEmail") || "",
+      password: localStorage.getItem("rememberedPassword") || "",
+      rememberMe: !!localStorage.getItem("rememberedEmail"),
     },
+    validationSchema: Yup.object({
+      email: Yup.string().email("Invalid email address").required("Email is required"),
+      password: Yup.string().required("Password is required"),
+    }),
     onSubmit: async (values) => {
       setStatus("loading");
       setErrorMessage(""); // Reset error message on new submission
@@ -41,11 +50,15 @@ function Login() {
             setStatus("error");
           } else {
             // 5. Success! Issue fake tokens so the Navbar works perfectly
-            localStorage.setItem("token", "mock-jwt-token-12345");
-            localStorage.setItem("userName", user.name);
-            localStorage.setItem("userId", "mock-user-id");
-            localStorage.setItem("userEmail", user.email);
-            window.dispatchEvent(new Event("userUpdated")); // 🔹 Update Navbar on login
+            if (values.rememberMe) {
+              localStorage.setItem("rememberedEmail", values.email);
+              localStorage.setItem("rememberedPassword", values.password);
+            } else {
+              localStorage.removeItem("rememberedEmail");
+              localStorage.removeItem("rememberedPassword");
+            }
+
+            login({ name: user.name, email: user.email }, values.rememberMe);
 
             setStatus("success");
             setTimeout(() => navigate("/"), 1000);
@@ -60,11 +73,11 @@ function Login() {
   });
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 font-sans p-5">
-      <div className="bg-white p-10 rounded-3xl shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] w-full max-w-105 border border-gray-100 relative transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)]">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 font-sans p-5 transition-colors duration-200">
+      <div className="bg-white dark:bg-gray-800 p-10 rounded-3xl shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] w-full max-w-105 border border-gray-100 dark:border-gray-700 relative transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)]">
         <Link
           to="/"
-          className="inline-block mb-6 text-gray-500 text-sm no-underline font-semibold transition-colors duration-200 hover:text-gray-900"
+          className="inline-block mb-6 text-gray-500 dark:text-gray-400 text-sm no-underline font-semibold transition-colors duration-200 hover:text-gray-900 dark:hover:text-white"
         >
           ← Back to Store
         </Link>
@@ -73,10 +86,10 @@ function Login() {
           <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-2xl font-bold mx-auto mb-4">
             K
           </div>
-          <h2 className="m-0 mb-2 text-gray-900 text-2xl font-extrabold">
+          <h2 className="m-0 mb-2 text-gray-900 dark:text-white text-2xl font-extrabold">
             Welcome Back
           </h2>
-          <p className="m-0 text-gray-500 text-sm">
+          <p className="m-0 text-gray-500 dark:text-gray-400 text-sm">
             Please enter your details to sign in.
           </p>
         </div>
@@ -84,37 +97,112 @@ function Login() {
         {/* 🔹 FORMIK HANDLES THE SUBMIT */}
         <form onSubmit={formik.handleSubmit} className="w-full">
           <div className="mb-5">
-            <label className="block mb-2 font-semibold text-sm text-gray-700">
+            <label className="block mb-2 font-semibold text-sm text-gray-700 dark:text-gray-300">
               Email
             </label>
             {/* 🔹 EXPLICIT FORMIK BINDINGS */}
             <input
-              className="w-full py-3.5 px-4 rounded-xl border border-gray-200 bg-gray-50 text-[15px] text-gray-900 transition-all duration-200 box-border placeholder-gray-400 focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-600/10"
+              className="w-full py-3.5 px-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-[15px] text-gray-900 dark:text-white transition-all duration-200 box-border placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-indigo-600/10"
               type="email"
               placeholder="name@example.com"
               {...formik.getFieldProps("email")}
-              required
             />
+            {formik.touched.email && formik.errors.email ? (
+              <div className="text-red-500 text-xs mt-1 pl-1">
+                {formik.errors.email}
+              </div>
+            ) : null}
           </div>
 
           <div className="mb-5">
-            <label className="block mb-2 font-semibold text-sm text-gray-700">
-              Password
-            </label>
+            <div className="flex justify-between items-center mb-2">
+              <label className="font-semibold text-sm text-gray-700 dark:text-gray-300">
+                Password
+              </label>
+              <Link
+                to="/forgot-password"
+                className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors no-underline"
+              >
+                Forgot Password?
+              </Link>
+            </div>
             {/* 🔹 EXPLICIT FORMIK BINDINGS */}
-            <input
-              className="w-full py-3.5 px-4 rounded-xl border border-gray-200 bg-gray-50 text-[15px] text-gray-900 transition-all duration-200 box-border placeholder-gray-400 focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-600/10"
-              type="password"
-              placeholder="••••••••"
-              {...formik.getFieldProps("password")}
-              required
-            />
+            <div className="relative">
+              <input
+                className="w-full py-3.5 px-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-[15px] text-gray-900 dark:text-white transition-all duration-200 box-border placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-indigo-600/10 pr-10"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                {...formik.getFieldProps("password")}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer bg-transparent border-none p-1"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.45 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                )}
+              </button>
+            </div>
+            {formik.touched.password && formik.errors.password ? (
+              <div className="text-red-500 text-xs mt-1 pl-1">
+                {formik.errors.password}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="mb-5 flex items-center">
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                name="rememberMe"
+                checked={formik.values.rememberMe}
+                onChange={formik.handleChange}
+                className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 accent-indigo-600 cursor-pointer"
+              />
+              <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">Remember me</span>
+            </label>
           </div>
 
           <button
             type="submit"
-            className="w-full py-3.5 rounded-xl border-none bg-gray-900 text-white font-semibold text-base cursor-pointer my-2.5 transition-all duration-200 hover:bg-gray-700 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-gray-900"
+            className="w-full py-3.5 rounded-xl border-none bg-gray-900 dark:bg-indigo-600 text-white font-semibold text-base cursor-pointer my-2.5 transition-all duration-200 hover:bg-gray-700 dark:hover:bg-indigo-700 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-gray-900 dark:disabled:hover:bg-indigo-600"
             disabled={status === "loading"}
+            aria-busy={status === "loading"}
           >
             {status === "loading" ? (
               <span className="flex items-center justify-center gap-2">
@@ -129,16 +217,16 @@ function Login() {
 
         {/* 🔹 UPDATED: Now dynamically displays the professional error messages */}
         {status === "error" && (
-          <div className="mt-6 p-3 bg-red-50 text-red-600 rounded-lg text-sm font-medium flex items-center justify-center border border-red-300 text-center">
+          <div className="mt-6 p-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-sm font-medium flex items-center justify-center border border-red-300 dark:border-red-800 text-center">
             <span className="mr-2">⚠️</span> {errorMessage}
           </div>
         )}
 
-        <p className="mt-6 text-sm text-gray-500 text-center">
+        <p className="mt-6 text-sm text-gray-500 dark:text-gray-400 text-center">
           Don't have an account?{" "}
           <Link
             to="/signup"
-            className="text-indigo-600 font-semibold no-underline transition-colors hover:underline hover:text-indigo-800"
+            className="text-indigo-600 dark:text-indigo-400 font-semibold no-underline transition-colors hover:underline hover:text-indigo-800 dark:hover:text-indigo-300"
           >
             Sign up
           </Link>
