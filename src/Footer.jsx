@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Footer() {
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = () => {
+    if (!email.trim()) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+    // Mock subscription
+    alert(`✅ Subscribed! You will now receive updates at ${email}`);
+    setEmail("");
+  };
+
   return (
     <footer className="bg-gray-900 text-white pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-6">
@@ -102,36 +114,36 @@ function Footer() {
             <h3 className="text-lg font-bold mb-4">Customer Service</h3>
             <ul className="space-y-2">
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/support?tab=shipping"
                   className="text-gray-400 hover:text-indigo-400 transition-colors text-sm"
                 >
                   Shipping Info
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/support?tab=returns"
                   className="text-gray-400 hover:text-indigo-400 transition-colors text-sm"
                 >
                   Returns & Exchanges
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/profile"
                   className="text-gray-400 hover:text-indigo-400 transition-colors text-sm"
                 >
                   Order Tracking
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/support?tab=faq"
                   className="text-gray-400 hover:text-indigo-400 transition-colors text-sm"
                 >
                   FAQ
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -145,10 +157,15 @@ function Footer() {
             <div className="flex">
               <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 className="flex-1 px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-l-lg text-white text-sm focus:outline-none focus:border-indigo-600"
               />
-              <button className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-r-lg font-semibold text-sm transition-colors">
+              <button
+                onClick={handleSubscribe}
+                className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-r-lg font-semibold text-sm transition-colors cursor-pointer"
+              >
                 Subscribe
               </button>
             </div>

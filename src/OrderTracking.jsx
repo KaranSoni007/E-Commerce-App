@@ -8,6 +8,11 @@ function OrderTracking() {
   const [loading, setLoading] = useState(true);
   const [trackingNumber, setTrackingNumber] = useState("");
   const [userData, setUserData] = useState({ name: "", email: "" });
+  const [showActionModal, setShowActionModal] = useState(false);
+  const [actionType, setActionType] = useState(null);
+  const [selectedReason, setSelectedReason] = useState("");
+  const [courier, setCourier] = useState("FedEx");
+  const [estimatedDelivery, setEstimatedDelivery] = useState("");
 
   useEffect(() => {
     // Load user data
@@ -34,6 +39,18 @@ function OrderTracking() {
         localStorage.setItem(`tracking_${orderId}`, newTracking);
         setTrackingNumber(newTracking);
       }
+
+      // Deterministic courier based on ID
+      const couriers = ["FedEx", "BlueDart", "DHL", "Delhivery", "Ecom Express"];
+      setCourier(couriers[foundOrder.id % couriers.length]);
+
+      // Calculate estimated delivery (3 days from order)
+      const orderDate = new Date(foundOrder.date);
+      const deliveryDate = new Date(orderDate);
+      deliveryDate.setDate(deliveryDate.getDate() + 3);
+      setEstimatedDelivery(deliveryDate.toLocaleDateString("en-US", { 
+        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' 
+      }));
     }
     setLoading(false);
   }, [orderId]);
@@ -56,50 +73,115 @@ function OrderTracking() {
   };
 
   const getStatusTimeline = (currentStatus) => {
+    if (!order) return [];
+    
+    const orderDate = new Date(order.date);
+    orderDate.setHours(9, 0, 0, 0); // Normalize start time
+
+    const formatTime = (date) => {
+      return date.toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      });
+    };
+
+    const addTime = (h) => {
+      const d = new Date(orderDate);
+      d.setHours(d.getHours() + h);
+      return formatTime(d);
+    };
+
     const statuses = [
       {
         key: "confirmed",
         label: "Order Confirmed",
         description: "Your order has been confirmed",
         icon: "📋",
-        time: "Just now",
+        time: addTime(0),
       },
       {
         key: "processing",
         label: "Processing",
         description: "Order is being prepared",
         icon: "📦",
-        time: "2 hours",
+        time: addTime(4),
       },
       {
         key: "shipped",
         label: "Shipped",
         description: "Order has been shipped",
         icon: "🚚",
-        time: "1 day",
+        time: addTime(24),
       },
       {
         key: "out_for_delivery",
         label: "Out for Delivery",
         description: "Order is on the way",
         icon: "🛵",
-        time: "2 days",
+        time: addTime(48),
       },
       {
         key: "delivered",
         label: "Delivered",
         description: "Order has been delivered",
         icon: "✅",
-        time: "3 days",
+        time: addTime(54),
       },
       {
         key: "cancelled",
         label: "Cancelled",
         description: "This order has been cancelled",
         icon: "❌",
-        time: "",
+        time: order.cancelledAt
+          ? formatTime(new Date(order.cancelledAt))
+          : formatTime(new Date()),
       },
     ];
+
+    if (currentStatus === "return_requested" || currentStatus === "returned") {
+      statuses.push(
+        {
+          key: "return_requested",
+          label: "Return Requested",
+          description: "Return request under review",
+          icon: "↩️",
+          time: order.returnRequestedAt
+            ? formatTime(new Date(order.returnRequestedAt))
+            : formatTime(new Date()),
+        },
+        {
+          key: "returned",
+          label: "Returned",
+          description: "Return processed",
+          icon: "📦",
+          time: "", // Future: Add returnedAt if admin processing is implemented
+        }
+      );
+    } else if (
+      currentStatus === "exchange_requested" ||
+      currentStatus === "exchanged"
+    ) {
+      statuses.push(
+        {
+          key: "exchange_requested",
+          label: "Exchange Requested",
+          description: "Exchange request under review",
+          icon: "🔄",
+          time: order.exchangeRequestedAt
+            ? formatTime(new Date(order.exchangeRequestedAt))
+            : formatTime(new Date()),
+        },
+        {
+          key: "exchanged",
+          label: "Exchanged",
+          description: "Exchange processed",
+          icon: "📦",
+          time: "", // Future: Add exchangedAt if admin processing is implemented
+        }
+      );
+    }
 
     const currentIndex = statuses.findIndex((s) => s.key === currentStatus);
 
@@ -131,17 +213,60 @@ function OrderTracking() {
   const handleCancelOrder = () => {
     if (window.confirm("Are you sure you want to cancel this order?")) {
       const allOrders = JSON.parse(localStorage.getItem("mockOrders")) || [];
+      const cancelledAt = new Date().toISOString();
       const updatedOrders = allOrders.map((o) => {
         if (o.id === order.id) {
-          return { ...o, status: "cancelled" };
+          return { ...o, status: "cancelled", cancelledAt };
         }
         return o;
       });
 
       localStorage.setItem("mockOrders", JSON.stringify(updatedOrders));
-      setOrder({ ...order, status: "cancelled" });
+      setOrder({ ...order, status: "cancelled", cancelledAt });
       alert("Order cancelled successfully.");
     }
+  };
+
+  const handleActionSubmit = () => {
+    if (!actionType) return;
+    if (!selectedReason) {
+      alert(`Please select a reason for ${actionType}.`);
+      return;
+    }
+
+    const statusKey =
+      actionType === "return" ? "return_requested" : "exchange_requested";
+    const reasonKey =
+      actionType === "return" ? "returnReason" : "exchangeReason";
+    const dateKey =
+      actionType === "return" ? "returnRequestedAt" : "exchangeRequestedAt";
+
+    const actionDate = new Date().toISOString();
+
+    const allOrders = JSON.parse(localStorage.getItem("mockOrders")) || [];
+    const updatedOrders = allOrders.map((o) => {
+      if (o.id === order.id) {
+        return {
+          ...o,
+          status: statusKey,
+          [reasonKey]: selectedReason,
+          [dateKey]: actionDate,
+        };
+      }
+      return o;
+    });
+
+    localStorage.setItem("mockOrders", JSON.stringify(updatedOrders));
+    setOrder({
+      ...order,
+      status: statusKey,
+      [reasonKey]: selectedReason,
+      [dateKey]: actionDate,
+    });
+    setShowActionModal(false);
+    alert(
+      `${actionType === "return" ? "Return" : "Exchange"} request submitted successfully.`
+    );
   };
 
   if (loading) {
@@ -222,6 +347,14 @@ function OrderTracking() {
                 className={`px-4 py-2 rounded-full text-sm font-semibold ${
                   currentStatus === "delivered"
                     ? "bg-green-100 text-green-700"
+                    : currentStatus === "return_requested"
+                    ? "bg-orange-100 text-orange-700"
+                    : currentStatus === "returned"
+                    ? "bg-gray-100 text-gray-700"
+                    : currentStatus === "exchange_requested"
+                    ? "bg-blue-100 text-blue-700"
+                    : currentStatus === "exchanged"
+                    ? "bg-indigo-100 text-indigo-700"
                     : currentStatus === "cancelled"
                       ? "bg-red-100 text-red-700"
                       : "bg-blue-100 text-blue-700"
@@ -232,6 +365,10 @@ function OrderTracking() {
                 {currentStatus === "shipped" && "Shipped"}
                 {currentStatus === "out_for_delivery" && "Out for Delivery"}
                 {currentStatus === "delivered" && "Delivered"}
+                {currentStatus === "return_requested" && "Return Requested"}
+                {currentStatus === "returned" && "Returned"}
+                {currentStatus === "exchange_requested" && "Exchange Requested"}
+                {currentStatus === "exchanged" && "Exchanged"}
               </span>
 
               {(currentStatus === "confirmed" ||
@@ -243,40 +380,61 @@ function OrderTracking() {
                   Cancel Order
                 </button>
               )}
+
+              {currentStatus === "delivered" && (
+                <button
+                  onClick={() => {
+                    setShowActionModal(true);
+                    setActionType(null);
+                    setSelectedReason("");
+                  }}
+                  className="text-indigo-600 hover:text-indigo-800 text-sm font-semibold underline cursor-pointer"
+                >
+                  Return / Exchange Order
+                </button>
+              )}
             </div>
           </div>
         </div>
 
         {/* Tracking Number */}
         <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl p-6 border border-indigo-100 dark:border-indigo-800 mb-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-1">
               <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium mb-1">
                 Tracking Number
               </p>
-              <p className="text-2xl font-bold text-indigo-900 dark:text-indigo-200">
-                {trackingNumber}
+              <div className="flex items-center gap-2">
+                <p className="text-xl font-bold text-indigo-900 dark:text-indigo-200">
+                  {trackingNumber}
+                </p>
+                <button
+                  onClick={copyTrackingNumber}
+                  className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
+                  title="Copy Tracking Number"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div className="md:col-span-1">
+              <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium mb-1">
+                Courier Partner
+              </p>
+              <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                {courier}
               </p>
             </div>
-            <button
-              onClick={copyTrackingNumber}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors flex items-center gap-2"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                />
-              </svg>
-              Copy
-            </button>
+            <div className="md:col-span-1">
+              <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium mb-1">
+                Estimated Delivery
+              </p>
+              <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                {estimatedDelivery}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -722,6 +880,117 @@ function OrderTracking() {
             Print Invoice
           </button>
         </div>
+
+        {/* Action Modal (Return/Exchange) */}
+        {showActionModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                {!actionType
+                  ? "Select Action"
+                  : actionType === "return"
+                  ? "Return Order"
+                  : "Exchange Order"}
+              </h3>
+
+              {!actionType ? (
+                <div className="space-y-4">
+                  <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm">
+                    Do you want to return or exchange this product?
+                  </p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      onClick={() => setActionType("return")}
+                      className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all text-center"
+                    >
+                      <span className="text-2xl block mb-2">↩️</span>
+                      <span className="font-semibold text-gray-900 dark:text-white">
+                        Return
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => setActionType("exchange")}
+                      className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all text-center"
+                    >
+                      <span className="text-2xl block mb-2">🔄</span>
+                      <span className="font-semibold text-gray-900 dark:text-white">
+                        Exchange
+                      </span>
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => setShowActionModal(false)}
+                    className="w-full mt-4 py-2.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm">
+                    Please select a reason for{" "}
+                    {actionType === "return" ? "returning" : "exchanging"} this
+                    order.
+                  </p>
+
+                  <div className="space-y-3 mb-6">
+                    {(actionType === "return"
+                      ? [
+                          "Defective/Damaged Product",
+                          "Received Wrong Item",
+                          "Quality Not as Expected",
+                          "Changed Mind",
+                          "Other",
+                        ]
+                      : [
+                          "Size Issue",
+                          "Color Issue",
+                          "Defective Product",
+                          "Received Wrong Item",
+                          "Other",
+                        ]
+                    ).map((reason) => (
+                      <label
+                        key={reason}
+                        className="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                      >
+                        <input
+                          type="radio"
+                          name="reason"
+                          value={reason}
+                          checked={selectedReason === reason}
+                          onChange={(e) => setSelectedReason(e.target.value)}
+                          className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
+                        />
+                        <span className="text-sm text-gray-700 dark:text-gray-200">
+                          {reason}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={handleActionSubmit}
+                      className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-semibold text-sm transition-colors"
+                    >
+                      Confirm {actionType === "return" ? "Return" : "Exchange"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setActionType(null);
+                        setSelectedReason("");
+                      }}
+                      className="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 py-2.5 rounded-xl font-semibold text-sm transition-colors"
+                    >
+                      Back
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

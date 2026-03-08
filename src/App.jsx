@@ -26,6 +26,7 @@ const Wishlist = lazy(() => import("./Wishlist"));
 const Compare = lazy(() => import("./Compare"));
 const OrderTracking = lazy(() => import("./OrderTracking"));
 const NotFound = lazy(() => import("./NotFound"));
+const Support = lazy(() => import("./Support"));
 
 // Loading fallback component for lazy loaded routes
 const PageLoader = () => (
@@ -82,6 +83,7 @@ function App() {
                             path="/track-order/:orderId"
                             element={<OrderTracking />}
                           />
+                          <Route path="/support" element={<Support />} />
                           <Route path="*" element={<NotFound />} />
                         </Routes>
                       </Suspense>

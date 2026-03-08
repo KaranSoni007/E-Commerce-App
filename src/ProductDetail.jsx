@@ -108,7 +108,9 @@ function ProductDetail() {
   }, [product, quantity, addToCart, navigate]);
 
   const handleQuantityChange = (delta) => {
-    setQuantity((prev) => Math.max(1, prev + delta));
+    setQuantity((prev) =>
+      Math.min(stockStatus.stockCount, Math.max(1, prev + delta))
+    );
   };
 
   const handleWishlistClick = useCallback(() => {
@@ -315,7 +317,7 @@ function ProductDetail() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => handleQuantityChange(-1)}
-                    disabled={quantity <= 1}
+                    disabled={quantity <= 1 || !isInStock}
                     className="w-10 h-10 rounded-lg border border-gray-300 dark:border-gray-600 flex items-center justify-center text-xl font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     -
@@ -325,6 +327,7 @@ function ProductDetail() {
                   </span>
                   <button
                     onClick={() => handleQuantityChange(1)}
+                    disabled={quantity >= stockCount || !isInStock}
                     className="w-10 h-10 rounded-lg border border-gray-300 dark:border-gray-600 flex items-center justify-center text-xl font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   >
                     +

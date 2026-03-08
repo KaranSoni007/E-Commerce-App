@@ -177,6 +177,101 @@ function Profile() {
     );
   };
 
+  const handleCancelOrder = (orderId) => {
+    if (window.confirm("Are you sure you want to cancel this order?")) {
+      const allOrders = JSON.parse(localStorage.getItem("mockOrders")) || [];
+      const cancelledAt = new Date().toISOString();
+      const updatedOrders = allOrders.map((o) => {
+        if (o.id === orderId) {
+          return { ...o, status: "cancelled", cancelledAt };
+        }
+        return o;
+      });
+
+      localStorage.setItem("mockOrders", JSON.stringify(updatedOrders));
+
+      setOrders((prevOrders) =>
+        prevOrders.map((o) => {
+          if (o.id === orderId) {
+            return { ...o, status: "cancelled", cancelledAt };
+          }
+          return o;
+        }),
+      );
+
+      alert("Order cancelled successfully.");
+    }
+  };
+
+  const isOrderCancellable = (order) => {
+    if (order.status) {
+      return order.status === "confirmed" || order.status === "processing";
+    }
+    // Fallback logic if status isn't explicitly set (matches renderStatusBadge logic)
+    const orderTime = new Date(order.date).getTime();
+    const now = new Date().getTime();
+    const hoursDiff = (now - orderTime) / (1000 * 60 * 60);
+    return hoursDiff < 24; // Considered "processing" if less than 24 hours
+  };
+
+  const renderStatusBadge = (order) => {
+    let status = order.status;
+    if (!status) {
+      // Fallback logic if status isn't explicitly set
+      const orderTime = new Date(order.date).getTime();
+      const now = new Date().getTime();
+      const hoursDiff = (now - orderTime) / (1000 * 60 * 60);
+      if (hoursDiff < 24) status = "processing";
+      else if (hoursDiff < 72) status = "shipped";
+      else status = "delivered";
+    }
+
+    switch (status) {
+      case "cancelled":
+        return (
+          <span className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-3 py-1 rounded-md text-xs font-bold">
+            Cancelled ❌
+          </span>
+        );
+      case "return_requested":
+        return (
+          <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 px-3 py-1 rounded-md text-xs font-bold">
+            Return Requested ↩️
+          </span>
+        );
+      case "returned":
+        return (
+          <span className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-md text-xs font-bold">
+            Returned 📦
+          </span>
+        );
+      case "exchange_requested":
+        return (
+          <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-md text-xs font-bold">
+            Exchange Requested 🔄
+          </span>
+        );
+      case "exchanged":
+        return (
+          <span className="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 px-3 py-1 rounded-md text-xs font-bold">
+            Exchanged 📦
+          </span>
+        );
+      case "delivered":
+        return (
+          <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-md text-xs font-bold">
+            Delivered ✅
+          </span>
+        );
+      default:
+        return (
+          <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-md text-xs font-bold">
+            {status.charAt(0).toUpperCase() + status.slice(1)} 🚚
+          </span>
+        );
+    }
+  };
+
   // Password change handler
   const handlePasswordChange = () => {
     if (!passwordData.currentPassword) {
@@ -836,9 +931,7 @@ function Profile() {
                                 {order.date}
                               </span>
                             </div>
-                            <span className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-md text-xs font-bold">
-                              Confirmed ✅
-                            </span>
+                            {renderStatusBadge(order)}
                           </div>
 
                           <div className="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-4">
@@ -880,12 +973,22 @@ function Profile() {
                             </span>
                           </div>
 
-                          <Link
-                            to={`/track-order/${order.id}`}
-                            className="mt-4 w-full block text-center py-2.5 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors no-underline"
-                          >
-                            📍 Track Order
-                          </Link>
+                          <div className="flex gap-3 mt-4">
+                            <Link
+                              to={`/track-order/${order.id}`}
+                              className="flex-1 text-center py-2.5 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors no-underline"
+                            >
+                              📍 Track Order
+                            </Link>
+                            {isOrderCancellable(order) && (
+                              <button
+                                onClick={() => handleCancelOrder(order.id)}
+                                className="flex-1 py-2.5 bg-white dark:bg-gray-800 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-lg font-semibold text-sm hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
+                              >
+                                Cancel Order
+                              </button>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>

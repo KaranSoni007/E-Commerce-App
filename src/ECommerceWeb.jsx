@@ -1,28 +1,11 @@
 import React, { useState, useEffect, memo, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Products from "./Products";
 import { useCart } from "./CartContext";
 import { useWishlist } from "./WishlistContext";
 import { useReviews } from "./ReviewContext";
 import { useCompare } from "./CompareContext";
-
-// Custom debounce hook for search optimization
-function useDebounce(value, delay) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-}
 
 // Professional Toast
 const Toast = memo(({ message, type, onClose }) => {
@@ -296,13 +279,11 @@ function ECommerceWeb() {
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
   const { getReviewCount, getAverageRating } = useReviews();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get("search") || "";
+  const categoryParam = searchParams.get("category");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [toast, setToast] = useState(null);
-  const [isListening, setIsListening] = useState(false);
-
-  // Debounce search input to reduce re-renders while typing
-  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   // Advanced Filter States
   const [showFilters, setShowFilters] = useState(false);
@@ -312,11 +293,21 @@ function ECommerceWeb() {
   const [discountFilter, setDiscountFilter] = useState("all");
   const [visibleCount, setVisibleCount] = useState(12);
 
+  useEffect(() => {
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+      setTimeout(() => {
+        const element = document.getElementById("products");
+        if (element) element.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  }, [categoryParam]);
+
   // Reset pagination when filters change
   useEffect(() => {
     setVisibleCount(12);
   }, [
-    debouncedSearchTerm,
+    searchTerm,
     selectedCategory,
     priceRange,
     selectedBrands,
@@ -381,49 +372,6 @@ function ECommerceWeb() {
     return Math.round(((mrp - original) / mrp) * 100);
   }, []);
 
-  const startListening = useCallback(() => {
-    if (
-      !("webkitSpeechRecognition" in window) &&
-      !("SpeechRecognition" in window)
-    ) {
-      showToast("Voice search is not supported in this browser.", "error");
-      return;
-    }
-
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = "en-US";
-
-    recognition.onstart = () => {
-      setIsListening(true);
-    };
-
-    recognition.onend = () => {
-      setIsListening(false);
-    };
-
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setSearchTerm(transcript);
-      showToast(`Searching for "${transcript}"`, "success");
-    };
-
-    recognition.onerror = (event) => {
-      console.error("Speech recognition error", event.error);
-      setIsListening(false);
-      // Don't show toast on 'no-speech' error to avoid annoyance if they just clicked and didn't speak
-      if (event.error !== "no-speech") {
-        showToast("Could not hear you, please try again.", "error");
-      }
-    };
-
-    recognition.start();
-  }, [showToast]);
-
   const smartShuffle = useCallback((products) => {
     if (!products || products.length === 0) return [];
     const categories = {};
@@ -465,7 +413,7 @@ function ECommerceWeb() {
     let filtered = data.filter((product) => {
       const matchesSearch = product.title
         ?.toLowerCase()
-        .includes(debouncedSearchTerm.toLowerCase());
+        .includes(searchTerm.toLowerCase());
       const matchesCategory =
         selectedCategory === "All" || product.category === selectedCategory;
 
@@ -541,7 +489,7 @@ function ECommerceWeb() {
     return filtered;
   }, [
     data,
-    debouncedSearchTerm,
+    searchTerm,
     selectedCategory,
     priceRange,
     selectedBrands,
@@ -553,7 +501,6 @@ function ECommerceWeb() {
   ]);
 
   const clearAllFilters = () => {
-    setSearchTerm("");
     setSelectedCategory("All");
     setPriceRange({ min: "", max: "" });
     setSelectedBrands([]);
@@ -713,74 +660,6 @@ function ECommerceWeb() {
                 <option value="rating">Highest Rated</option>
                 <option value="newest">Newest First</option>
               </select>
-
-              {/* Search Input */}
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                </span>
-                <input
-                  type="text"
-                  placeholder={isListening ? "Listening..." : "Search..."}
-                  className={`w-40 sm:w-60 py-2.5 pl-9 pr-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-900 transition-all ${isListening ? "border-indigo-500 ring-2 ring-indigo-200" : ""}`}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  aria-label="Search products"
-                />
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                  {searchTerm && (
-                    <button
-                      onClick={() => setSearchTerm("")}
-                      className="w-5 h-5 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                    >
-                      <svg
-                        className="w-3 h-3"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  )}
-                  <button
-                    onClick={startListening}
-                    className={`p-1.5 rounded-full transition-colors ${isListening ? "bg-red-100 text-red-600 animate-pulse" : "hover:bg-gray-100 text-gray-400 hover:text-indigo-600"}`}
-                    title="Voice Search"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
 
