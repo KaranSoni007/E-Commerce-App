@@ -9,7 +9,7 @@ function Profile() {
   const { cart } = useCart();
   const { wishlist } = useWishlist();
   const { user, logout, updateUser } = useAuth();
-  
+
   const [orders, setOrders] = useState([]);
   const [showOrders, setShowOrders] = useState(false);
 
@@ -199,9 +199,7 @@ function Profile() {
     // Mock password change
     const existingUsers = JSON.parse(localStorage.getItem("mockUsers")) || [];
     const updatedUsers = existingUsers.map((u) =>
-      u.email === user.email
-        ? { ...u, password: passwordData.newPassword }
-        : u,
+      u.email === user.email ? { ...u, password: passwordData.newPassword } : u,
     );
     localStorage.setItem("mockUsers", JSON.stringify(updatedUsers));
 
@@ -410,24 +408,35 @@ function Profile() {
 
       // 1. Cleanup Orders
       const allOrders = JSON.parse(localStorage.getItem("mockOrders")) || [];
-      const remainingOrders = allOrders.filter(o => o.userEmail !== userEmail);
+      const remainingOrders = allOrders.filter(
+        (o) => o.userEmail !== userEmail,
+      );
       localStorage.setItem("mockOrders", JSON.stringify(remainingOrders));
 
       // 2. Cleanup Addresses
-      const allAddresses = JSON.parse(localStorage.getItem("mockAddresses")) || [];
-      const remainingAddresses = allAddresses.filter(a => a.userEmail !== userEmail);
+      const allAddresses =
+        JSON.parse(localStorage.getItem("mockAddresses")) || [];
+      const remainingAddresses = allAddresses.filter(
+        (a) => a.userEmail !== userEmail,
+      );
       localStorage.setItem("mockAddresses", JSON.stringify(remainingAddresses));
 
       // 3. Cleanup Payment Methods
-      const allPayments = JSON.parse(localStorage.getItem("mockPayments")) || [];
-      const remainingPayments = allPayments.filter(p => p.userEmail !== userEmail);
+      const allPayments =
+        JSON.parse(localStorage.getItem("mockPayments")) || [];
+      const remainingPayments = allPayments.filter(
+        (p) => p.userEmail !== userEmail,
+      );
       localStorage.setItem("mockPayments", JSON.stringify(remainingPayments));
 
       // 4. Cleanup Reviews
-      const allReviews = JSON.parse(localStorage.getItem("productReviews")) || {};
+      const allReviews =
+        JSON.parse(localStorage.getItem("productReviews")) || {};
       const cleanedReviews = {};
-      Object.keys(allReviews).forEach(productTitle => {
-        cleanedReviews[productTitle] = allReviews[productTitle].filter(r => r.userEmail !== userEmail);
+      Object.keys(allReviews).forEach((productTitle) => {
+        cleanedReviews[productTitle] = allReviews[productTitle].filter(
+          (r) => r.userEmail !== userEmail,
+        );
       });
       localStorage.setItem("productReviews", JSON.stringify(cleanedReviews));
 
@@ -480,9 +489,7 @@ function Profile() {
 
     // Update global mock storage
     const allPayments = JSON.parse(localStorage.getItem("mockPayments")) || [];
-    const otherPayments = allPayments.filter(
-      (p) => p.userEmail !== user.email,
-    );
+    const otherPayments = allPayments.filter((p) => p.userEmail !== user.email);
     localStorage.setItem(
       "mockPayments",
       JSON.stringify([...otherPayments, ...updatedPayments]),

@@ -199,8 +199,18 @@ const CardView = memo(
           }`}
           title="Compare"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
           </svg>
         </button>
 
@@ -372,17 +382,21 @@ function ECommerceWeb() {
   }, []);
 
   const startListening = useCallback(() => {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    if (
+      !("webkitSpeechRecognition" in window) &&
+      !("SpeechRecognition" in window)
+    ) {
       showToast("Voice search is not supported in this browser.", "error");
       return;
     }
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
-    
+
     recognition.continuous = false;
     recognition.interimResults = false;
-    recognition.lang = 'en-US';
+    recognition.lang = "en-US";
 
     recognition.onstart = () => {
       setIsListening(true);
@@ -402,8 +416,8 @@ function ECommerceWeb() {
       console.error("Speech recognition error", event.error);
       setIsListening(false);
       // Don't show toast on 'no-speech' error to avoid annoyance if they just clicked and didn't speak
-      if (event.error !== 'no-speech') {
-         showToast("Could not hear you, please try again.", "error");
+      if (event.error !== "no-speech") {
+        showToast("Could not hear you, please try again.", "error");
       }
     };
 
@@ -581,7 +595,10 @@ function ECommerceWeb() {
   }
 
   return (
-    <div className="min-h-screen font-sans pb-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-200" id="home">
+    <div
+      className="min-h-screen font-sans pb-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-200"
+      id="home"
+    >
       <AnimatePresence>
         {toast && (
           <Toast
@@ -748,8 +765,18 @@ function ECommerceWeb() {
                     className={`p-1.5 rounded-full transition-colors ${isListening ? "bg-red-100 text-red-600 animate-pulse" : "hover:bg-gray-100 text-gray-400 hover:text-indigo-600"}`}
                     title="Voice Search"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -834,7 +861,9 @@ function ECommerceWeb() {
                           }}
                           className="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500"
                         />
-                        <span className="text-sm text-gray-700 dark:text-gray-300">{brand}</span>
+                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                          {brand}
+                        </span>
                       </label>
                     ))}
                   </div>

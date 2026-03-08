@@ -19,7 +19,9 @@ function Login() {
       rememberMe: !!localStorage.getItem("rememberedEmail"),
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email address").required("Email is required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
       password: Yup.string().required("Password is required"),
     }),
     onSubmit: async (values) => {
@@ -194,7 +196,9 @@ function Login() {
                 onChange={formik.handleChange}
                 className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 accent-indigo-600 cursor-pointer"
               />
-              <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">Remember me</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                Remember me
+              </span>
             </label>
           </div>
 

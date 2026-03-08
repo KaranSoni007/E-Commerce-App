@@ -138,7 +138,9 @@ function Wishlist() {
 
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My Wishlist</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              My Wishlist
+            </h1>
             <p className="text-gray-500 dark:text-gray-400 mt-1">
               {wishlist.length} {wishlist.length === 1 ? "item" : "items"} saved
             </p>
@@ -162,7 +164,10 @@ function Wishlist() {
               >
                 {/* Product Image */}
                 <div className="relative h-48 bg-gray-50 dark:bg-gray-700 flex items-center justify-center p-4 overflow-hidden">
-                  <Link to={`/product/${product.id}`} className="w-full h-full flex items-center justify-center">
+                  <Link
+                    to={`/product/${product.id}`}
+                    className="w-full h-full flex items-center justify-center"
+                  >
                     <img
                       src={
                         product.src ||
@@ -261,41 +266,53 @@ function Wishlist() {
 
       {/* Quick View Modal */}
       {isModalOpen && selectedProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn" onClick={closeQuickView}>
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden relative animate-scaleIn" onClick={e => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn"
+          onClick={closeQuickView}
+        >
+          <div
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden relative animate-scaleIn"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               onClick={closeQuickView}
               className="absolute top-4 right-4 p-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors z-10"
             >
               ✕
             </button>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2">
               <div className="h-64 md:h-full bg-gray-50 dark:bg-gray-700 flex items-center justify-center p-6">
                 <img
-                  src={selectedProduct.src || "https://via.placeholder.com/300x200?text=No+Image"}
+                  src={
+                    selectedProduct.src ||
+                    "https://via.placeholder.com/300x200?text=No+Image"
+                  }
                   alt={selectedProduct.title}
                   className="max-w-full max-h-full object-contain"
                 />
               </div>
-              
+
               <div className="p-8 flex flex-col">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">{selectedProduct.title}</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                  {selectedProduct.title}
+                </h3>
                 <div className="mb-4">
-                   <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
-                      {formatPrice(selectedProduct.OriginalPrice)}
-                   </span>
-                   {selectedProduct.MRP && (
-                      <span className="ml-2 text-sm text-gray-400 line-through">
-                        {formatPrice(selectedProduct.MRP)}
-                      </span>
-                   )}
+                  <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+                    {formatPrice(selectedProduct.OriginalPrice)}
+                  </span>
+                  {selectedProduct.MRP && (
+                    <span className="ml-2 text-sm text-gray-400 line-through">
+                      {formatPrice(selectedProduct.MRP)}
+                    </span>
+                  )}
                 </div>
-                
+
                 <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 grow line-clamp-4">
-                  {selectedProduct.description || `Experience the ultimate in technology with this premium ${selectedProduct.category?.toLowerCase() || 'product'}. Designed with cutting-edge features and superior craftsmanship.`}
+                  {selectedProduct.description ||
+                    `Experience the ultimate in technology with this premium ${selectedProduct.category?.toLowerCase() || "product"}. Designed with cutting-edge features and superior craftsmanship.`}
                 </p>
-                
+
                 <div className="space-y-3 mt-auto">
                   <button
                     onClick={() => {

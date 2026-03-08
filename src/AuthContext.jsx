@@ -9,10 +9,13 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-    const name = localStorage.getItem("userName") || sessionStorage.getItem("userName");
-    const email = localStorage.getItem("userEmail") || sessionStorage.getItem("userEmail");
-    
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    const name =
+      localStorage.getItem("userName") || sessionStorage.getItem("userName");
+    const email =
+      localStorage.getItem("userEmail") || sessionStorage.getItem("userEmail");
+
     if (token && name && email) {
       setUser({ name, email, token });
     }
@@ -53,7 +56,8 @@ export const AuthProvider = ({ children }) => {
   const resetPassword = (email, newPassword) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const existingUsers = JSON.parse(localStorage.getItem("mockUsers")) || [];
+        const existingUsers =
+          JSON.parse(localStorage.getItem("mockUsers")) || [];
         const userIndex = existingUsers.findIndex((u) => u.email === email);
 
         if (userIndex === -1) {
@@ -69,7 +73,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, updateUser, resetPassword, loading }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, updateUser, resetPassword, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );

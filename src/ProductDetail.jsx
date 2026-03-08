@@ -377,12 +377,17 @@ function ProductDetail() {
             {/* Product Features */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-                {product.features && product.features.length > 0 ? "Key Highlights" : "Service Benefits"}
+                {product.features && product.features.length > 0
+                  ? "Key Highlights"
+                  : "Service Benefits"}
               </h3>
               <ul className="space-y-3">
                 {product.features && product.features.length > 0 ? (
                   product.features.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-300">
+                    <li
+                      key={index}
+                      className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-300"
+                    >
                       <span className="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xs shrink-0 mt-0.5">
                         ★
                       </span>
@@ -474,7 +479,9 @@ function ProductDetail() {
                             key={key}
                             className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-700"
                           >
-                            <span className="text-gray-500 dark:text-gray-400">{key}</span>
+                            <span className="text-gray-500 dark:text-gray-400">
+                              {key}
+                            </span>
                             <span className="font-medium text-gray-900 dark:text-gray-200">
                               {value}
                             </span>
@@ -484,25 +491,33 @@ function ProductDetail() {
                     ) : (
                       <>
                         <div className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-700">
-                          <span className="text-gray-500 dark:text-gray-400">Brand</span>
+                          <span className="text-gray-500 dark:text-gray-400">
+                            Brand
+                          </span>
                           <span className="font-medium text-gray-900 dark:text-gray-200">
                             {product.title?.split(" ")[0] || "Premium"}
                           </span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-700">
-                          <span className="text-gray-500 dark:text-gray-400">Category</span>
+                          <span className="text-gray-500 dark:text-gray-400">
+                            Category
+                          </span>
                           <span className="font-medium text-gray-900 dark:text-gray-200">
                             {product.category}
                           </span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-700">
-                          <span className="text-gray-500 dark:text-gray-400">Warranty</span>
+                          <span className="text-gray-500 dark:text-gray-400">
+                            Warranty
+                          </span>
                           <span className="font-medium text-gray-900 dark:text-gray-200">
                             1 Year
                           </span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-700">
-                          <span className="text-gray-500 dark:text-gray-400">Available</span>
+                          <span className="text-gray-500 dark:text-gray-400">
+                            Available
+                          </span>
                           <span className="font-medium text-green-600">
                             In Stock
                           </span>

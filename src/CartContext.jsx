@@ -1,4 +1,10 @@
-import React, { createContext, useState, useContext, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import { useAuth } from "./AuthContext";
 
 const CartContext = createContext();
@@ -14,7 +20,10 @@ export const CartProvider = ({ children }) => {
 
   const [cart, setCart] = useState(() => {
     // Try to initialize from storage based on potential auth state to avoid flash
-    const email = localStorage.getItem("userEmail") || sessionStorage.getItem("userEmail") || "guest";
+    const email =
+      localStorage.getItem("userEmail") ||
+      sessionStorage.getItem("userEmail") ||
+      "guest";
     const savedCart = localStorage.getItem(`cart_${email}`);
     return savedCart ? JSON.parse(savedCart) : [];
   });

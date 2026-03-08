@@ -65,12 +65,13 @@ export const ReviewProvider = ({ children }) => {
   const addReview = useCallback((productTitle, reviewData) => {
     setReviews((prevReviews) => {
       const productReviews = prevReviews[productTitle] || [];
-      
+
       // 🔹 Check if the user has actually purchased this product
       const allOrders = JSON.parse(localStorage.getItem("mockOrders")) || [];
-      const hasPurchased = allOrders.some(order => 
-        order.userEmail === reviewData.userEmail && 
-        order.items.some(item => item.title === productTitle)
+      const hasPurchased = allOrders.some(
+        (order) =>
+          order.userEmail === reviewData.userEmail &&
+          order.items.some((item) => item.title === productTitle),
       );
 
       const newReview = {
@@ -78,7 +79,7 @@ export const ReviewProvider = ({ children }) => {
         ...reviewData,
         createdAt: new Date().toISOString(),
         helpful: 0,
-        verified: hasPurchased, 
+        verified: hasPurchased,
       };
       return {
         ...prevReviews,

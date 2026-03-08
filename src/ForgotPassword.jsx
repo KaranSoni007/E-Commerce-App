@@ -17,7 +17,9 @@ function ForgotPassword() {
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email address").required("Email is required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
       newPassword: Yup.string()
         .min(6, "Password must be at least 6 characters")
         .required("New Password is required"),

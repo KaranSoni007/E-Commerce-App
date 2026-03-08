@@ -68,7 +68,10 @@ function App() {
                           <Route path="/profile" element={<Profile />} />
                           <Route path="/signup" element={<Signup />} />
                           <Route path="/login" element={<Login />} />
-                          <Route path="/forgot-password" element={<ForgotPassword />} />
+                          <Route
+                            path="/forgot-password"
+                            element={<ForgotPassword />}
+                          />
                           <Route
                             path="/product/:id"
                             element={<ProductDetail />}

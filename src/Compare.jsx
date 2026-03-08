@@ -149,7 +149,7 @@ function Compare() {
               {/* Specifications */}
               {allSpecKeys.map((key) => {
                 const values = compareList.map(
-                  (product) => product.specifications?.[key]
+                  (product) => product.specifications?.[key],
                 );
                 const hasDifferences =
                   compareList.length > 1 && new Set(values).size > 1;

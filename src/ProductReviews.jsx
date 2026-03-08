@@ -264,7 +264,9 @@ function ProductReviews({ productTitle, product }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
         {/* Rating Breakdown - Left Column */}
         <div className="lg:col-span-1">
-          <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Rating Breakdown</h4>
+          <h4 className="font-semibold text-gray-900 dark:text-white mb-4">
+            Rating Breakdown
+          </h4>
           <div className="space-y-2">
             {[5, 4, 3, 2, 1].map((rating) => (
               <div key={rating} className="flex items-center gap-3">
@@ -291,17 +293,25 @@ function ProductReviews({ productTitle, product }) {
             </h5>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-300">Total Reviews</span>
-                <span className="font-medium text-gray-900 dark:text-white">{reviewCount}</span>
+                <span className="text-gray-600 dark:text-gray-300">
+                  Total Reviews
+                </span>
+                <span className="font-medium text-gray-900 dark:text-white">
+                  {reviewCount}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-300">Verified Purchases</span>
+                <span className="text-gray-600 dark:text-gray-300">
+                  Verified Purchases
+                </span>
                 <span className="font-medium text-gray-900 dark:text-white">
                   {reviews.filter((r) => r.verified).length}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-300">Would Recommend</span>
+                <span className="text-gray-600 dark:text-gray-300">
+                  Would Recommend
+                </span>
                 <span className="font-medium text-gray-900 dark:text-white">
                   {reviews.filter((r) => r.recommend).length}
                 </span>

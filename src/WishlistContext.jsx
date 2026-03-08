@@ -1,4 +1,10 @@
-import React, { createContext, useState, useContext, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import { useAuth } from "./AuthContext";
 
 const WishlistContext = createContext();
@@ -12,7 +18,10 @@ export const WishlistProvider = ({ children }) => {
   const userEmail = user?.email || "guest";
 
   const [wishlist, setWishlist] = useState(() => {
-    const email = localStorage.getItem("userEmail") || sessionStorage.getItem("userEmail") || "guest";
+    const email =
+      localStorage.getItem("userEmail") ||
+      sessionStorage.getItem("userEmail") ||
+      "guest";
     const savedWishlist = localStorage.getItem(`wishlist_${email}`);
     return savedWishlist ? JSON.parse(savedWishlist) : [];
   });
