@@ -6,7 +6,7 @@ import { useAuth } from "./AuthContext";
 
 function Profile() {
   const navigate = useNavigate();
-  const { cart } = useCart();
+  const { cart, addToCart } = useCart();
   const { wishlist } = useWishlist();
   const { user, logout, updateUser } = useAuth();
 
@@ -201,6 +201,16 @@ function Profile() {
 
       alert("Order cancelled successfully.");
     }
+  };
+
+  const handleBuyAgain = (order) => {
+    // Add all items from the order to the cart
+    order.items.forEach((item) => {
+      // We use the cart context's addToCart. 
+      // Note: This assumes addToCart handles duplicates by increasing quantity
+      addToCart(item, item.quantity || 1);
+    });
+    navigate("/cart");
   };
 
   const isOrderCancellable = (order) => {
@@ -863,7 +873,7 @@ function Profile() {
                   {recentlyViewed.map((product, index) => (
                     <Link
                       key={index}
-                      to={`/product/${encodeURIComponent(product.title)}`}
+                      to={`/product/${product.id}`}
                       className="group block"
                     >
                       <div className="bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden border border-gray-100 dark:border-gray-600 group-hover:border-indigo-300 dark:group-hover:border-indigo-500 transition-colors">
@@ -973,7 +983,7 @@ function Profile() {
                             </span>
                           </div>
 
-                          <div className="flex gap-3 mt-4">
+                          <div className="flex flex-wrap gap-3 mt-4">
                             <Link
                               to={`/track-order/${order.id}`}
                               className="flex-1 text-center py-2.5 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors no-underline"
@@ -988,6 +998,12 @@ function Profile() {
                                 Cancel Order
                               </button>
                             )}
+                            <button
+                              onClick={() => handleBuyAgain(order)}
+                              className="flex-1 py-2.5 bg-white dark:bg-gray-800 border border-indigo-600 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400 rounded-lg font-semibold text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors cursor-pointer"
+                            >
+                              Buy Again
+                            </button>
                           </div>
                         </div>
                       ))}

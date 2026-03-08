@@ -16,7 +16,6 @@ function ProductDetail() {
   const [product, setProduct] = useState(null);
 
   const [loading, setLoading] = useState(true);
-  const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -32,6 +31,7 @@ function ProductDetail() {
 
   // Recently viewed products
   const [recentlyViewed, setRecentlyViewed] = useState([]);
+  const [similarProducts, setSimilarProducts] = useState([]);
 
   useEffect(() => {
     // Find product by ID
@@ -39,7 +39,6 @@ function ProductDetail() {
 
     if (foundProduct) {
       setProduct(foundProduct);
-      setSelectedImage(0);
 
       // Add to recently viewed
       const currentUserEmail = localStorage.getItem("userEmail") || "guest";
@@ -58,6 +57,12 @@ function ProductDetail() {
 
       // Check wishlist status
       setIsWishlisted(isInWishlist(foundProduct.title));
+
+      // Find similar products (same category, excluding current)
+      const related = products.filter(
+        (p) => p.category === foundProduct.category && p.id !== foundProduct.id
+      );
+      setSimilarProducts(related.slice(0, 5));
     }
     setLoading(false);
   }, [id, getAverageRating, getReviewCount, isInWishlist]);
@@ -542,6 +547,50 @@ function ProductDetail() {
             </div>
           </div>
         </div>
+
+        {/* Similar Products */}
+        {similarProducts.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              Similar Products
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {similarProducts.map((item) => (
+                <Link
+                  key={item.id}
+                  to={`/product/${item.id}`}
+                  className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow"
+                >
+                  <div className="aspect-square mb-3 flex items-center justify-center bg-white dark:bg-gray-700 rounded-lg p-2">
+                    <img
+                      src={item.src}
+                      alt={item.title}
+                      className="max-w-full max-h-30 object-contain"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://via.placeholder.com/150?text=No+Image";
+                      }}
+                    />
+                  </div>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 mb-1">
+                    {item.title?.substring(0, 40)}...
+                  </h3>
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-bold text-indigo-600 dark:text-indigo-400">
+                      {formatPrice(item.OriginalPrice)}
+                    </span>
+                    {item.MRP && (
+                      <span className="text-xs text-gray-400 line-through">
+                        {formatPrice(item.MRP)}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Recently Viewed Products */}
         {recentlyViewed.length > 0 && (

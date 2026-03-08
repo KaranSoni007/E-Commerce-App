@@ -155,7 +155,8 @@ function Wishlist() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {wishlist.map((product, index) => {
-            const discount = getDiscount(product.OriginalPrice, product.MRP);
+            const currentProduct = products.find((p) => p.title === product.title) || product;
+            const discount = getDiscount(currentProduct.OriginalPrice, currentProduct.MRP);
 
             return (
               <div
@@ -165,15 +166,15 @@ function Wishlist() {
                 {/* Product Image */}
                 <div className="relative h-48 bg-gray-50 dark:bg-gray-700 flex items-center justify-center p-4 overflow-hidden">
                   <Link
-                    to={`/product/${product.id}`}
+                    to={`/product/${currentProduct.id}`}
                     className="w-full h-full flex items-center justify-center"
                   >
                     <img
                       src={
-                        product.src ||
+                        currentProduct.src ||
                         "https://via.placeholder.com/300x200?text=No+Image"
                       }
-                      alt={product.title}
+                      alt={currentProduct.title}
                       className="w-full h-full object-contain hover:scale-105 transition-transform"
                       onError={(e) => {
                         e.target.onerror = null;
@@ -192,7 +193,7 @@ function Wishlist() {
 
                   {/* Remove Button */}
                   <button
-                    onClick={() => handleRemove(product.title)}
+                    onClick={() => handleRemove(currentProduct.title)}
                     className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white dark:bg-gray-800 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center justify-center shadow-md transition-colors"
                     aria-label="Remove from wishlist"
                   >
@@ -214,9 +215,9 @@ function Wishlist() {
 
                 {/* Product Info */}
                 <div className="p-4 flex flex-col grow">
-                  <Link to={`/product/${product.id}`} className="block">
+                  <Link to={`/product/${currentProduct.id}`} className="block">
                     <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 mb-2 min-h-10 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                      {product.title}
+                      {currentProduct.title}
                     </h3>
                   </Link>
 
@@ -224,11 +225,11 @@ function Wishlist() {
                   <div className="mb-3">
                     <div className="flex items-baseline gap-2">
                       <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
-                        {formatPrice(product.OriginalPrice)}
+                        {formatPrice(currentProduct.OriginalPrice)}
                       </span>
-                      {product.MRP && (
+                      {currentProduct.MRP && (
                         <span className="text-xs text-gray-400 line-through">
-                          {formatPrice(product.MRP)}
+                          {formatPrice(currentProduct.MRP)}
                         </span>
                       )}
                     </div>
@@ -237,20 +238,20 @@ function Wishlist() {
                   {/* Action Buttons */}
                   <div className="space-y-2 mt-auto">
                     <button
-                      onClick={() => handleMoveToCart(product)}
+                      onClick={() => handleMoveToCart(currentProduct)}
                       className="w-full py-2.5 rounded-lg bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 transition-colors"
                     >
                       Move to Cart
                     </button>
                     <div className="grid grid-cols-2 gap-2">
                       <button
-                        onClick={() => openQuickView(product)}
+                        onClick={() => openQuickView(currentProduct)}
                         className="py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                       >
                         Quick View
                       </button>
                       <Link
-                        to={`/product/${product.id}`}
+                        to={`/product/${currentProduct.id}`}
                         className="block py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-semibold text-sm text-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors no-underline"
                       >
                         Details

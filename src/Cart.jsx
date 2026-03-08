@@ -289,6 +289,7 @@ function Cart() {
       userEmail: userEmail,
       items: [...cart],
       total: total,
+      paymentMethod: paymentMethod,
       date: new Date().toLocaleDateString("en-US", {
         year: "numeric",
         month: "short",
@@ -308,7 +309,7 @@ function Cart() {
       setCart([]);
     }
 
-    navigate(`/track-order/${newOrder.id}`);
+    navigate(`/order-confirmation/${newOrder.id}`);
   };
 
   if (cart.length === 0) {

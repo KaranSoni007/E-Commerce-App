@@ -25,6 +25,7 @@ const ProductDetail = lazy(() => import("./ProductDetail"));
 const Wishlist = lazy(() => import("./Wishlist"));
 const Compare = lazy(() => import("./Compare"));
 const OrderTracking = lazy(() => import("./OrderTracking"));
+const OrderConfirmation = lazy(() => import("./OrderConfirmation"));
 const NotFound = lazy(() => import("./NotFound"));
 const Support = lazy(() => import("./Support"));
 
@@ -82,6 +83,10 @@ function App() {
                           <Route
                             path="/track-order/:orderId"
                             element={<OrderTracking />}
+                          />
+                          <Route
+                            path="/order-confirmation/:orderId"
+                            element={<OrderConfirmation />}
                           />
                           <Route path="/support" element={<Support />} />
                           <Route path="*" element={<NotFound />} />
