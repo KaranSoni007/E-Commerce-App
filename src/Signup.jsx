@@ -80,11 +80,11 @@ function Signup() {
   });
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 font-sans p-5 transition-colors duration-200">
-      <div className="bg-white dark:bg-gray-800 p-12 px-10 rounded-3xl shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] w-full max-w-105 border border-gray-100 dark:border-gray-700 relative transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)]">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 font-sans p-5 transition-colors duration-200">
+      <div className="bg-white p-12 px-10 rounded-3xl shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] w-full max-w-105 border border-gray-100 relative transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)]">
         <Link
           to="/"
-          className="inline-block mb-6 text-gray-500 dark:text-gray-400 text-sm no-underline font-semibold transition-colors duration-200 hover:text-gray-900 dark:hover:text-white"
+          className="inline-block mb-6 text-gray-500 text-sm no-underline font-semibold transition-colors duration-200 hover:text-gray-900"
         >
           ← Back to Store
         </Link>
@@ -93,21 +93,21 @@ function Signup() {
           <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-2xl font-bold mx-auto mb-4">
             K
           </div>
-          <h2 className="m-0 mb-2 text-gray-900 dark:text-white text-2xl font-extrabold">
+          <h2 className="m-0 mb-2 text-gray-900 text-2xl font-extrabold">
             Create an Account
           </h2>
-          <p className="m-0 text-gray-500 dark:text-gray-400 text-sm">
+          <p className="m-0 text-gray-500 text-sm">
             Sign up to get started with your dashboard.
           </p>
         </div>
 
         <form onSubmit={formik.handleSubmit} className="w-full">
           <div className="mb-5">
-            <label className="block mb-2 font-semibold text-sm text-gray-700 dark:text-gray-300">
+            <label className="block mb-2 font-semibold text-sm text-gray-700">
               Full Name
             </label>
             <input
-              className="w-full py-3.5 px-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-[15px] text-gray-900 dark:text-white transition-all duration-200 box-border placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-indigo-600/10"
+              className="w-full py-3.5 px-4 rounded-xl border border-gray-200 bg-gray-50 text-[15px] text-gray-900 transition-all duration-200 box-border placeholder-gray-400 focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-600/10"
               type="text"
               name="name"
               placeholder="John Doe"
@@ -121,11 +121,11 @@ function Signup() {
           </div>
 
           <div className="mb-5">
-            <label className="block mb-2 font-semibold text-sm text-gray-700 dark:text-gray-300">
+            <label className="block mb-2 font-semibold text-sm text-gray-700">
               Email Address
             </label>
             <input
-              className="w-full py-3.5 px-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-[15px] text-gray-900 dark:text-white transition-all duration-200 box-border placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-indigo-600/10"
+              className="w-full py-3.5 px-4 rounded-xl border border-gray-200 bg-gray-50 text-[15px] text-gray-900 transition-all duration-200 box-border placeholder-gray-400 focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-600/10"
               type="email"
               name="email"
               placeholder="name@example.com"
@@ -139,12 +139,12 @@ function Signup() {
           </div>
 
           <div className="mb-5">
-            <label className="block mb-2 font-semibold text-sm text-gray-700 dark:text-gray-300">
+            <label className="block mb-2 font-semibold text-sm text-gray-700">
               Password
             </label>
             <div className="relative">
               <input
-                className="w-full py-3.5 px-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-[15px] text-gray-900 dark:text-white transition-all duration-200 box-border placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-indigo-600/10 pr-10"
+                className="w-full py-3.5 px-4 rounded-xl border border-gray-200 bg-gray-50 text-[15px] text-gray-900 transition-all duration-200 box-border placeholder-gray-400 focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-600/10 pr-10"
                 type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="••••••••"
@@ -153,7 +153,7 @@ function Signup() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer bg-transparent border-none p-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer bg-transparent border-none p-1"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
@@ -202,12 +202,12 @@ function Signup() {
           </div>
 
           <div className="mb-5">
-            <label className="block mb-2 font-semibold text-sm text-gray-700 dark:text-gray-300">
+            <label className="block mb-2 font-semibold text-sm text-gray-700">
               Confirm Password
             </label>
             <div className="relative">
               <input
-                className="w-full py-3.5 px-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-[15px] text-gray-900 dark:text-white transition-all duration-200 box-border placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-indigo-600/10 pr-10"
+                className="w-full py-3.5 px-4 rounded-xl border border-gray-200 bg-gray-50 text-[15px] text-gray-900 transition-all duration-200 box-border placeholder-gray-400 focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-600/10 pr-10"
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 placeholder="••••••••"
@@ -216,7 +216,7 @@ function Signup() {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer bg-transparent border-none p-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer bg-transparent border-none p-1"
                 aria-label={
                   showConfirmPassword ? "Hide password" : "Show password"
                 }
@@ -276,11 +276,11 @@ function Signup() {
                 onBlur={formik.handleBlur}
                 className="mt-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 accent-indigo-600 cursor-pointer"
               />
-              <span className="text-sm text-gray-600 dark:text-gray-400">
+              <span className="text-sm text-gray-600">
                 I agree to the{" "}
                 <a
                   href="#"
-                  className="text-indigo-600 dark:text-indigo-400 hover:underline"
+                  className="text-indigo-600 hover:underline"
                 >
                   Terms and Conditions
                 </a>
@@ -295,7 +295,7 @@ function Signup() {
 
           <button
             type="submit"
-            className="w-full py-3.5 rounded-xl border-none bg-gray-900 dark:bg-indigo-600 text-white font-semibold text-base cursor-pointer mt-2.5 transition-all duration-200 hover:bg-gray-700 dark:hover:bg-indigo-700 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-gray-900 dark:disabled:hover:bg-indigo-600"
+            className="w-full py-3.5 rounded-xl border-none bg-gray-900 text-white font-semibold text-base cursor-pointer mt-2.5 transition-all duration-200 hover:bg-gray-700 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-gray-900"
             disabled={status === "loading" || status === "success"}
           >
             {status === "loading" ? (
@@ -310,7 +310,7 @@ function Signup() {
         </form>
 
         {status === "success" && (
-          <div className="mt-6 p-3 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg text-sm font-medium flex items-center justify-center border border-emerald-300 dark:border-emerald-800">
+          <div className="mt-6 p-3 bg-emerald-50 text-emerald-600 rounded-lg text-sm font-medium flex items-center justify-center border border-emerald-300">
             <span className="mr-2">✨</span> Account created! Redirecting to
             login...
           </div>
@@ -318,16 +318,16 @@ function Signup() {
 
         {/* 🔹 UPDATED: Now dynamically displays the professional error message */}
         {status === "error" && (
-          <div className="mt-6 p-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-sm font-medium flex items-center justify-center border border-red-300 dark:border-red-800 text-center">
+          <div className="mt-6 p-3 bg-red-50 text-red-600 rounded-lg text-sm font-medium flex items-center justify-center border border-red-300 text-center">
             <span className="mr-2">⚠️</span> {errorMessage}
           </div>
         )}
 
-        <p className="mt-6 text-sm text-gray-500 dark:text-gray-400 text-center">
+        <p className="mt-6 text-sm text-gray-500 text-center">
           Already have an account?{" "}
           <Link
             to="/login"
-            className="text-indigo-600 dark:text-indigo-400 font-semibold no-underline transition-colors hover:underline hover:text-indigo-800 dark:hover:text-indigo-300"
+            className="text-indigo-600 font-semibold no-underline transition-colors hover:underline hover:text-indigo-800"
           >
             Sign in
           </Link>

@@ -516,21 +516,25 @@ function OrderTracking() {
                 className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl"
               >
                 <div className="w-16 h-16 rounded-lg bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-600 overflow-hidden shrink-0">
-                  <img
-                    src={item.src}
-                    alt={item.title}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src =
-                        "https://via.placeholder.com/64?text=No+Image";
-                    }}
-                  />
+                  <Link to={`/product/${item.id}`} className="block w-full h-full">
+                    <img
+                      src={item.src}
+                      alt={item.title}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://via.placeholder.com/64?text=No+Image";
+                      }}
+                    />
+                  </Link>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-gray-900 dark:text-white text-sm line-clamp-2">
-                    {item.title}
-                  </h4>
+                  <Link to={`/product/${item.id}`} className="no-underline hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                    <h4 className="font-medium text-gray-900 dark:text-white text-sm line-clamp-2">
+                      {item.title}
+                    </h4>
+                  </Link>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                     Qty: {item.quantity || 1}
                   </p>

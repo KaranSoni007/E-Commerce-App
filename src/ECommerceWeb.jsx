@@ -20,7 +20,7 @@ const Toast = memo(({ message, type, onClose }) => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 100, opacity: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className={`fixed top-24 right-6 z-50 px-6 py-3 rounded-xl shadow-lg ${
+      className={`fixed top-32 right-6 z-50 px-6 py-3 rounded-xl shadow-lg ${
         type === "success"
           ? "bg-emerald-500 text-white"
           : "bg-red-500 text-white"
@@ -36,12 +36,12 @@ const Toast = memo(({ message, type, onClose }) => {
 
 // Professional Skeleton
 const SkeletonCard = memo(() => (
-  <div className="rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
-    <div className="h-56 bg-gray-200 dark:bg-gray-700 animate-pulse" />
+  <div className="rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-sm">
+    <div className="h-56 bg-gray-200 animate-pulse" />
     <div className="p-4 space-y-3">
-      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4 animate-pulse" />
-      <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse" />
+      <div className="h-4 bg-gray-200 rounded animate-pulse" />
+      <div className="h-3 bg-gray-200 rounded w-3/4 animate-pulse" />
+      <div className="h-10 bg-gray-200 rounded-xl animate-pulse" />
     </div>
   </div>
 ));
@@ -133,7 +133,7 @@ const CardView = memo(
     return (
       <div
         onClick={handleCardClick}
-        className="rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col h-full shadow-sm cursor-pointer relative transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
+        className="rounded-2xl overflow-hidden border border-gray-200 bg-white flex flex-col h-full shadow-sm cursor-pointer relative transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
       >
         {/* Badges */}
         <div className="absolute top-3 left-3 z-20 flex flex-col gap-1.5 pointer-events-none">
@@ -153,7 +153,7 @@ const CardView = memo(
           className={`absolute top-3 right-3 z-30 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 shadow-md ${
             isWishlisted
               ? "bg-pink-500 text-white"
-              : "bg-white dark:bg-gray-700 text-gray-400 hover:text-pink-500 hover:bg-pink-50 dark:hover:bg-gray-600"
+              : "bg-white text-gray-400 hover:text-pink-500 hover:bg-pink-50"
           }`}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
@@ -178,7 +178,7 @@ const CardView = memo(
           className={`absolute top-14 right-3 z-30 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 shadow-md ${
             isCompared
               ? "bg-indigo-600 text-white"
-              : "bg-white dark:bg-gray-700 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-gray-600"
+              : "bg-white text-gray-400 hover:text-indigo-600 hover:bg-indigo-50"
           }`}
           title="Compare"
         >
@@ -198,7 +198,7 @@ const CardView = memo(
         </button>
 
         {/* Professional Image Container - Full Image Visible */}
-        <div className="h-56 overflow-hidden relative bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4 pointer-events-none">
+        <div className="h-56 overflow-hidden relative bg-gray-50 flex items-center justify-center p-4 pointer-events-none">
           <img
             src={src || "https://via.placeholder.com/300x200?text=No+Image"}
             alt={title}
@@ -214,7 +214,7 @@ const CardView = memo(
 
         {/* Content */}
         <div className="p-4 flex flex-col grow">
-          <h4 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 mb-2 min-h-10">
+          <h4 className="text-sm font-semibold text-gray-900 line-clamp-2 mb-2 min-h-10">
             {title}
           </h4>
 
@@ -243,7 +243,7 @@ const CardView = memo(
               </span>
             )}
             <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-gray-900 dark:text-white">
+              <span className="text-lg font-bold text-gray-900">
                 {formatPrice(OriginalPrice)}
               </span>
               {MRP && (
@@ -517,17 +517,17 @@ function ECommerceWeb() {
 
   if (loading) {
     return (
-      <div className="min-h-screen font-sans bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen font-sans bg-gray-50">
         <div className="max-w-7xl mx-auto py-10 px-6">
-          <div className="rounded-2xl p-8 mb-8 bg-gray-200 dark:bg-gray-800 animate-pulse">
-            <div className="h-8 bg-gray-300 dark:bg-gray-700 rounded w-2/3 mx-auto mb-2" />
-            <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/2 mx-auto" />
+          <div className="rounded-2xl p-8 mb-8 bg-gray-200 animate-pulse">
+            <div className="h-8 bg-gray-300 rounded w-2/3 mx-auto mb-2" />
+            <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto" />
           </div>
           <div className="flex gap-3 mb-6">
             {[1, 2, 3, 4, 5].map((i) => (
               <div
                 key={i}
-                className="h-10 w-24 rounded-full bg-gray-200 dark:bg-gray-800 animate-pulse"
+                className="h-10 w-24 rounded-full bg-gray-200 animate-pulse"
               />
             ))}
           </div>
@@ -543,7 +543,7 @@ function ECommerceWeb() {
 
   return (
     <div
-      className="min-h-screen font-sans pb-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-200"
+      className="min-h-screen font-sans pb-16 bg-gray-50 transition-colors duration-200"
       id="home"
     >
       <AnimatePresence>
@@ -592,7 +592,7 @@ function ECommerceWeb() {
                 className={`shrink-0 px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 ${
                   selectedCategory === category
                     ? "bg-indigo-600 text-white shadow-md"
-                    : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400"
+                    : "bg-white text-gray-700 border border-gray-200 hover:border-indigo-300 hover:text-indigo-600"
                 }`}
               >
                 {category}
@@ -602,7 +602,7 @@ function ECommerceWeb() {
         </div>
 
         {/* Advanced Filters & Sort Bar */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             {/* Left: Filter Toggle & Active Filters */}
             <div className="flex items-center gap-3">
@@ -611,7 +611,7 @@ function ECommerceWeb() {
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-sm transition-all ${
                   showFilters || activeFiltersCount > 0
                     ? "bg-indigo-600 text-white"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
                 <svg
@@ -651,7 +651,7 @@ function ECommerceWeb() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-900 transition-all cursor-pointer"
+                className="px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all cursor-pointer"
               >
                 <option value="featured">Sort by: Featured</option>
                 <option value="priceLow">Price: Low to High</option>
@@ -665,11 +665,11 @@ function ECommerceWeb() {
 
           {/* Expandable Filter Panel */}
           {showFilters && (
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 animate-fadeIn">
+            <div className="mt-4 pt-4 border-t border-gray-200 animate-fadeIn">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Price Range Filter */}
                 <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-3 text-sm">
+                  <h4 className="font-semibold text-gray-900 mb-3 text-sm">
                     Price Range
                   </h4>
                   <div className="flex items-center gap-2">
@@ -687,7 +687,7 @@ function ECommerceWeb() {
                             min: e.target.value,
                           }))
                         }
-                        className="w-full py-2 pl-7 pr-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500"
+                        className="w-full py-2 pl-7 pr-3 rounded-lg border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:border-indigo-500"
                       />
                     </div>
                     <span className="text-gray-400">-</span>
@@ -705,7 +705,7 @@ function ECommerceWeb() {
                             max: e.target.value,
                           }))
                         }
-                        className="w-full py-2 pl-7 pr-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500"
+                        className="w-full py-2 pl-7 pr-3 rounded-lg border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:border-indigo-500"
                       />
                     </div>
                   </div>
@@ -717,14 +717,14 @@ function ECommerceWeb() {
 
                 {/* Brand Filter */}
                 <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-3 text-sm">
+                  <h4 className="font-semibold text-gray-900 mb-3 text-sm">
                     Brand
                   </h4>
                   <div className="max-h-32 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
                     {brands.map((brand) => (
                       <label
                         key={brand}
-                        className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-1 rounded transition-colors"
+                        className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded transition-colors"
                       >
                         <input
                           type="checkbox"
@@ -740,7 +740,7 @@ function ECommerceWeb() {
                           }}
                           className="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500"
                         />
-                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                        <span className="text-sm text-gray-700">
                           {brand}
                         </span>
                       </label>
@@ -750,7 +750,7 @@ function ECommerceWeb() {
 
                 {/* Discount Filter */}
                 <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-3 text-sm">
+                  <h4 className="font-semibold text-gray-900 mb-3 text-sm">
                     Discount
                   </h4>
                   <div className="space-y-2">
@@ -763,7 +763,7 @@ function ECommerceWeb() {
                     ].map((option) => (
                       <label
                         key={option.value}
-                        className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-1 rounded transition-colors"
+                        className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded transition-colors"
                       >
                         <input
                           type="radio"
@@ -773,7 +773,7 @@ function ECommerceWeb() {
                           onChange={(e) => setDiscountFilter(e.target.value)}
                           className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
                         />
-                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                        <span className="text-sm text-gray-700">
                           {option.label}
                         </span>
                       </label>
@@ -789,7 +789,7 @@ function ECommerceWeb() {
         <div className="mb-4">
           <p className="text-sm text-gray-500">
             Found{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">
+            <span className="font-semibold text-gray-900">
               {filteredData.length}
             </span>{" "}
             products
@@ -826,9 +826,9 @@ function ECommerceWeb() {
               );
             })
           ) : (
-            <div className="col-span-full text-center py-16 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
+            <div className="col-span-full text-center py-16 bg-white rounded-2xl border border-gray-200">
               <span className="text-4xl mb-4 block">🔍</span>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
                 No products found
               </h3>
               <p className="text-gray-500 mb-6">
@@ -850,7 +850,7 @@ function ECommerceWeb() {
           <div className="mt-12 text-center">
             <button
               onClick={() => setVisibleCount((prev) => prev + 12)}
-              className="px-8 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 transition-all shadow-sm active:scale-95 cursor-pointer"
+              className="px-8 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm active:scale-95 cursor-pointer"
             >
               Load More Products
             </button>
@@ -864,10 +864,10 @@ function ECommerceWeb() {
         {/* Professional Contact Section */}
         <div
           id="contact"
-          className="mt-12 p-8 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm"
+          className="mt-12 p-8 bg-white rounded-2xl border border-gray-200 shadow-sm"
         >
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-indigo-100 flex items-center justify-center">
               <span className="text-3xl">💬</span>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -880,14 +880,14 @@ function ECommerceWeb() {
             <div className="flex flex-wrap justify-center gap-4">
               <a
                 href="mailto:ks.telecom999@gmail.com"
-                className="flex items-center gap-3 px-5 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                className="flex items-center gap-3 px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-700 font-medium hover:bg-gray-100 transition-colors"
               >
                 <span className="text-xl">📧</span>
-                abc.xyz999@gmail.com
+                ks.telecom999@gmail.com
               </a>
               <a
                 href="tel:+919876543210"
-                className="flex items-center gap-3 px-5 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                className="flex items-center gap-3 px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-700 font-medium hover:bg-gray-100 transition-colors"
               >
                 <span className="text-xl">📞</span>
                 +91 98765 43210

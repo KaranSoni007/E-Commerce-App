@@ -12,7 +12,6 @@ import { CartProvider } from "./CartContext";
 import { WishlistProvider } from "./WishlistContext";
 import { ReviewProvider } from "./ReviewContext";
 import { CompareProvider } from "./CompareContext";
-import { ThemeProvider } from "./ThemeContext";
 import { AuthProvider } from "./AuthContext";
 
 // Lazy load page components for better performance - reduces initial bundle size
@@ -52,15 +51,14 @@ const ScrollToTop = () => {
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
+    <AuthProvider>
         <CartProvider>
           <WishlistProvider>
             <ReviewProvider>
               <CompareProvider>
                 <Router>
                   <ScrollToTop />
-                  <div className="flex flex-col min-h-screen dark:bg-gray-900 transition-colors duration-200">
+                  <div className="flex flex-col min-h-screen transition-colors duration-200">
                     <Navbar />
                     <div className="grow">
                       <Suspense fallback={<PageLoader />}>
@@ -100,8 +98,7 @@ function App() {
             </ReviewProvider>
           </WishlistProvider>
         </CartProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    </AuthProvider>
   );
 }
 

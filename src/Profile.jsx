@@ -56,18 +56,25 @@ function Profile() {
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [editingPayment, setEditingPayment] = useState(null);
   const [paymentFormData, setPaymentFormData] = useState({
+    type: "CARD", // CARD, UPI, NET_BANKING
     cardNumber: "",
     cardHolder: "",
     expiryMonth: "",
     expiryYear: "",
     cvv: "",
-    cardType: "Credit Card",
+    upiId: "",
+    bankName: "",
+    accountNumber: "",
   });
 
   // Account info
   const [memberSince, setMemberSince] = useState("");
   const [lastLogin, setLastLogin] = useState("");
   const [isVerified, setIsVerified] = useState(true);
+
+  // Toast state
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -239,43 +246,43 @@ function Profile() {
     switch (status) {
       case "cancelled":
         return (
-          <span className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-3 py-1 rounded-md text-xs font-bold">
+          <span className="bg-red-100 text-red-700 px-3 py-1 rounded-md text-xs font-bold">
             Cancelled ❌
           </span>
         );
       case "return_requested":
         return (
-          <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 px-3 py-1 rounded-md text-xs font-bold">
+          <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-md text-xs font-bold">
             Return Requested ↩️
           </span>
         );
       case "returned":
         return (
-          <span className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-md text-xs font-bold">
+          <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-md text-xs font-bold">
             Returned 📦
           </span>
         );
       case "exchange_requested":
         return (
-          <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-md text-xs font-bold">
+          <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-md text-xs font-bold">
             Exchange Requested 🔄
           </span>
         );
       case "exchanged":
         return (
-          <span className="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 px-3 py-1 rounded-md text-xs font-bold">
+          <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md text-xs font-bold">
             Exchanged 📦
           </span>
         );
       case "delivered":
         return (
-          <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-md text-xs font-bold">
+          <span className="bg-green-100 text-green-700 px-3 py-1 rounded-md text-xs font-bold">
             Delivered ✅
           </span>
         );
       default:
         return (
-          <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-md text-xs font-bold">
+          <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-md text-xs font-bold">
             {status.charAt(0).toUpperCase() + status.slice(1)} 🚚
           </span>
         );
@@ -571,14 +578,31 @@ function Profile() {
   };
 
   const savePaymentMethod = () => {
-    if (
-      !paymentFormData.cardNumber ||
-      !paymentFormData.cardHolder ||
-      !paymentFormData.expiryMonth ||
-      !paymentFormData.expiryYear ||
-      !paymentFormData.cvv
-    ) {
-      alert("Please fill in all payment details");
+    if (paymentFormData.type === "CARD") {
+      if (
+        !paymentFormData.cardNumber ||
+        !paymentFormData.cardHolder ||
+        !paymentFormData.expiryMonth ||
+        !paymentFormData.expiryYear ||
+        !paymentFormData.cvv
+      ) {
+        alert("Please fill in all card details");
+        return;
+      }
+    } else if (paymentFormData.type === "UPI") {
+      if (!paymentFormData.upiId || !paymentFormData.upiId.includes("@")) {
+        alert("Please enter a valid UPI ID");
+        return;
+      }
+    } else if (paymentFormData.type === "NET_BANKING") {
+      if (!paymentFormData.bankName || !paymentFormData.accountNumber) {
+        alert("Please fill in bank details");
+        return;
+      }
+    }
+
+    if (!user) {
+      alert("Please log in to save payment methods");
       return;
     }
 
@@ -586,7 +610,10 @@ function Profile() {
       id: Date.now(),
       userEmail: user.email,
       ...paymentFormData,
-      lastFour: paymentFormData.cardNumber.replace(/\s/g, "").slice(-4),
+      lastFour:
+        paymentFormData.type === "CARD"
+          ? paymentFormData.cardNumber.replace(/\s/g, "").slice(-4)
+          : null,
     };
 
     const updatedPayments = [...paymentMethods, newPayment];
@@ -602,30 +629,48 @@ function Profile() {
 
     setShowPaymentForm(false);
     setPaymentFormData({
+      type: "CARD",
       cardNumber: "",
       cardHolder: "",
       expiryMonth: "",
       expiryYear: "",
       cvv: "",
-      cardType: "Credit Card",
+      upiId: "",
+      bankName: "",
+      accountNumber: "",
     });
     alert("✅ Payment method added successfully!");
   };
 
   const handleDeletePayment = (id) => {
-    if (window.confirm("Are you sure you want to remove this card?")) {
+    if (window.confirm("Are you sure you want to remove this payment method?")) {
       const updatedPayments = paymentMethods.filter((p) => p.id !== id);
       setPaymentMethods(updatedPayments);
-      // In a real app, we would also update localStorage here similar to savePaymentMethod
+
+      const allPayments = JSON.parse(localStorage.getItem("mockPayments")) || [];
+      const updatedAllPayments = allPayments.filter((p) => p.id !== id);
+      localStorage.setItem("mockPayments", JSON.stringify(updatedAllPayments));
+
+      setToastMessage("Payment method removed successfully!");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
     }
   };
 
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-6 font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-gray-50 py-10 px-6 font-sans transition-colors duration-200">
+      {showToast && (
+        <div className="fixed top-32 right-6 z-50 px-6 py-3 rounded-xl shadow-lg bg-emerald-500 text-white animate-slideIn">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">✓</span>
+            <span className="font-medium text-sm">{toastMessage}</span>
+          </div>
+        </div>
+      )}
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-8">
+        <h1 className="text-3xl font-extrabold text-gray-900 mb-8">
           My Account
         </h1>
 
@@ -633,19 +678,19 @@ function Profile() {
           {/* Left Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             {/* User Info Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex flex-col items-center text-center">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col items-center text-center">
               <div className="w-24 h-24 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center text-4xl font-bold mb-4 shadow-lg">
                 {user.name.charAt(0).toUpperCase()}
               </div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+              <h2 className="text-xl font-bold text-gray-900 mb-1">
                 {user.name}
               </h2>
-              <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">
+              <p className="text-gray-500 text-sm mb-2">
                 {user.email}
               </p>
 
               {/* Verification Badge */}
-              <div className="flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-medium mb-4">
+              <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium mb-4">
                 <svg
                   className="w-3.5 h-3.5"
                   fill="currentColor"
@@ -661,20 +706,20 @@ function Profile() {
               </div>
 
               {/* Account Info */}
-              <div className="w-full space-y-2 text-left border-t border-gray-100 dark:border-gray-700 pt-4">
+              <div className="w-full space-y-2 text-left border-t border-gray-100 pt-4">
                 <div className="flex justify-between text-xs">
-                  <span className="text-gray-500 dark:text-gray-400">
+                  <span className="text-gray-500">
                     Member Since
                   </span>
-                  <span className="text-gray-700 dark:text-gray-300 font-medium">
+                  <span className="text-gray-700 font-medium">
                     {memberSince}
                   </span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="text-gray-500 dark:text-gray-400">
+                  <span className="text-gray-500">
                     Last Login
                   </span>
-                  <span className="text-gray-700 dark:text-gray-300 font-medium">
+                  <span className="text-gray-700 font-medium">
                     {lastLogin}
                   </span>
                 </div>
@@ -682,15 +727,15 @@ function Profile() {
 
               <button
                 onClick={handleLogout}
-                className="w-full mt-4 py-2.5 rounded-xl border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 font-semibold bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors cursor-pointer"
+                className="w-full mt-4 py-2.5 rounded-xl border border-red-200 text-red-600 font-semibold bg-red-50 hover:bg-red-100 transition-colors cursor-pointer"
               >
                 Log Out
               </button>
             </div>
 
             {/* Stats Dashboard */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
-              <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+              <h3 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <svg
                   className="w-4 h-4 text-indigo-600"
                   fill="none"
@@ -707,36 +752,36 @@ function Profile() {
                 Account Stats
               </h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl">
+                <div className="flex items-center justify-between p-3 bg-indigo-50 rounded-xl">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">📦</span>
-                    <span className="text-xs text-gray-600 dark:text-gray-300">
+                    <span className="text-xs text-gray-600">
                       Total Orders
                     </span>
                   </div>
-                  <span className="font-bold text-indigo-700 dark:text-indigo-400 text-lg">
+                  <span className="font-bold text-indigo-700 text-lg">
                     {totalOrders}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
+                <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-xl">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">💰</span>
-                    <span className="text-xs text-gray-600 dark:text-gray-300">
+                    <span className="text-xs text-gray-600">
                       Total Spent
                     </span>
                   </div>
-                  <span className="font-bold text-emerald-700 dark:text-emerald-400 text-lg">
+                  <span className="font-bold text-emerald-700 text-lg">
                     {formatPrice(totalSpent)}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl">
+                <div className="flex items-center justify-between p-3 bg-amber-50 rounded-xl">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">❤️</span>
-                    <span className="text-xs text-gray-600 dark:text-gray-300">
+                    <span className="text-xs text-gray-600">
                       Wishlist Items
                     </span>
                   </div>
-                  <span className="font-bold text-amber-700 dark:text-amber-400 text-lg">
+                  <span className="font-bold text-amber-700 text-lg">
                     {wishlistCount}
                   </span>
                 </div>
@@ -744,8 +789,8 @@ function Profile() {
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
-              <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+              <h3 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <svg
                   className="w-4 h-4 text-indigo-600"
                   fill="none"
@@ -764,19 +809,19 @@ function Profile() {
               <div className="space-y-2">
                 <Link
                   to="/"
-                  className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-700 dark:hover:text-indigo-400 transition-colors no-underline"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 text-gray-700 text-sm font-medium hover:bg-indigo-50 hover:text-indigo-700 transition-colors no-underline"
                 >
                   <span>🛍️</span> Continue Shopping
                 </Link>
                 <Link
                   to="/wishlist"
-                  className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-700 dark:hover:text-indigo-400 transition-colors no-underline"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 text-gray-700 text-sm font-medium hover:bg-indigo-50 hover:text-indigo-700 transition-colors no-underline"
                 >
                   <span>❤️</span> My Wishlist
                 </Link>
                 <Link
                   to="/cart"
-                  className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-700 dark:hover:text-indigo-400 transition-colors no-underline"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 text-gray-700 text-sm font-medium hover:bg-indigo-50 hover:text-indigo-700 transition-colors no-underline"
                 >
                   <span>🛒</span> My Cart
                 </Link>
@@ -787,8 +832,8 @@ function Profile() {
           {/* Main Content */}
           <div className="lg:col-span-3 space-y-6">
             {/* Notification Preferences */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <svg
                   className="w-5 h-5 text-indigo-600"
                   fill="none"
@@ -810,19 +855,19 @@ function Profile() {
                     className={`relative w-12 h-6 rounded-full transition-colors ${
                       notificationPrefs.orderUpdates
                         ? "bg-indigo-600"
-                        : "bg-gray-300 dark:bg-gray-600"
+                        : "bg-gray-300"
                     }`}
                     onClick={() => handleNotificationToggle("orderUpdates")}
                   >
                     <div
-                      className={`absolute top-1 w-4 h-4 bg-white dark:bg-gray-200 rounded-full shadow transition-transform ${
+                      className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${
                         notificationPrefs.orderUpdates
                           ? "translate-x-7"
                           : "translate-x-1"
                       }`}
                     />
                   </div>
-                  <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">
+                  <span className="text-sm text-gray-700 font-medium">
                     Order Updates
                   </span>
                 </label>
@@ -831,19 +876,19 @@ function Profile() {
                     className={`relative w-12 h-6 rounded-full transition-colors ${
                       notificationPrefs.promotions
                         ? "bg-indigo-600"
-                        : "bg-gray-300 dark:bg-gray-600"
+                        : "bg-gray-300"
                     }`}
                     onClick={() => handleNotificationToggle("promotions")}
                   >
                     <div
-                      className={`absolute top-1 w-4 h-4 bg-white dark:bg-gray-200 rounded-full shadow transition-transform ${
+                      className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${
                         notificationPrefs.promotions
                           ? "translate-x-7"
                           : "translate-x-1"
                       }`}
                     />
                   </div>
-                  <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">
+                  <span className="text-sm text-gray-700 font-medium">
                     Promotions & Deals
                   </span>
                 </label>
@@ -852,8 +897,8 @@ function Profile() {
 
             {/* Recently Viewed Products */}
             {recentlyViewed.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                   <svg
                     className="w-5 h-5 text-indigo-600"
                     fill="none"
@@ -876,7 +921,7 @@ function Profile() {
                       to={`/product/${product.id}`}
                       className="group block"
                     >
-                      <div className="bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden border border-gray-100 dark:border-gray-600 group-hover:border-indigo-300 dark:group-hover:border-indigo-500 transition-colors">
+                      <div className="bg-gray-50 rounded-xl overflow-hidden border border-gray-100 group-hover:border-indigo-300 transition-colors">
                         <div className="h-24 flex items-center justify-center p-2">
                           <img
                             src={product.src}
@@ -885,7 +930,7 @@ function Profile() {
                           />
                         </div>
                         <div className="p-2">
-                          <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-1">
+                          <p className="text-xs text-gray-600 line-clamp-1">
                             {product.title}
                           </p>
                         </div>
@@ -897,9 +942,9 @@ function Profile() {
             )}
 
             {/* Orders Panel */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-              <div className="flex justify-between items-center border-b border-gray-100 dark:border-gray-700 pb-3 mb-4">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white m-0 flex items-center gap-2">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+              <div className="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
+                <h3 className="text-lg font-bold text-gray-900 m-0 flex items-center gap-2">
                   <svg
                     className="w-5 h-5 text-indigo-600"
                     fill="none"
@@ -917,7 +962,7 @@ function Profile() {
                 </h3>
                 <button
                   onClick={() => setShowOrders(!showOrders)}
-                  className="bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 px-4 py-2 rounded-lg text-sm font-semibold transition-colors border-none cursor-pointer"
+                  className="bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-4 py-2 rounded-lg text-sm font-semibold transition-colors border-none cursor-pointer"
                 >
                   {showOrders ? "Hide Orders" : "View Orders"}
                 </button>
@@ -930,55 +975,55 @@ function Profile() {
                       {orders.map((order, index) => (
                         <div
                           key={index}
-                          className="border border-gray-100 dark:border-gray-700 rounded-xl p-5 bg-gray-50 dark:bg-gray-700/50 transition-colors hover:border-indigo-200 dark:hover:border-indigo-500"
+                          className="border border-gray-100 rounded-xl p-5 bg-gray-50 transition-colors hover:border-indigo-200"
                         >
                           <div className="flex justify-between items-center mb-4">
                             <div>
-                              <span className="font-bold text-gray-900 dark:text-white block">
+                              <span className="font-bold text-gray-900 block">
                                 Order #{order.id}
                               </span>
-                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                              <span className="text-xs text-gray-500">
                                 {order.date}
                               </span>
                             </div>
                             {renderStatusBadge(order)}
                           </div>
 
-                          <div className="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-4">
+                          <div className="space-y-3 border-t border-gray-200 pt-4">
                             {order.items.slice(0, 3).map((item, idx) => (
                               <div
                                 key={idx}
                                 className="flex justify-between items-center text-sm"
                               >
                                 <div className="flex items-center gap-3">
-                                  <div className="w-10 h-10 rounded bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-500 overflow-hidden shrink-0 flex items-center justify-center">
+                                  <div className="w-10 h-10 rounded bg-white border border-gray-200 overflow-hidden shrink-0 flex items-center justify-center">
                                     <img
                                       src={item.src}
                                       alt={item.title}
                                       className="w-full h-full object-cover"
                                     />
                                   </div>
-                                  <span className="text-gray-700 dark:text-gray-300 line-clamp-1">
+                                  <span className="text-gray-700 line-clamp-1">
                                     {item.title}
                                   </span>
                                 </div>
-                                <span className="font-medium text-gray-900 dark:text-white shrink-0 ml-4">
+                                <span className="font-medium text-gray-900 shrink-0 ml-4">
                                   Qty: {item.quantity || 1}
                                 </span>
                               </div>
                             ))}
                             {order.items.length > 3 && (
-                              <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                              <p className="text-xs text-gray-500 text-center">
                                 +{order.items.length - 3} more items
                               </p>
                             )}
                           </div>
 
-                          <div className="flex justify-between items-center border-t border-gray-200 dark:border-gray-700 mt-4 pt-4">
-                            <span className="font-bold text-gray-900 dark:text-white text-sm">
+                          <div className="flex justify-between items-center border-t border-gray-200 mt-4 pt-4">
+                            <span className="font-bold text-gray-900 text-sm">
                               Total Amount
                             </span>
-                            <span className="font-bold text-indigo-600 dark:text-indigo-400 text-lg">
+                            <span className="font-bold text-indigo-600 text-lg">
                               {formatPrice(order.total)}
                             </span>
                           </div>
@@ -993,14 +1038,14 @@ function Profile() {
                             {isOrderCancellable(order) && (
                               <button
                                 onClick={() => handleCancelOrder(order.id)}
-                                className="flex-1 py-2.5 bg-white dark:bg-gray-800 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-lg font-semibold text-sm hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
+                                className="flex-1 py-2.5 bg-white border border-red-200 text-red-600 rounded-lg font-semibold text-sm hover:bg-red-50 transition-colors cursor-pointer"
                               >
                                 Cancel Order
                               </button>
                             )}
                             <button
                               onClick={() => handleBuyAgain(order)}
-                              className="flex-1 py-2.5 bg-white dark:bg-gray-800 border border-indigo-600 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400 rounded-lg font-semibold text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors cursor-pointer"
+                              className="flex-1 py-2.5 bg-white border border-indigo-600 text-indigo-600 rounded-lg font-semibold text-sm hover:bg-indigo-50 transition-colors cursor-pointer"
                             >
                               Buy Again
                             </button>
@@ -1011,7 +1056,7 @@ function Profile() {
                   ) : (
                     <div className="flex flex-col items-center justify-center py-8 text-center">
                       <span className="text-5xl mb-4">📦</span>
-                      <p className="text-gray-900 dark:text-white font-semibold text-lg m-0">
+                      <p className="text-gray-900 font-semibold text-lg m-0">
                         No orders yet
                       </p>
                       <Link
@@ -1027,29 +1072,29 @@ function Profile() {
             </div>
 
             {/* Account Settings Panel */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-700 pb-3">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4 border-b border-gray-100 pb-3">
                 Account Settings
               </h3>
 
               <div className="space-y-4">
                 {/* 1. Edit Profile */}
-                <div className="border-b border-gray-100 dark:border-gray-700 pb-4">
+                <div className="border-b border-gray-100 pb-4">
                   <div
                     className="flex justify-between items-center cursor-pointer"
                     onClick={() => setShowEditProfile(!showEditProfile)}
                   >
-                    <span className="text-sm text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
+                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2">
                       <span>👤</span> Personal Information
                     </span>
-                    <span className="text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <span className="text-indigo-600 text-sm font-semibold">
                       {showEditProfile ? "Close ↑" : "Edit →"}
                     </span>
                   </div>
                   {showEditProfile && (
                     <div className="mt-4 space-y-4 animate-fadeIn">
                       <div>
-                        <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                        <label className="block text-xs font-semibold text-gray-600 mb-1">
                           Full Name
                         </label>
                         <div className="flex gap-2">
@@ -1058,7 +1103,7 @@ function Profile() {
                             value={editName}
                             onChange={(e) => setEditName(e.target.value)}
                             placeholder="Enter your name"
-                            className="flex-1 p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-indigo-600 dark:focus:border-indigo-500 focus:shadow-[0_0_0_3px_rgba(79,70,229,0.1)] transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            className="flex-1 p-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-indigo-600 focus:shadow-[0_0_0_3px_rgba(79,70,229,0.1)] transition-all bg-white text-gray-900"
                           />
                           <button
                             onClick={handleSaveProfile}
@@ -1069,16 +1114,16 @@ function Profile() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                        <label className="block text-xs font-semibold text-gray-600 mb-1">
                           Email Address
                         </label>
                         <input
                           type="email"
                           value={user.email}
                           disabled
-                          className="w-full p-2.5 border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                          className="w-full p-2.5 border border-gray-200 bg-gray-100 rounded-lg text-sm text-gray-500 cursor-not-allowed"
                         />
-                        <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-1">
+                        <p className="text-[11px] text-gray-500 mt-1">
                           For security reasons, your email address cannot be
                           changed.
                         </p>
@@ -1088,22 +1133,22 @@ function Profile() {
                 </div>
 
                 {/* 2. Change Password */}
-                <div className="border-b border-gray-100 dark:border-gray-700 pb-4">
+                <div className="border-b border-gray-100 pb-4">
                   <div
                     className="flex justify-between items-center cursor-pointer"
                     onClick={() => setShowPasswordChange(!showPasswordChange)}
                   >
-                    <span className="text-sm text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
+                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2">
                       <span>🔒</span> Change Password
                     </span>
-                    <span className="text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <span className="text-indigo-600 text-sm font-semibold">
                       {showPasswordChange ? "Close ↑" : "Update →"}
                     </span>
                   </div>
                   {showPasswordChange && (
                     <div className="mt-4 space-y-4 animate-fadeIn">
                       <div>
-                        <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                        <label className="block text-xs font-semibold text-gray-600 mb-1">
                           Current Password
                         </label>
                         <input
@@ -1116,11 +1161,11 @@ function Profile() {
                             })
                           }
                           placeholder="Enter current password"
-                          className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-indigo-600 dark:focus:border-indigo-500 focus:shadow-[0_0_0_3px_rgba(79,70,229,0.1)] transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                          className="w-full p-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-indigo-600 focus:shadow-[0_0_0_3px_rgba(79,70,229,0.1)] transition-all bg-white text-gray-900"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                        <label className="block text-xs font-semibold text-gray-600 mb-1">
                           New Password
                         </label>
                         <input
@@ -1133,11 +1178,11 @@ function Profile() {
                             })
                           }
                           placeholder="Enter new password"
-                          className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-indigo-600 dark:focus:border-indigo-500 focus:shadow-[0_0_0_3px_rgba(79,70,229,0.1)] transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                          className="w-full p-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-indigo-600 focus:shadow-[0_0_0_3px_rgba(79,70,229,0.1)] transition-all bg-white text-gray-900"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                        <label className="block text-xs font-semibold text-gray-600 mb-1">
                           Confirm New Password
                         </label>
                         <input
@@ -1150,7 +1195,7 @@ function Profile() {
                             })
                           }
                           placeholder="Confirm new password"
-                          className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-indigo-600 dark:focus:border-indigo-500 focus:shadow-[0_0_0_3px_rgba(79,70,229,0.1)] transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                          className="w-full p-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-indigo-600 focus:shadow-[0_0_0_3px_rgba(79,70,229,0.1)] transition-all bg-white text-gray-900"
                         />
                       </div>
                       <button
@@ -1164,15 +1209,15 @@ function Profile() {
                 </div>
 
                 {/* 3. Shipping Addresses */}
-                <div className="border-b border-gray-100 dark:border-gray-700 pb-4">
+                <div className="border-b border-gray-100 pb-4">
                   <div
                     className="flex justify-between items-center cursor-pointer"
                     onClick={() => setShowAddresses(!showAddresses)}
                   >
-                    <span className="text-sm text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
+                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2">
                       <span>📍</span> Shipping Addresses ({addresses.length})
                     </span>
-                    <span className="text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <span className="text-indigo-600 text-sm font-semibold">
                       {showAddresses ? "Close ↑" : "Manage →"}
                     </span>
                   </div>
@@ -1182,15 +1227,15 @@ function Profile() {
                       {!showAddressForm && (
                         <button
                           onClick={openAddAddressForm}
-                          className="w-full py-3 border-2 border-dashed border-indigo-300 dark:border-indigo-500 rounded-xl text-indigo-600 dark:text-indigo-400 font-semibold hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors flex items-center justify-center gap-2"
+                          className="w-full py-3 border-2 border-dashed border-indigo-300 rounded-xl text-indigo-600 font-semibold hover:bg-indigo-50 transition-colors flex items-center justify-center gap-2"
                         >
                           <span className="text-xl">+</span> Add New Address
                         </button>
                       )}
 
                       {showAddressForm && (
-                        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-5 border border-gray-200 dark:border-gray-600 animate-fadeIn">
-                          <h4 className="font-bold text-gray-900 dark:text-white mb-4 text-sm flex items-center gap-2">
+                        <div className="bg-gray-50 rounded-xl p-5 border border-gray-200 animate-fadeIn">
+                          <h4 className="font-bold text-gray-900 mb-4 text-sm flex items-center gap-2">
                             {editingAddress
                               ? "✏️ Edit Address"
                               : "➕ Add New Address"}
@@ -1199,7 +1244,7 @@ function Profile() {
                           <div className="space-y-3">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                               <div>
-                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                <label className="block text-xs font-medium text-gray-600 mb-1">
                                   Full Name *
                                 </label>
                                 <input
@@ -1212,11 +1257,11 @@ function Profile() {
                                     )
                                   }
                                   placeholder="John Doe"
-                                  className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-sm outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900"
+                                  className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none transition-all bg-white text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
                                 />
                               </div>
                               <div>
-                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                <label className="block text-xs font-medium text-gray-600 mb-1">
                                   Phone Number *
                                 </label>
                                 <input
@@ -1230,13 +1275,13 @@ function Profile() {
                                   }
                                   placeholder="9876543210"
                                   maxLength="10"
-                                  className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-sm outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900"
+                                  className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none transition-all bg-white text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
                                 />
                               </div>
                             </div>
 
                             <div>
-                              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                              <label className="block text-xs font-medium text-gray-600 mb-1">
                                 Street Address *
                               </label>
                               <input
@@ -1249,13 +1294,13 @@ function Profile() {
                                   )
                                 }
                                 placeholder="123 Main Street, Apartment 4B"
-                                className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-sm outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900"
+                                className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none transition-all bg-white text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
                               />
                             </div>
 
                             <div className="grid grid-cols-3 gap-3">
                               <div>
-                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                <label className="block text-xs font-medium text-gray-600 mb-1">
                                   City *
                                 </label>
                                 <input
@@ -1268,11 +1313,11 @@ function Profile() {
                                     )
                                   }
                                   placeholder="Mumbai"
-                                  className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-sm outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900"
+                                  className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none transition-all bg-white text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
                                 />
                               </div>
                               <div>
-                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                <label className="block text-xs font-medium text-gray-600 mb-1">
                                   State *
                                 </label>
                                 <input
@@ -1285,11 +1330,11 @@ function Profile() {
                                     )
                                   }
                                   placeholder="Maharashtra"
-                                  className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-sm outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900"
+                                  className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none transition-all bg-white text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
                                 />
                               </div>
                               <div>
-                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                <label className="block text-xs font-medium text-gray-600 mb-1">
                                   PIN Code *
                                 </label>
                                 <input
@@ -1303,7 +1348,7 @@ function Profile() {
                                   }
                                   placeholder="400001"
                                   maxLength="6"
-                                  className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-sm outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900"
+                                  className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none transition-all bg-white text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
                                 />
                               </div>
                             </div>
@@ -1319,7 +1364,7 @@ function Profile() {
                               </button>
                               <button
                                 onClick={closeAddressForm}
-                                className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer"
+                                className="flex-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer"
                               >
                                 Cancel
                               </button>
@@ -1329,9 +1374,9 @@ function Profile() {
                       )}
 
                       {addresses.length === 0 && !showAddressForm ? (
-                        <div className="text-center py-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                        <div className="text-center py-6 bg-gray-50 rounded-xl">
                           <span className="text-3xl mb-2 block">📍</span>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                          <p className="text-sm text-gray-500">
                             No saved addresses yet.
                           </p>
                         </div>
@@ -1366,14 +1411,14 @@ function Profile() {
                                 key={index}
                                 className={`p-4 rounded-xl border-2 transition-all duration-200 ${
                                   index === 0
-                                    ? "border-indigo-600 dark:border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20 shadow-md"
-                                    : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-indigo-300 dark:hover:border-indigo-500"
+                                    ? "border-indigo-600 bg-indigo-50 shadow-md"
+                                    : "border-gray-200 bg-white hover:border-indigo-300"
                                 }`}
                               >
                                 <div className="flex justify-between items-start">
                                   <div className="flex-1 pr-3">
                                     <div className="flex items-center gap-2 mb-2">
-                                      <span className="font-bold text-gray-900 dark:text-white text-sm">
+                                      <span className="font-bold text-gray-900 text-sm">
                                         {displayName}
                                       </span>
                                       {index === 0 && (
@@ -1382,14 +1427,14 @@ function Profile() {
                                         </span>
                                       )}
                                     </div>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                    <p className="text-gray-600 text-sm leading-relaxed">
                                       {displayStreet}
                                       {displayCity && `, ${displayCity}`}
                                       {displayState && `, ${displayState}`}
                                       {displayPincode && ` - ${displayPincode}`}
                                     </p>
                                     {displayPhone && (
-                                      <p className="text-gray-500 dark:text-gray-400 text-xs mt-2 flex items-center gap-1">
+                                      <p className="text-gray-500 text-xs mt-2 flex items-center gap-1">
                                         <span>📞</span> {displayPhone}
                                       </p>
                                     )}
@@ -1398,14 +1443,14 @@ function Profile() {
                                   <div className="flex flex-col gap-1 shrink-0">
                                     <button
                                       onClick={() => openEditAddressForm(addr)}
-                                      className="w-8 h-8 flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors cursor-pointer border-none"
+                                      className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer border-none"
                                       title="Edit Address"
                                     >
                                       ✏️
                                     </button>
                                     <button
                                       onClick={() => handleDeleteAddress(index)}
-                                      className="w-8 h-8 flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer border-none"
+                                      className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer border-none"
                                       title="Delete Address"
                                     >
                                       🗑️
@@ -1413,7 +1458,7 @@ function Profile() {
                                     {index !== 0 && (
                                       <button
                                         onClick={() => setAsDefault(index)}
-                                        className="w-8 h-8 flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors cursor-pointer border-none"
+                                        className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors cursor-pointer border-none"
                                         title="Set as Default"
                                       >
                                         ⭐
@@ -1431,15 +1476,15 @@ function Profile() {
                 </div>
 
                 {/* 4. Payment Methods */}
-                <div className="border-b border-gray-100 dark:border-gray-700 pb-4">
+                <div className="border-b border-gray-100 pb-4">
                   <div
                     className="flex justify-between items-center cursor-pointer"
                     onClick={() => setShowPaymentMethods(!showPaymentMethods)}
                   >
-                    <span className="text-sm text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
+                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2">
                       <span>💳</span> Payment Methods
                     </span>
-                    <span className="text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <span className="text-indigo-600 text-sm font-semibold">
                       {showPaymentMethods ? "Close ↑" : "Manage →"}
                     </span>
                   </div>
@@ -1449,24 +1494,34 @@ function Profile() {
                       {paymentMethods.map((method) => (
                         <div
                           key={method.id}
-                          className="flex justify-between items-center p-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-700/50"
+                          className="flex justify-between items-center p-4 border border-gray-200 rounded-xl bg-gray-50"
                         >
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-6 bg-gray-300 dark:bg-gray-600 rounded flex items-center justify-center text-[10px] font-bold text-gray-600 dark:text-gray-300">
-                              CARD
+                            <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-xl shadow-sm">
+                              {method.type === "CARD" && "💳"}
+                              {method.type === "UPI" && "📱"}
+                              {method.type === "NET_BANKING" && "🏦"}
                             </div>
                             <div>
-                              <p className="text-sm font-bold text-gray-900 dark:text-white">
-                                •••• •••• •••• {method.lastFour}
+                              <p className="text-sm font-bold text-gray-900">
+                                {method.type === "CARD" &&
+                                  `•••• ${method.lastFour}`}
+                                {method.type === "UPI" && method.upiId}
+                                {method.type === "NET_BANKING" &&
+                                  method.bankName}
                               </p>
-                              <p className="text-xs text-gray-500 dark:text-gray-400">
-                                Expires {method.expiryMonth}/{method.expiryYear}
+                              <p className="text-xs text-gray-500">
+                                {method.type === "CARD" &&
+                                  `Expires ${method.expiryMonth}/${method.expiryYear}`}
+                                {method.type === "UPI" && "UPI Linked"}
+                                {method.type === "NET_BANKING" &&
+                                  `Acc: •••• ${method.accountNumber.slice(-4)}`}
                               </p>
                             </div>
                           </div>
                           <button
                             onClick={() => handleDeletePayment(method.id)}
-                            className="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 p-2 rounded-lg transition-colors border-none cursor-pointer"
+                            className="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors border-none cursor-pointer"
                           >
                             🗑️
                           </button>
@@ -1476,18 +1531,47 @@ function Profile() {
                       {!showPaymentForm ? (
                         <button
                           onClick={() => setShowPaymentForm(true)}
-                          className="w-full py-3 border-2 border-dashed border-indigo-300 dark:border-indigo-500 rounded-xl text-indigo-600 dark:text-indigo-400 font-semibold hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                          className="w-full py-3 border-2 border-dashed border-indigo-300 rounded-xl text-indigo-600 font-semibold hover:bg-indigo-50 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                         >
-                          <span className="text-xl">+</span> Add New Card
+                          <span className="text-xl">+</span> Add Payment Method
                         </button>
                       ) : (
-                        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-5 border border-gray-200 dark:border-gray-600 animate-fadeIn">
-                          <h4 className="font-bold text-gray-900 dark:text-white mb-4 text-sm">
-                            Add New Card
+                        <div className="bg-gray-50 rounded-xl p-5 border border-gray-200 animate-fadeIn">
+                          <h4 className="font-bold text-gray-900 mb-4 text-sm">
+                            Add New Payment Method
                           </h4>
+
+                          {/* Payment Type Selection */}
+                          <div className="flex gap-2 mb-4">
+                            {["CARD", "UPI", "NET_BANKING"].map((type) => (
+                              <button
+                                key={type}
+                                onClick={() =>
+                                  setPaymentFormData({
+                                    ...paymentFormData,
+                                    type,
+                                  })
+                                }
+                                className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all ${
+                                  paymentFormData.type === type
+                                    ? "bg-indigo-600 text-white border-indigo-600"
+                                    : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
+                                }`}
+                              >
+                                {type === "CARD"
+                                  ? "Card"
+                                  : type === "UPI"
+                                  ? "UPI"
+                                  : "Net Banking"}
+                              </button>
+                            ))}
+                          </div>
+
                           <div className="space-y-3">
-                            <div>
-                              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                            {paymentFormData.type === "CARD" && (
+                              <>
+                                <div>
+                              <label className="block text-xs font-medium text-gray-600 mb-1">
                                 Card Number
                               </label>
                               <input
@@ -1501,11 +1585,11 @@ function Profile() {
                                 }
                                 placeholder="0000 0000 0000 0000"
                                 maxLength="19"
-                                className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-sm outline-none focus:border-indigo-600 dark:focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                                className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
                               />
                             </div>
                             <div>
-                              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                              <label className="block text-xs font-medium text-gray-600 mb-1">
                                 Card Holder Name
                               </label>
                               <input
@@ -1518,12 +1602,12 @@ function Profile() {
                                   )
                                 }
                                 placeholder="Name on card"
-                                className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-sm outline-none focus:border-indigo-600 dark:focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                                className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
                               />
                             </div>
                             <div className="grid grid-cols-3 gap-3">
                               <div>
-                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                <label className="block text-xs font-medium text-gray-600 mb-1">
                                   Expiry Month
                                 </label>
                                 <input
@@ -1537,11 +1621,11 @@ function Profile() {
                                       e.target.value,
                                     )
                                   }
-                                  className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-sm outline-none focus:border-indigo-600 dark:focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                                  className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
                                 />
                               </div>
                               <div>
-                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                <label className="block text-xs font-medium text-gray-600 mb-1">
                                   Expiry Year
                                 </label>
                                 <input
@@ -1555,11 +1639,11 @@ function Profile() {
                                       e.target.value,
                                     )
                                   }
-                                  className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-sm outline-none focus:border-indigo-600 dark:focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                                  className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
                                 />
                               </div>
                               <div>
-                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                <label className="block text-xs font-medium text-gray-600 mb-1">
                                   CVV
                                 </label>
                                 <input
@@ -1573,20 +1657,77 @@ function Profile() {
                                       e.target.value,
                                     )
                                   }
-                                  className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-sm outline-none focus:border-indigo-600 dark:focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                                  className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
                                 />
                               </div>
                             </div>
+                              </>
+                            )}
+
+                            {paymentFormData.type === "UPI" && (
+                              <div>
+                                <label className="block text-xs font-medium text-gray-600 mb-1">
+                                  UPI ID
+                                </label>
+                                <input
+                                  type="text"
+                                  value={paymentFormData.upiId}
+                                  onChange={(e) =>
+                                    handlePaymentInputChange("upiId", e.target.value)
+                                  }
+                                  placeholder="username@bank"
+                                  className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
+                                />
+                              </div>
+                            )}
+
+                            {paymentFormData.type === "NET_BANKING" && (
+                              <>
+                                <div>
+                                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                                    Bank Name
+                                  </label>
+                                  <select
+                                    value={paymentFormData.bankName}
+                                    onChange={(e) =>
+                                      handlePaymentInputChange("bankName", e.target.value)
+                                    }
+                                    className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
+                                  >
+                                    <option value="">Select Bank</option>
+                                    <option value="HDFC Bank">HDFC Bank</option>
+                                    <option value="SBI">State Bank of India</option>
+                                    <option value="ICICI Bank">ICICI Bank</option>
+                                    <option value="Axis Bank">Axis Bank</option>
+                                  </select>
+                                </div>
+                                <div>
+                                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                                    Account Number
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={paymentFormData.accountNumber}
+                                    onChange={(e) =>
+                                      handlePaymentInputChange("accountNumber", e.target.value)
+                                    }
+                                    placeholder="Enter Account Number"
+                                    className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
+                                  />
+                                </div>
+                              </>
+                            )}
+
                             <div className="flex gap-3 pt-3">
                               <button
                                 onClick={savePaymentMethod}
                                 className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer border-none"
                               >
-                                Save Card
+                                Save Payment Method
                               </button>
                               <button
                                 onClick={() => setShowPaymentForm(false)}
-                                className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer"
+                                className="flex-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer"
                               >
                                 Cancel
                               </button>
@@ -1599,15 +1740,15 @@ function Profile() {
                 </div>
 
                 {/* 5. Help & Support */}
-                <div className="border-b border-gray-100 dark:border-gray-700 pb-4">
+                <div className="border-b border-gray-100 pb-4">
                   <div
                     className="flex justify-between items-center cursor-pointer"
                     onClick={() => setShowSupport(!showSupport)}
                   >
-                    <span className="text-sm text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
+                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2">
                       <span>❓</span> Help & Support
                     </span>
-                    <span className="text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <span className="text-indigo-600 text-sm font-semibold">
                       {showSupport ? "Close ↑" : "View →"}
                     </span>
                   </div>
@@ -1624,8 +1765,8 @@ function Profile() {
                         }
                         className={`p-3 rounded-lg text-sm m-0 cursor-pointer transition-colors font-medium flex justify-between items-center ${
                           activeSupportSection === "contact"
-                            ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-400"
-                            : "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-indigo-700 dark:hover:text-indigo-400"
+                            ? "bg-indigo-50 text-indigo-700"
+                            : "bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-indigo-700"
                         }`}
                       >
                         <span>📞 Contact Customer Service</span>
@@ -1634,8 +1775,8 @@ function Profile() {
                         </span>
                       </div>
                       {activeSupportSection === "contact" && (
-                        <div className="p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg text-sm text-gray-600 dark:text-gray-300 animate-fadeIn ml-2 mb-2">
-                          <p className="font-semibold text-gray-900 dark:text-white mb-2">
+                        <div className="p-4 bg-white border border-gray-100 rounded-lg text-sm text-gray-600 animate-fadeIn ml-2 mb-2">
+                          <p className="font-semibold text-gray-900 mb-2">
                             We're here to help!
                           </p>
                           <div className="space-y-2">
@@ -1643,7 +1784,7 @@ function Profile() {
                               <span>📧</span>{" "}
                               <a
                                 href="mailto:support@intellikart.com"
-                                className="text-indigo-600 dark:text-indigo-400 hover:underline"
+                                className="text-indigo-600 hover:underline"
                               >
                                 support@intellikart.com
                               </a>
@@ -1652,7 +1793,7 @@ function Profile() {
                               <span>📞</span>{" "}
                               <a
                                 href="tel:+919876543210"
-                                className="text-indigo-600 dark:text-indigo-400 hover:underline"
+                                className="text-indigo-600 hover:underline"
                               >
                                 +91 98765 43210
                               </a>
@@ -1673,8 +1814,8 @@ function Profile() {
                         }
                         className={`p-3 rounded-lg text-sm m-0 cursor-pointer transition-colors font-medium flex justify-between items-center ${
                           activeSupportSection === "faq"
-                            ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-400"
-                            : "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-indigo-700 dark:hover:text-indigo-400"
+                            ? "bg-indigo-50 text-indigo-700"
+                            : "bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-indigo-700"
                         }`}
                       >
                         <span>❓ Frequently Asked Questions</span>
@@ -1683,9 +1824,9 @@ function Profile() {
                         </span>
                       </div>
                       {activeSupportSection === "faq" && (
-                        <div className="p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg text-sm text-gray-600 dark:text-gray-300 animate-fadeIn ml-2 mb-2 space-y-3">
+                        <div className="p-4 bg-white border border-gray-100 rounded-lg text-sm text-gray-600 animate-fadeIn ml-2 mb-2 space-y-3">
                           <div>
-                            <p className="font-semibold text-gray-900 dark:text-white mb-1">
+                            <p className="font-semibold text-gray-900 mb-1">
                               How do I track my order?
                             </p>
                             <p>
@@ -1694,7 +1835,7 @@ function Profile() {
                             </p>
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-900 dark:text-white mb-1">
+                            <p className="font-semibold text-gray-900 mb-1">
                               Can I cancel my order?
                             </p>
                             <p>
@@ -1714,8 +1855,8 @@ function Profile() {
                         }
                         className={`p-3 rounded-lg text-sm m-0 cursor-pointer transition-colors font-medium flex justify-between items-center ${
                           activeSupportSection === "return"
-                            ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-400"
-                            : "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-indigo-700 dark:hover:text-indigo-400"
+                            ? "bg-indigo-50 text-indigo-700"
+                            : "bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-indigo-700"
                         }`}
                       >
                         <span>🔄 Return Policy</span>
@@ -1724,8 +1865,8 @@ function Profile() {
                         </span>
                       </div>
                       {activeSupportSection === "return" && (
-                        <div className="p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg text-sm text-gray-600 dark:text-gray-300 animate-fadeIn ml-2 mb-2">
-                          <p className="font-semibold text-gray-900 dark:text-white mb-2">
+                        <div className="p-4 bg-white border border-gray-100 rounded-lg text-sm text-gray-600 animate-fadeIn ml-2 mb-2">
+                          <p className="font-semibold text-gray-900 mb-2">
                             Easy 10-Day Returns
                           </p>
                           <p className="mb-2">
@@ -1753,10 +1894,10 @@ function Profile() {
                     className="flex justify-between items-center cursor-pointer"
                     onClick={handleDeleteAccount}
                   >
-                    <span className="text-sm text-red-600 dark:text-red-400 font-semibold flex items-center gap-2">
+                    <span className="text-sm text-red-600 font-semibold flex items-center gap-2">
                       <span>🗑️</span> Delete Account
                     </span>
-                    <span className="text-red-600 dark:text-red-400 text-sm font-semibold">
+                    <span className="text-red-600 text-sm font-semibold">
                       Delete →
                     </span>
                   </div>
@@ -1768,6 +1909,19 @@ function Profile() {
       </div>
 
       <style>{`
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        .animate-slideIn {
+          animation: slideIn 0.3s ease-out;
+        }
         .animate-fadeIn { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(-5px); }
