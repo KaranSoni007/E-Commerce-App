@@ -10,7 +10,7 @@ import { useCart } from "./CartContext";
 import { useWishlist } from "./WishlistContext";
 import { useCompare } from "./CompareContext";
 import { useAuth } from "./AuthContext";
-import products from "./Products";
+import AllProducts, { categories as productCategories } from "./Products";
 
 // Reusable Nav Icon Component
 const NavIcon = ({ to, title, count, countBgColor, children }) => (
@@ -56,11 +56,7 @@ function Navbar() {
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [recentSearches, setRecentSearches] = useState([]);
   const isSubmittingRef = useRef(false);
-
-  const categories = useMemo(
-    () => ["All", ...new Set(products.map((p) => p.category).filter(Boolean))],
-    [],
-  );
+  const categories = productCategories;
 
   const cartCount = cart.length;
   const compareCount = compareList.length;
@@ -87,6 +83,18 @@ function Navbar() {
       document.body.style.overflow = "auto";
     };
   }, [showMobileSearch]);
+
+  // Close profile dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setShowProfileDropdown(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [profileDropdownRef]);
 
   // Load recent searches on mount
   useEffect(() => {
@@ -135,14 +143,10 @@ function Navbar() {
           .toLowerCase()
           .split(" ")
           .filter(Boolean);
-        const filtered = products
-          .filter((p) => {
-            const productTitleLower = p.title.toLowerCase();
-            return searchWords.every((word) =>
-              productTitleLower.includes(word),
-            );
-          })
-          .slice(0, 5);
+        const filtered = AllProducts.filter((p) => {
+          const productTitleLower = p.title.toLowerCase();
+          return searchWords.every((word) => productTitleLower.includes(word));
+        }).slice(0, 5);
         setSuggestions(filtered);
       } else {
         setSuggestions([]);
@@ -173,7 +177,7 @@ function Navbar() {
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [searchQuery, products, recentSearches]);
+  }, [searchQuery, recentSearches]);
 
   const handleSearch = useCallback(
     (e) => {
@@ -354,14 +358,12 @@ function Navbar() {
                         .split(" ")
                         .filter(Boolean);
                       setSuggestions(
-                        products
-                          .filter((p) => {
-                            const productTitleLower = p.title.toLowerCase();
-                            return searchWords.every((word) =>
-                              productTitleLower.includes(word),
-                            );
-                          })
-                          .slice(0, 5),
+                        AllProducts.filter((p) => {
+                          const productTitleLower = p.title.toLowerCase();
+                          return searchWords.every((word) =>
+                            productTitleLower.includes(word),
+                          );
+                        }).slice(0, 5),
                       );
                     }
                   }}
@@ -886,23 +888,6 @@ function Navbar() {
           </ul>
 
           <div className="border-t border-gray-200 p-4">
-            {/* Mobile Theme Toggle */}
-            {/* <button
-              type="button"
-              onClick={toggleTheme}
-              className="w-full text-left text-gray-700 font-medium flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors mb-2 cursor-pointer"
-            >
-              {isDarkMode ? (
-                <span className="flex items-center gap-3">
-                  <span className="text-xl">☀️</span> Light Mode
-                </span>
-              ) : (
-                <span className="flex items-center gap-3">
-                  <span className="text-xl">🌙</span> Dark Mode
-                </span>
-              )}
-            </button> */}
-
             <div className="flex flex-col space-y-2">
               {/* Mobile Compare */}
               <Link
@@ -970,67 +955,67 @@ function Navbar() {
                 Cart {cartCount > 0 && `(${cartCount})`}
               </Link>
 
-            {user ? (
-              <>
-                {/* Mobile Profile */}
-                <Link
-                  to="/profile"
-                  className="no-underline text-gray-700 font-medium flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-bold">
-                    {user.name?.charAt(0).toUpperCase() || "U"}
-                  </div>
-                  <div>
-                    <span className="font-bold">{user.name}</span>
-                    <span className="text-xs block text-gray-500">
-                      View Profile
-                    </span>
-                  </div>
-                </Link>
-
-                {/* Mobile Logout */}
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="text-left text-red-600 font-semibold flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-red-50 transition-colors w-full"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+              {user ? (
+                <>
+                  {/* Mobile Profile */}
+                  <Link
+                    to="/profile"
+                    className="no-underline text-gray-700 font-medium flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                    />
-                  </svg>
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="no-underline text-gray-700 font-medium py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Log In
-                </Link>
-                <Link
-                  to="/signup"
-                  className="no-underline bg-indigo-600 text-white px-4 py-3 rounded-lg font-semibold text-sm text-center hover:bg-indigo-700 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Sign Up
-                </Link>
-              </>
-            )}
+                    <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-bold">
+                      {user.name?.charAt(0).toUpperCase() || "U"}
+                    </div>
+                    <div>
+                      <span className="font-bold">{user.name}</span>
+                      <span className="text-xs block text-gray-500">
+                        View Profile
+                      </span>
+                    </div>
+                  </Link>
+
+                  {/* Mobile Logout */}
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="text-left text-red-600 font-semibold flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-red-50 transition-colors w-full"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="no-underline text-gray-700 font-medium py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Log In
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="no-underline bg-indigo-600 text-white px-4 py-3 rounded-lg font-semibold text-sm text-center hover:bg-indigo-700 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

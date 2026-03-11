@@ -106,7 +106,11 @@ function OrderConfirmation() {
                     Order Date
                   </p>
                   <p className="font-semibold text-gray-900 dark:text-white text-lg">
-                    {order.date}
+                    {new Date(order.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
                   </p>
                 </div>
                 <div>

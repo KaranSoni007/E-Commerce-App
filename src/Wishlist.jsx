@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useWishlist } from "./WishlistContext";
 import { useCart } from "./CartContext";
-import products from "./Products";
+import AllProducts, { services, accessories } from "./Products";
 
 function Wishlist() {
   const navigate = useNavigate();
@@ -155,7 +155,8 @@ function Wishlist() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {wishlist.map((product, index) => {
-            const currentProduct = products.find((p) => p.title === product.title) || product;
+            const allItems = [...AllProducts, ...services, ...accessories];
+            const currentProduct = allItems.find((p) => p.title === product.title) || product;
             const discount = getDiscount(currentProduct.OriginalPrice, currentProduct.MRP);
 
             return (

@@ -257,7 +257,6 @@ function Cart() {
       alert("Please enter PIN code");
       return;
     }
-
     const userEmail = getUserEmail();
     const allAddresses =
       JSON.parse(localStorage.getItem("mockAddresses")) || [];
@@ -417,24 +416,14 @@ function Cart() {
       items: [...cart],
       total: total,
       paymentMethod: finalPaymentMethod,
-      date: new Date().toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      }),
+      date: new Date().toISOString(),
     };
 
     const existingOrders = JSON.parse(localStorage.getItem("mockOrders")) || [];
     existingOrders.push(newOrder);
     localStorage.setItem("mockOrders", JSON.stringify(existingOrders));
-
-    localStorage.setItem("cart", JSON.stringify([]));
-
-    if (clearCart) {
-      clearCart();
-    } else if (setCart) {
-      setCart([]);
-    }
+    
+    clearCart();
 
     navigate(`/order-confirmation/${newOrder.id}`);
   };

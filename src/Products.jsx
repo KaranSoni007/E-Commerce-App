@@ -3014,9 +3014,330 @@ const rawProducts = [
   },
 ];
 
-const products = rawProducts.map((product, index) => ({
+// Accessories
+const accessoriesRaw = [
+  {
+    src: "/EProducts/Premium Tempered Glass Screen Protector.jpg",
+    title: "Premium Tempered Glass Screen Protector",
+    OriginalPrice: 299,
+    MRP: 999,
+    category: "Accessories",
+    description:
+      "9H Hardness Tempered Glass Screen Protector with Oleophobic Coating.",
+    features: ["9H Hardness", "Anti-Fingerprint", "Easy Installation"],
+  },
+  {
+    src: "/EProducts/Shockproof Transparent Back Cover Case.jpg",
+    title: "Shockproof Transparent Back Cover Case",
+    OriginalPrice: 199,
+    MRP: 499,
+    category: "Accessories",
+    description:
+      "Crystal clear transparent back cover with shockproof corners.",
+    features: ["Shockproof", "Transparent", "Slim Fit"],
+  },
+  {
+    src: "/EProducts/Heavy Duty Wall Mount Bracket for TV.jpg",
+    title: "Heavy Duty Wall Mount Bracket for TV",
+    OriginalPrice: 999,
+    MRP: 2499,
+    category: "Accessories",
+    description: "Universal wall mount bracket suitable for 32-65 inch TVs.",
+    features: ["Heavy Duty Steel", "Universal Fit", "Easy Installation"],
+  },
+  {
+    src: "/EProducts/High-Speed HDMI Cable (2m).jpg",
+    title: "High-Speed HDMI Cable (2m)",
+    OriginalPrice: 499,
+    MRP: 999,
+    category: "Accessories",
+    description: "4K Support High Speed HDMI Cable with Ethernet.",
+    features: ["4K Support", "Gold Plated Connectors", "2 Meters Length"],
+  },
+  {
+    src: "/EProducts/Wireless Optical Mouse.jpg",
+    title: "Wireless Optical Mouse",
+    OriginalPrice: 599,
+    MRP: 999,
+    category: "Accessories",
+    description: "Ergonomic wireless mouse with 2.4GHz connectivity.",
+    features: ["Wireless", "Ergonomic Design", "Long Battery Life"],
+  },
+  {
+    src: "/EProducts/Laptop Sleeve.jpg",
+    title: "Laptop Sleeve / Carrying Case",
+    OriginalPrice: 799,
+    MRP: 1999,
+    category: "Accessories",
+    description:
+      "Protective sleeve for 15.6 inch laptops with water resistance.",
+    features: ["Water Resistant", "Shock Protection", "Extra Pockets"],
+  },
+  {
+    src: "/EProducts/Protective Silicone Case for Earbuds.jpg",
+    title: "Protective Silicone Case for Earbuds",
+    OriginalPrice: 299,
+    MRP: 599,
+    category: "Accessories",
+    description: "Soft silicone case cover with carabiner.",
+    features: ["Shock Absorption", "Carabiner Included", "Precise Cutouts"],
+  },
+  {
+    src: "/EProducts/Universal Headphone Stand.jpg",
+    title: "Universal Headphone Stand",
+    OriginalPrice: 899,
+    MRP: 1999,
+    category: "Accessories",
+    description: "Sturdy aluminium headphone stand for desk setup",
+    features: ["Aluminium Build", "Anti-slip Base", "Universal Compatibility"],
+  },
+  {
+    src: "/EProducts/Replacement Silicone Strap.jpg",
+    title: "Replacement Silicone Strap",
+    OriginalPrice: 399,
+    MRP: 999,
+    category: "Accessories",
+    description: "Comfortable and durable silicone strap for smartwatches.",
+    features: ["Soft Silicone", "Quick Release", "Multiple Colors"],
+  },
+  {
+    src: "/EProducts/Screen Protector for Smartwatch.webp",
+    title: "Screen Protector for Smartwatch",
+    OriginalPrice: 199,
+    MRP: 499,
+    category: "Accessories",
+    description: "Full coverage screen protector to prevent scratches.",
+    features: ["HD Clarity", "Bubble Free", "Edge to Edge"],
+  },
+  {
+    src: "/EProducts/USB-C to 3.5mm Headphone Jack Adapter.jpg",
+    title: "USB-C to 3.5mm Headphone Jack Adapter",
+    OriginalPrice: 349,
+    MRP: 799,
+    category: "Accessories",
+    description:
+      "High-fidelity audio adapter for connecting 3.5mm headphones to USB-C devices.",
+    features: ["DAC Chip", "Durable Braided Cable", "Wide Compatibility"],
+  },
+  {
+    src: "/EProducts/Portable Power Bank 10000mAh.jpg",
+    title: "Portable Power Bank 10000mAh",
+    OriginalPrice: 1299,
+    MRP: 2499,
+    category: "Accessories",
+    description:
+      "Compact and powerful 10000mAh power bank with fast charging support.",
+    features: [
+      "18W Fast Charging",
+      "Dual Output (USB-A & USB-C)",
+      "Slim Design",
+    ],
+  },
+  {
+    src: "/EProducts/Car Charger with Dual USB Ports.jpg",
+    title: "Car Charger with Dual USB Ports",
+    OriginalPrice: 499,
+    MRP: 999,
+    category: "Accessories",
+    description:
+      "Charge two devices simultaneously on the go with this powerful car charger.",
+    features: ["3.1A Total Output", "Smart IC Technology", "Compact Design"],
+  },
+  {
+    src: "/EProducts/Braided USB-C to USB-C Cable.jpg",
+    title: "Braided USB-C to USB-C Cable (2m)",
+    OriginalPrice: 599,
+    MRP: 1299,
+    category: "Accessories",
+    description:
+      "Durable and long 2-meter braided cable for charging and data sync.",
+    features: ["100W Power Delivery", "480Mbps Data Transfer", "Nylon Braided"],
+  },
+  {
+    src: "/EProducts/Adjustable Aluminum Laptop Stand.jpg",
+    title: "Adjustable Aluminum Laptop Stand",
+    OriginalPrice: 1499,
+    MRP: 2999,
+    category: "Accessories",
+    description:
+      "Ergonomic and adjustable aluminum stand for laptops up to 17 inches.",
+    features: ["Ergonomic Design", "Sturdy Aluminum", "Ventilated for Cooling"],
+  },
+  {
+    src: "/EProducts/Webcam Cover Slide.jpg",
+    title: "Webcam Cover Slide (3-Pack)",
+    OriginalPrice: 149,
+    MRP: 499,
+    category: "Accessories",
+    description:
+      "Protect your privacy with this ultra-thin webcam cover slide for laptops and tablets.",
+    features: ["Ultra-Thin Design", "Easy to Apply", "Fits Most Devices"],
+  },
+  {
+    src: "/EProducts/Microfiber Cleaning Cloths.jpg",
+    title: "Microfiber Cleaning Cloths (6-Pack)",
+    OriginalPrice: 249,
+    MRP: 599,
+    category: "Accessories",
+    description:
+      "Soft and safe microfiber cloths for cleaning screens, lenses, and glasses.",
+    features: ["Lint-Free", "Scratch-Free", "Washable & Reusable"],
+  },
+  {
+    src: "/EProducts/Cable Management Sleeves.jpg",
+    title: "Cable Management Sleeves (4-Pack)",
+    OriginalPrice: 399,
+    MRP: 899,
+    category: "Accessories",
+    description:
+      "Organize your desk and entertainment center with these flexible neoprene cable sleeves.",
+    features: ["Flexible Neoprene", "Zip-up Design", "Reversible Black/White"],
+  },
+  {
+    src: "/EProducts/Smartwatch Charging Stand.jpg",
+    title: "Smartwatch Charging Stand",
+    OriginalPrice: 699,
+    MRP: 1499,
+    category: "Accessories",
+    description:
+      "A sleek and stable stand to charge your smartwatch on your nightstand or desk.",
+    features: ["Non-slip Base", "Cable Management", "Durable Silicone"],
+  },
+  {
+    src: "/EProducts/Wireless Charging Pad.jpg",
+    title: "Wireless Charging Pad (Qi-Certified)",
+    OriginalPrice: 999,
+    MRP: 1999,
+    category: "Accessories",
+    description:
+      "Fast and convenient wireless charging for your Qi-enabled devices.",
+    features: ["15W Fast Charging", "Case Friendly", "LED Indicator"],
+  },
+  {
+    src: "/EProducts/Bluetooth Car Kit with FM Transmitter.jpg",
+    title: "Bluetooth Car Kit with FM Transmitter",
+    OriginalPrice: 899,
+    MRP: 1799,
+    category: "Accessories",
+    description:
+      "Stream music and take calls in your car with this Bluetooth FM transmitter.",
+    features: ["Hands-free Calling", "Dual USB Charging", "MicroSD Card Slot"],
+  },
+  {
+    src: "/EProducts/Gaming Mouse Pad.jpg",
+    title: "Gaming Mouse Pad (Extended)",
+    OriginalPrice: 799,
+    MRP: 1599,
+    category: "Accessories",
+    description:
+      "Large mouse pad for your keyboard and mouse with a smooth surface for gaming.",
+    features: [
+      "Stitched Edges",
+      "Non-slip Rubber Base",
+      "Water-Resistant Surface",
+    ],
+  },
+  {
+    src: "/EProducts/Screen Cleaning Spray Kit.jpg",
+    title: "Screen Cleaning Spray Kit",
+    OriginalPrice: 349,
+    MRP: 699,
+    category: "Accessories",
+    description:
+      "Alcohol-free screen cleaner with a microfiber cloth for all your electronic devices.",
+    features: [
+      "Ammonia & Alcohol-Free",
+      "Streak-Free Formula",
+      "Includes Microfiber Cloth",
+    ],
+  },
+  {
+    src: "/EProducts/Hard Shell Case for MacBook Air.jpg",
+    title: "Hard Shell Case for MacBook Air",
+    OriginalPrice: 1199,
+    MRP: 2499,
+    category: "Accessories",
+    description:
+      "Protective and stylish hard shell case for MacBook Air models.",
+    features: [
+      "Scratch Protection",
+      "Ventilated for Heat Dissipation",
+      "Easy Snap-on Design",
+    ],
+  },
+  {
+    src: "/EProducts/Silicone Nibs for Apple Pencil.jpg",
+    title: "Silicone Nibs for Apple Pencil (4-Pack)",
+    OriginalPrice: 299,
+    MRP: 599,
+    category: "Accessories",
+    description:
+      "Protective and quiet silicone nib covers for Apple Pencil 1st and 2nd Gen.",
+    features: ["Reduces Noise", "Increases Friction", "Protects Original Tip"],
+  },
+];
+
+// Services
+const servicesRaw = [
+  {
+    src: "/EProducts/1 Year Extended Warranty for Smartphones.jpg",
+    title: "1 Year Extended Warranty for Smartphones",
+    OriginalPrice: 1499,
+    MRP: 2999,
+    category: "Services",
+    description:
+      "Extend your smartphone warranty by 1 year. Covers manufacturing defects.",
+    features: [
+      "1 Year Extension",
+      "Authorized Service Centers",
+      "Paperless Claim",
+    ],
+  },
+  {
+    src: "/EProducts/2 Year Extended Warranty for Smart TVs.jpg",
+    title: "2 Year Extended Warranty for Smart TVs",
+    OriginalPrice: 2999,
+    MRP: 5999,
+    category: "Services",
+    description:
+      "Complete peace of mind with 2 years extended warranty for your Smart TV.",
+    features: ["2 Year Extension", "On-site Service", "All Parts Covered"],
+  },
+  {
+    src: "/EProducts/1 Year Accidental Damage Protection for Laptops.png",
+    title: "1 Year Accidental Damage Protection for Laptops",
+    OriginalPrice: 2499,
+    MRP: 4999,
+    category: "Services",
+    description: "Covers drops, spills, and electrical surges.",
+    features: [
+      "Accidental Damage Cover",
+      "Free Pick & Drop",
+      "No Hidden Charges",
+    ],
+  },
+];
+
+export const products = rawProducts.map((product, index) => ({
   ...product,
   id: index + 1,
 }));
 
-export default products;
+export const accessories = accessoriesRaw.map((product, index) => ({
+  ...product,
+  id: products.length + index + 1,
+}));
+
+export const services = servicesRaw.map((product, index) => ({
+  ...product,
+  id: products.length + accessories.length + index + 1,
+}));
+
+const AllProducts = [...products, ...accessories];
+
+export const categories = [
+  "All",
+  ...new Set(AllProducts.map((p) => p.category).filter(Boolean)),
+];
+
+export default AllProducts;

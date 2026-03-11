@@ -145,6 +145,14 @@ function Footer() {
                   FAQ
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/admin"
+                  className="text-gray-400 hover:text-indigo-400 transition-colors text-sm"
+                >
+                  Admin Panel
+                </Link>
+              </li>
             </ul>
           </div>
 

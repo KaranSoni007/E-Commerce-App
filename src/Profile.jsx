@@ -228,7 +228,7 @@ function Profile() {
     const orderTime = new Date(order.date).getTime();
     const now = new Date().getTime();
     const hoursDiff = (now - orderTime) / (1000 * 60 * 60);
-    return hoursDiff < 24; // Considered "processing" if less than 24 hours
+    return hoursDiff < 4; // Cancellable only during confirmed/processing (first 4 hours)
   };
 
   const renderStatusBadge = (order) => {
@@ -238,12 +238,26 @@ function Profile() {
       const orderTime = new Date(order.date).getTime();
       const now = new Date().getTime();
       const hoursDiff = (now - orderTime) / (1000 * 60 * 60);
-      if (hoursDiff < 24) status = "processing";
-      else if (hoursDiff < 72) status = "shipped";
+      if (hoursDiff < 1) status = "confirmed";
+      else if (hoursDiff < 4) status = "processing";
+      else if (hoursDiff < 24) status = "shipped";
+      else if (hoursDiff < 72) status = "out_for_delivery";
       else status = "delivered";
     }
 
     switch (status) {
+      case "confirmed":
+        return (
+          <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-md text-xs font-bold">
+            Confirmed 📋
+          </span>
+        );
+      case "processing":
+        return (
+          <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-md text-xs font-bold">
+            Processing ⚙️
+          </span>
+        );
       case "cancelled":
         return (
           <span className="bg-red-100 text-red-700 px-3 py-1 rounded-md text-xs font-bold">
@@ -272,6 +286,18 @@ function Profile() {
         return (
           <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md text-xs font-bold">
             Exchanged 📦
+          </span>
+        );
+      case "shipped":
+        return (
+          <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md text-xs font-bold">
+            Shipped 🚚
+          </span>
+        );
+      case "out_for_delivery":
+        return (
+          <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-md text-xs font-bold">
+            Out for Delivery 🛵
           </span>
         );
       case "delivered":
@@ -341,8 +367,8 @@ function Profile() {
   const openEditAddressForm = (addressItem) => {
     setEditingAddress(addressItem);
 
-    let parsedData = {
-      fullName: userData.name || "",
+    let parsedData = { // FIX: Changed userData to user
+      fullName: user.name || "",
       phone: "",
       street: "",
       city: "",
@@ -983,7 +1009,11 @@ function Profile() {
                                 Order #{order.id}
                               </span>
                               <span className="text-xs text-gray-500">
-                                {order.date}
+                                {new Date(order.date).toLocaleDateString("en-US", {
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                })}
                               </span>
                             </div>
                             {renderStatusBadge(order)}

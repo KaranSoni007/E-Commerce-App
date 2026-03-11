@@ -27,6 +27,7 @@ const OrderTracking = lazy(() => import("./OrderTracking"));
 const OrderConfirmation = lazy(() => import("./OrderConfirmation"));
 const NotFound = lazy(() => import("./NotFound"));
 const Support = lazy(() => import("./Support"));
+const AdminPanel = lazy(() => import("./AdminPanel"));
 
 // Loading fallback component for lazy loaded routes
 const PageLoader = () => (
@@ -52,52 +53,53 @@ const ScrollToTop = () => {
 function App() {
   return (
     <AuthProvider>
-        <CartProvider>
-          <WishlistProvider>
-            <ReviewProvider>
-              <CompareProvider>
-                <Router>
-                  <ScrollToTop />
-                  <div className="flex flex-col min-h-screen transition-colors duration-200">
-                    <Navbar />
-                    <div className="grow">
-                      <Suspense fallback={<PageLoader />}>
-                        <Routes>
-                          <Route path="/" element={<ECommerceWeb />} />
-                          <Route path="/cart" element={<Cart />} />
-                          <Route path="/profile" element={<Profile />} />
-                          <Route path="/signup" element={<Signup />} />
-                          <Route path="/login" element={<Login />} />
-                          <Route
-                            path="/forgot-password"
-                            element={<ForgotPassword />}
-                          />
-                          <Route
-                            path="/product/:id"
-                            element={<ProductDetail />}
-                          />
-                          <Route path="/wishlist" element={<Wishlist />} />
-                          <Route path="/compare" element={<Compare />} />
-                          <Route
-                            path="/track-order/:orderId"
-                            element={<OrderTracking />}
-                          />
-                          <Route
-                            path="/order-confirmation/:orderId"
-                            element={<OrderConfirmation />}
-                          />
-                          <Route path="/support" element={<Support />} />
-                          <Route path="*" element={<NotFound />} />
-                        </Routes>
-                      </Suspense>
-                    </div>
-                    <Footer />
+      <CartProvider>
+        <WishlistProvider>
+          <ReviewProvider>
+            <CompareProvider>
+              <Router>
+                <ScrollToTop />
+                <div className="flex flex-col min-h-screen transition-colors duration-200">
+                  <Navbar />
+                  <div className="grow">
+                    <Suspense fallback={<PageLoader />}>
+                      <Routes>
+                        <Route path="/" element={<ECommerceWeb />} />
+                        <Route path="/cart" element={<Cart />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/signup" element={<Signup />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route
+                          path="/forgot-password"
+                          element={<ForgotPassword />}
+                        />
+                        <Route
+                          path="/product/:id"
+                          element={<ProductDetail />}
+                        />
+                        <Route path="/wishlist" element={<Wishlist />} />
+                        <Route path="/compare" element={<Compare />} />
+                        <Route
+                          path="/track-order/:orderId"
+                          element={<OrderTracking />}
+                        />
+                        <Route
+                          path="/order-confirmation/:orderId"
+                          element={<OrderConfirmation />}
+                        />
+                        <Route path="/support" element={<Support />} />
+                        <Route path="/admin" element={<AdminPanel />} />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </Suspense>
                   </div>
-                </Router>
-              </CompareProvider>
-            </ReviewProvider>
-          </WishlistProvider>
-        </CartProvider>
+                  <Footer />
+                </div>
+              </Router>
+            </CompareProvider>
+          </ReviewProvider>
+        </WishlistProvider>
+      </CartProvider>
     </AuthProvider>
   );
 }

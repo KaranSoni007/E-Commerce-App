@@ -1,11 +1,13 @@
 import React, { useState, useEffect, memo, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Products from "./Products";
+import AllProducts, { categories as productCategories } from "./Products";
 import { useCart } from "./CartContext";
 import { useWishlist } from "./WishlistContext";
 import { useReviews } from "./ReviewContext";
 import { useCompare } from "./CompareContext";
+import { AIService } from "./AIService";
+import { useAuth } from "./AuthContext";
 
 // Professional Toast
 const Toast = memo(({ message, type, onClose }) => {
@@ -56,6 +58,7 @@ const CardView = memo(
     formatPrice,
     getDiscount,
     productIndex,
+    productId,
     reviewCount,
     averageRating,
     isWishlisted: propIsWishlisted,
@@ -114,8 +117,8 @@ const CardView = memo(
     );
 
     const handleCardClick = useCallback(() => {
-      navigate(`/product/${productIndex + 1}`);
-    }, [navigate, productIndex]);
+      navigate(`/product/${productId}`);
+    }, [navigate, productId]);
 
     useEffect(() => {
       if (!isAdded) return;
@@ -292,6 +295,8 @@ function ECommerceWeb() {
   const [sortBy, setSortBy] = useState("featured");
   const [discountFilter, setDiscountFilter] = useState("all");
   const [visibleCount, setVisibleCount] = useState(12);
+  const { user } = useAuth();
+  const [personalizedSuggestions, setPersonalizedSuggestions] = useState([]);
 
   useEffect(() => {
     if (categoryParam) {
@@ -302,6 +307,14 @@ function ECommerceWeb() {
       }, 100);
     }
   }, [categoryParam]);
+
+  // Fetch personalized suggestions on mount
+  useEffect(() => {
+    const userEmail = user?.email || "guest";
+    setPersonalizedSuggestions(
+      AIService.getPersonalizedSuggestions(userEmail, 5),
+    );
+  }, [user]);
 
   // Reset pagination when filters change
   useEffect(() => {
@@ -315,16 +328,13 @@ function ECommerceWeb() {
     discountFilter,
   ]);
 
-  const categories = useMemo(() => {
-    if (!Products || !Array.isArray(Products)) return ["All"];
-    return ["All", ...new Set(Products.map((p) => p.category).filter(Boolean))];
-  }, []);
+  const categories = productCategories;
 
   // Extract unique brands from products
   const brands = useMemo(() => {
-    if (!Products || !Array.isArray(Products)) return [];
+    if (!AllProducts || !Array.isArray(AllProducts)) return [];
     const brandSet = new Set();
-    Products.forEach((p) => {
+    AllProducts.forEach((p) => {
       const brand = p.title?.split(" ")[0];
       if (brand) brandSet.add(brand);
     });
@@ -333,10 +343,10 @@ function ECommerceWeb() {
 
   // Get price range from products
   const priceStats = useMemo(() => {
-    if (!Products || !Array.isArray(Products) || Products.length === 0) {
+    if (!AllProducts || !Array.isArray(AllProducts) || AllProducts.length === 0) {
       return { min: 0, max: 100000 };
     }
-    const prices = Products.map((p) => p.OriginalPrice || 0).filter(
+    const prices = AllProducts.map((p) => p.OriginalPrice || 0).filter(
       (p) => p > 0,
     );
     return {
@@ -396,18 +406,17 @@ function ECommerceWeb() {
 
   useEffect(() => {
     const loadLocalData = () => {
-      if (!Products || !Array.isArray(Products)) {
+      if (!AllProducts || !Array.isArray(AllProducts)) {
         setData([]);
         setLoading(false);
         return;
       }
-      setData(Products);
+      setData(AllProducts);
       setLoading(false);
     };
     const timer = setTimeout(loadLocalData, 500);
     return () => clearTimeout(timer);
   }, []);
-
   const filteredData = useMemo(() => {
     if (!data || data.length === 0) return [];
     let filtered = data.filter((product) => {
@@ -582,6 +591,39 @@ function ECommerceWeb() {
           </div>
         </motion.div>
 
+        {/* AI-Powered "Recommended for You" Section */}
+        {personalizedSuggestions.length > 0 && (
+          <div className="mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              Recommended for You
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+              {personalizedSuggestions.map((product, index) => {
+                const productIndex = AllProducts.findIndex(
+                  (p) => p.title === product.title,
+                );
+                const reviewCount = getReviewCount(product.title);
+                const averageRating = getAverageRating(product.title);
+                return (
+                  <CardView
+                    key={`personalized-${product.id}-${index}`}
+                    product={product}
+                    index={index}
+                    productIndex={productIndex >= 0 ? productIndex : index}
+                  productId={product.id}
+                    addToCart={addToCart}
+                    showToast={showToast}
+                    formatPrice={formatPrice}
+                    getDiscount={getDiscount}
+                    reviewCount={reviewCount}
+                    averageRating={averageRating}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Professional Category Filters */}
         <div className="mb-6 overflow-x-auto pb-2">
           <div className="flex gap-3">
@@ -740,9 +782,7 @@ function ECommerceWeb() {
                           }}
                           className="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500"
                         />
-                        <span className="text-sm text-gray-700">
-                          {brand}
-                        </span>
+                        <span className="text-sm text-gray-700">{brand}</span>
                       </label>
                     ))}
                   </div>
@@ -804,8 +844,8 @@ function ECommerceWeb() {
         >
           {filteredData.length > 0 ? (
             filteredData.slice(0, visibleCount).map((product, index) => {
-              // Find the original index in the Products array
-              const productIndex = Products.findIndex(
+              // Find the original index in the AllProducts array
+              const productIndex = AllProducts.findIndex(
                 (p) => p.title === product.title,
               );
               const reviewCount = getReviewCount(product.title);
@@ -816,6 +856,7 @@ function ECommerceWeb() {
                   product={product}
                   index={index}
                   productIndex={productIndex >= 0 ? productIndex : index}
+                  productId={product.id}
                   addToCart={addToCart}
                   showToast={showToast}
                   formatPrice={formatPrice}

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useReviews } from "./ReviewContext";
 import { useAuth } from "./AuthContext";
 
@@ -38,6 +38,7 @@ function ProductReviews({ productTitle, product }) {
   const [editingReview, setEditingReview] = useState(null);
   const [sortBy, setSortBy] = useState("newest");
   const [filterRating, setFilterRating] = useState("all");
+  const [canReview, setCanReview] = useState(false);
 
   // Get current user info
   const userName = user?.name || "Guest";
@@ -53,6 +54,22 @@ function ProductReviews({ productTitle, product }) {
     cons: "",
     recommend: true,
   });
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      const allOrders = JSON.parse(localStorage.getItem("mockOrders")) || [];
+      const hasPurchasedAndReceived = allOrders.some(
+        (order) =>
+          order.userEmail === userEmail &&
+          order.status === "delivered" &&
+          order.items.some((item) => item.title === productTitle),
+      );
+      setCanReview(hasPurchasedAndReceived);
+    } else {
+      setCanReview(false);
+    }
+    // Re-check when user or product changes. allReviews is a proxy for when a review is added/deleted.
+  }, [userEmail, productTitle, isLoggedIn, allReviews]);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -237,7 +254,7 @@ function ProductReviews({ productTitle, product }) {
             </select>
 
             {/* Write Review Button */}
-            {isLoggedIn && !userHasReviewed && (
+            {isLoggedIn && canReview && !userHasReviewed && (
               <button
                 onClick={() => {
                   resetForm();
@@ -673,16 +690,23 @@ function ProductReviews({ productTitle, product }) {
                 <p className="text-gray-500 mb-4">
                   Be the first to review this product!
                 </p>
-                {isLoggedIn ? (
+                {isLoggedIn && canReview && !userHasReviewed ? (
                   <button
-                    onClick={() => setShowReviewForm(true)}
+                    onClick={() => {
+                      resetForm();
+                      setShowReviewForm(true);
+                    }}
                     className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors"
                   >
                     Write a Review
                   </button>
                 ) : (
                   <p className="text-sm text-gray-400">
-                    Please log in to write a review
+                    {!isLoggedIn
+                      ? "Please log in to write a review."
+                      : !canReview && !userHasReviewed
+                      ? "You can review products you've purchased after they are delivered."
+                      : ""}
                   </p>
                 )}
               </div>

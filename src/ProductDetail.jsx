@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useCart } from "./CartContext";
 import { useWishlist } from "./WishlistContext";
 import { useReviews } from "./ReviewContext";
-import products from "./Products";
+import AllProducts, { services } from "./Products";
+import { useAuth } from "./AuthContext";
 import ProductReviews from "./ProductReviews";
+import { AIService } from "./AIService";
 
 function ProductDetail() {
   const { id } = useParams();
@@ -12,6 +14,7 @@ function ProductDetail() {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { getAverageRating, getReviewCount } = useReviews();
+  const { user } = useAuth();
 
   const [product, setProduct] = useState(null);
 
@@ -32,16 +35,19 @@ function ProductDetail() {
   // Recently viewed products
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [similarProducts, setSimilarProducts] = useState([]);
+  const [frequentlyBought, setFrequentlyBought] = useState([]);
+  const [selectedBundleIds, setSelectedBundleIds] = useState([]);
 
   useEffect(() => {
     // Find product by ID
-    const foundProduct = products.find((p) => p.id === parseInt(id));
+    const allItems = [...AllProducts, ...services];
+    const foundProduct = allItems.find((p) => p.id === parseInt(id));
 
     if (foundProduct) {
       setProduct(foundProduct);
 
       // Add to recently viewed
-      const currentUserEmail = localStorage.getItem("userEmail") || "guest";
+      const currentUserEmail = user?.email || "guest";
       const viewedKey = `recentlyViewed_${currentUserEmail}`;
       const viewed = JSON.parse(localStorage.getItem(viewedKey)) || [];
       const newViewed = [
@@ -58,14 +64,18 @@ function ProductDetail() {
       // Check wishlist status
       setIsWishlisted(isInWishlist(foundProduct.title));
 
-      // Find similar products (same category, excluding current)
-      const related = products.filter(
-        (p) => p.category === foundProduct.category && p.id !== foundProduct.id
-      );
-      setSimilarProducts(related.slice(0, 5));
+      // Use AI Service to get smart recommendations
+      const related = AIService.getRecommendations(foundProduct);
+      setSimilarProducts(related);
+
+      // Get Frequently Bought Together
+      const freq = AIService.getFrequentlyBoughtTogether(foundProduct);
+      setFrequentlyBought(freq);
+      setSelectedBundleIds(freq.map((p) => p.id));
     }
     setLoading(false);
-  }, [id, getAverageRating, getReviewCount, isInWishlist]);
+  }, [id, getAverageRating, getReviewCount, isInWishlist, user]);
+
   const getDiscount = useCallback(() => {
     if (!product || !product.MRP || !product.OriginalPrice) return 0;
     return Math.round(
@@ -114,7 +124,7 @@ function ProductDetail() {
 
   const handleQuantityChange = (delta) => {
     setQuantity((prev) =>
-      Math.min(stockStatus.stockCount, Math.max(1, prev + delta))
+      Math.min(stockStatus.stockCount, Math.max(1, prev + delta)),
     );
   };
 
@@ -126,6 +136,45 @@ function ProductDetail() {
     setToastMessage(added ? "Added to wishlist!" : "Removed from wishlist");
     setTimeout(() => setShowToast(false), 2500);
   }, [product, toggleWishlist]);
+
+  const handleBundleAddToCart = () => {
+    // Add main product
+    addToCart(product, quantity);
+
+    // Add selected bundle items
+    let addedCount = 1;
+    selectedBundleIds.forEach((id) => {
+      const item = frequentlyBought.find((p) => p.id === id);
+      if (item) {
+        addToCart(item, 1);
+        addedCount++;
+      }
+    });
+
+    setIsAdded(true);
+    setShowToast(true);
+    setToastMessage(`${addedCount} items added to cart!`);
+    setTimeout(() => {
+      setIsAdded(false);
+      setShowToast(false);
+    }, 2500);
+  };
+
+  const toggleBundleItem = (id) => {
+    setSelectedBundleIds((prev) =>
+      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id],
+    );
+  };
+
+  const bundleTotalPrice = useMemo(() => {
+    if (!product) return 0;
+    let total = product.OriginalPrice || 0;
+    selectedBundleIds.forEach((id) => {
+      const item = frequentlyBought.find((p) => p.id === id);
+      if (item) total += item.OriginalPrice || 0;
+    });
+    return total;
+  }, [product, selectedBundleIds, frequentlyBought]);
 
   // Stock status is now persisted in state and localStorage
   const { isInStock, stockCount } = stockStatus;
@@ -487,9 +536,7 @@ function ProductDetail() {
                             key={key}
                             className="flex justify-between py-2 border-b border-gray-100"
                           >
-                            <span className="text-gray-500">
-                              {key}
-                            </span>
+                            <span className="text-gray-500">{key}</span>
                             <span className="font-medium text-gray-900">
                               {value}
                             </span>
@@ -499,33 +546,25 @@ function ProductDetail() {
                     ) : (
                       <>
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-500">
-                            Brand
-                          </span>
+                          <span className="text-gray-500">Brand</span>
                           <span className="font-medium text-gray-900">
                             {product.title?.split(" ")[0] || "Premium"}
                           </span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-500">
-                            Category
-                          </span>
+                          <span className="text-gray-500">Category</span>
                           <span className="font-medium text-gray-900">
                             {product.category}
                           </span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-500">
-                            Warranty
-                          </span>
+                          <span className="text-gray-500">Warranty</span>
                           <span className="font-medium text-gray-900">
                             1 Year
                           </span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-500">
-                            Available
-                          </span>
+                          <span className="text-gray-500">Available</span>
                           <span className="font-medium text-green-600">
                             In Stock
                           </span>
@@ -547,6 +586,122 @@ function ProductDetail() {
             </div>
           </div>
         </div>
+
+        {/* Frequently Bought Together */}
+        {frequentlyBought.length > 0 && (
+          <div className="mt-12 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <h2 className="text-xl font-bold text-gray-900 mb-6">
+              Frequently Bought Together
+            </h2>
+            <div className="flex flex-col md:flex-row gap-8 items-center">
+              {/* Images */}
+              <div className="flex items-center gap-4 overflow-x-auto pb-2">
+                <Link
+                  to={`/product/${product.id}`}
+                  className="relative block group"
+                >
+                  <img
+                    src={product.src}
+                    alt={product.title}
+                    className="w-24 h-24 object-contain rounded-lg border border-gray-200 p-2 group-hover:border-indigo-300 transition-all"
+                  />
+                  <span className="absolute -top-2 -right-2 bg-gray-900 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                    1
+                  </span>
+                </Link>
+
+                {frequentlyBought.map((item) => (
+                  <React.Fragment key={item.id}>
+                    <span className="text-gray-400 text-xl font-bold">+</span>
+                    <div className="relative">
+                      {item.category === "Services" ? (
+                        <img
+                          src={item.src}
+                          alt={item.title}
+                          className="w-24 h-24 object-contain rounded-lg border border-gray-200 p-2"
+                        />
+                      ) : (
+                        <Link
+                          to={`/product/${item.id}`}
+                          className="block group"
+                        >
+                          <img
+                            src={item.src}
+                            alt={item.title}
+                            className="w-24 h-24 object-contain rounded-lg border border-gray-200 p-2 group-hover:border-indigo-300 transition-all"
+                          />
+                        </Link>
+                      )}
+                      {selectedBundleIds.includes(item.id) && (
+                        <span className="absolute -top-2 -right-2 bg-indigo-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                          ✓
+                        </span>
+                      )}
+                    </div>
+                  </React.Fragment>
+                ))}
+              </div>
+
+              {/* Selection List & Action */}
+              <div className="flex-1 w-full">
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-3">
+                    <span className="w-5 h-5 flex items-center justify-center rounded bg-gray-900 text-white text-xs">
+                      1
+                    </span>
+                    <span className="text-sm font-medium text-gray-900 line-clamp-1">
+                      This item: {product.title}
+                    </span>
+                    <span className="text-sm font-bold text-indigo-600 ml-auto">
+                      {formatPrice(product.OriginalPrice)}
+                    </span>
+                  </div>
+
+                  {frequentlyBought.map((item) => (
+                    <div key={item.id} className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedBundleIds.includes(item.id)}
+                        onChange={() => toggleBundleItem(item.id)}
+                        className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                      />
+                      {item.category === "Services" ? (
+                        <span className="text-sm text-gray-700 line-clamp-1">
+                          {item.title}
+                        </span>
+                      ) : (
+                        <Link
+                          to={`/product/${item.id}`}
+                          className="text-sm text-gray-700 hover:text-indigo-600 line-clamp-1"
+                        >
+                          {item.title}
+                        </Link>
+                      )}
+                      <span className="text-sm font-bold text-indigo-600 ml-auto">
+                        {formatPrice(item.OriginalPrice)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 border-t border-gray-100">
+                  <div className="text-lg">
+                    Total Price:{" "}
+                    <span className="font-bold text-gray-900">
+                      {formatPrice(bundleTotalPrice)}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleBundleAddToCart}
+                    className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg w-full sm:w-auto"
+                  >
+                    Add All {selectedBundleIds.length + 1} to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Similar Products */}
         {similarProducts.length > 0 && (
@@ -600,13 +755,10 @@ function ProductDetail() {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {recentlyViewed.slice(0, 5).map((item, index) => {
-                const itemIndex = products.findIndex(
-                  (p) => p.title === item.title,
-                );
                 return (
                   <Link
                     key={index}
-                    to={`/product/${itemIndex + 1}`}
+                    to={`/product/${item.id}`}
                     className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
                   >
                     <div className="aspect-square mb-3 flex items-center justify-center bg-white rounded-lg p-2">

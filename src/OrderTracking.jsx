@@ -339,7 +339,11 @@ function OrderTracking() {
                 Order #{order.id}
               </h1>
               <p className="text-gray-500 dark:text-gray-400 text-sm">
-                Placed on {order.date}
+                Placed on {new Date(order.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -602,12 +606,12 @@ function OrderTracking() {
           <button
             onClick={() => {
               const printWindow = window.open("", "_blank");
-              const invoiceDate = new Date().toLocaleDateString("en-IN", {
+              const invoiceDate = new Date(order.date).toLocaleDateString("en-IN", {
                 day: "2-digit",
                 month: "short",
                 year: "numeric",
               });
-              const invoiceTime = new Date().toLocaleTimeString("en-IN", {
+              const invoiceTime = new Date(order.date).toLocaleTimeString("en-IN", {
                 hour: "2-digit",
                 minute: "2-digit",
               });
