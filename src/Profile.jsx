@@ -213,103 +213,255 @@ function Profile() {
   const handleBuyAgain = (order) => {
     // Add all items from the order to the cart
     order.items.forEach((item) => {
-      // We use the cart context's addToCart. 
+      // We use the cart context's addToCart.
       // Note: This assumes addToCart handles duplicates by increasing quantity
       addToCart(item, item.quantity || 1);
     });
     navigate("/cart");
   };
 
-  const isOrderCancellable = (order) => {
+  const getOrderStatus = (order) => {
     if (order.status) {
-      return order.status === "confirmed" || order.status === "processing";
+      return order.status;
     }
-    // Fallback logic if status isn't explicitly set (matches renderStatusBadge logic)
     const orderTime = new Date(order.date).getTime();
     const now = new Date().getTime();
     const hoursDiff = (now - orderTime) / (1000 * 60 * 60);
-    return hoursDiff < 4; // Cancellable only during confirmed/processing (first 4 hours)
+    if (hoursDiff < 1) return "confirmed";
+    if (hoursDiff < 4) return "processing";
+    if (hoursDiff < 24) return "shipped";
+    if (hoursDiff < 72) return "out_for_delivery";
+    return "delivered";
+  };
+
+  const isOrderCancellable = (order) => {
+    const status = getOrderStatus(order);
+    return status === "confirmed" || status === "processing";
   };
 
   const renderStatusBadge = (order) => {
-    let status = order.status;
-    if (!status) {
-      // Fallback logic if status isn't explicitly set
-      const orderTime = new Date(order.date).getTime();
-      const now = new Date().getTime();
-      const hoursDiff = (now - orderTime) / (1000 * 60 * 60);
-      if (hoursDiff < 1) status = "confirmed";
-      else if (hoursDiff < 4) status = "processing";
-      else if (hoursDiff < 24) status = "shipped";
-      else if (hoursDiff < 72) status = "out_for_delivery";
-      else status = "delivered";
-    }
+    const status = getOrderStatus(order);
 
     switch (status) {
       case "confirmed":
         return (
-          <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-md text-xs font-bold">
-            Confirmed 📋
+          <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1">
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+              />
+            </svg>
+            Confirmed
           </span>
         );
       case "processing":
         return (
-          <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-md text-xs font-bold">
-            Processing ⚙️
+          <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1">
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            Processing
           </span>
         );
       case "cancelled":
         return (
-          <span className="bg-red-100 text-red-700 px-3 py-1 rounded-md text-xs font-bold">
-            Cancelled ❌
+          <span className="bg-red-100 text-red-700 px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1">
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            Cancelled
           </span>
         );
       case "return_requested":
         return (
-          <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-md text-xs font-bold">
-            Return Requested ↩️
+          <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1">
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+              />
+            </svg>
+            Return Requested
           </span>
         );
       case "returned":
         return (
-          <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-md text-xs font-bold">
-            Returned 📦
+          <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1">
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+              />
+            </svg>
+            Returned
           </span>
         );
       case "exchange_requested":
         return (
-          <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-md text-xs font-bold">
-            Exchange Requested 🔄
+          <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1">
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+            Exchange Requested
           </span>
         );
       case "exchanged":
         return (
-          <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md text-xs font-bold">
-            Exchanged 📦
+          <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1">
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+              />
+            </svg>
+            Exchanged
           </span>
         );
       case "shipped":
         return (
-          <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md text-xs font-bold">
-            Shipped 🚚
+          <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1">
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
+              />
+            </svg>
+            Shipped
           </span>
         );
       case "out_for_delivery":
         return (
-          <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-md text-xs font-bold">
-            Out for Delivery 🛵
+          <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1">
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            Out for Delivery
           </span>
         );
       case "delivered":
         return (
-          <span className="bg-green-100 text-green-700 px-3 py-1 rounded-md text-xs font-bold">
-            Delivered ✅
+          <span className="bg-green-100 text-green-700 px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1">
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Delivered
           </span>
         );
       default:
         return (
-          <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-md text-xs font-bold">
-            {status.charAt(0).toUpperCase() + status.slice(1)} 🚚
+          <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1">
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
+              />
+            </svg>
+            {status.charAt(0).toUpperCase() + status.slice(1)}
           </span>
         );
     }
@@ -367,7 +519,8 @@ function Profile() {
   const openEditAddressForm = (addressItem) => {
     setEditingAddress(addressItem);
 
-    let parsedData = { // FIX: Changed userData to user
+    let parsedData = {
+      // FIX: Changed userData to user
       fullName: user.name || "",
       phone: "",
       street: "",
@@ -669,11 +822,14 @@ function Profile() {
   };
 
   const handleDeletePayment = (id) => {
-    if (window.confirm("Are you sure you want to remove this payment method?")) {
+    if (
+      window.confirm("Are you sure you want to remove this payment method?")
+    ) {
       const updatedPayments = paymentMethods.filter((p) => p.id !== id);
       setPaymentMethods(updatedPayments);
 
-      const allPayments = JSON.parse(localStorage.getItem("mockPayments")) || [];
+      const allPayments =
+        JSON.parse(localStorage.getItem("mockPayments")) || [];
       const updatedAllPayments = allPayments.filter((p) => p.id !== id);
       localStorage.setItem("mockPayments", JSON.stringify(updatedAllPayments));
 
@@ -690,7 +846,19 @@ function Profile() {
       {showToast && (
         <div className="fixed top-32 right-6 z-50 px-6 py-3 rounded-xl shadow-lg bg-emerald-500 text-white animate-slideIn">
           <div className="flex items-center gap-2">
-            <span className="text-lg">✓</span>
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
             <span className="font-medium text-sm">{toastMessage}</span>
           </div>
         </div>
@@ -705,15 +873,13 @@ function Profile() {
           <div className="lg:col-span-1 space-y-6">
             {/* User Info Card */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col items-center text-center">
-              <div className="w-24 h-24 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center text-4xl font-bold mb-4 shadow-lg">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center text-4xl font-bold mb-4 shadow-lg">
                 {user.name.charAt(0).toUpperCase()}
               </div>
               <h2 className="text-xl font-bold text-gray-900 mb-1">
                 {user.name}
               </h2>
-              <p className="text-gray-500 text-sm mb-2">
-                {user.email}
-              </p>
+              <p className="text-gray-500 text-sm mb-2">{user.email}</p>
 
               {/* Verification Badge */}
               <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium mb-4">
@@ -734,20 +900,14 @@ function Profile() {
               {/* Account Info */}
               <div className="w-full space-y-2 text-left border-t border-gray-100 pt-4">
                 <div className="flex justify-between text-xs">
-                  <span className="text-gray-500">
-                    Member Since
-                  </span>
+                  <span className="text-gray-500">Member Since</span>
                   <span className="text-gray-700 font-medium">
                     {memberSince}
                   </span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="text-gray-500">
-                    Last Login
-                  </span>
-                  <span className="text-gray-700 font-medium">
-                    {lastLogin}
-                  </span>
+                  <span className="text-gray-500">Last Login</span>
+                  <span className="text-gray-700 font-medium">{lastLogin}</span>
                 </div>
               </div>
 
@@ -780,10 +940,20 @@ function Profile() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-indigo-50 rounded-xl">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">📦</span>
-                    <span className="text-xs text-gray-600">
-                      Total Orders
-                    </span>
+                    <svg
+                      className="w-5 h-5 text-indigo-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                      />
+                    </svg>
+                    <span className="text-xs text-gray-600">Total Orders</span>
                   </div>
                   <span className="font-bold text-indigo-700 text-lg">
                     {totalOrders}
@@ -791,10 +961,20 @@ function Profile() {
                 </div>
                 <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-xl">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">💰</span>
-                    <span className="text-xs text-gray-600">
-                      Total Spent
-                    </span>
+                    <svg
+                      className="w-5 h-5 text-emerald-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span className="text-xs text-gray-600">Total Spent</span>
                   </div>
                   <span className="font-bold text-emerald-700 text-lg">
                     {formatPrice(totalSpent)}
@@ -802,7 +982,19 @@ function Profile() {
                 </div>
                 <div className="flex items-center justify-between p-3 bg-amber-50 rounded-xl">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">❤️</span>
+                    <svg
+                      className="w-5 h-5 text-amber-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
+                    </svg>
                     <span className="text-xs text-gray-600">
                       Wishlist Items
                     </span>
@@ -837,19 +1029,58 @@ function Profile() {
                   to="/"
                   className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 text-gray-700 text-sm font-medium hover:bg-indigo-50 hover:text-indigo-700 transition-colors no-underline"
                 >
-                  <span>🛍️</span> Continue Shopping
+                  <svg
+                    className="w-5 h-5 text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                    />
+                  </svg>
+                  Continue Shopping
                 </Link>
                 <Link
                   to="/wishlist"
                   className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 text-gray-700 text-sm font-medium hover:bg-indigo-50 hover:text-indigo-700 transition-colors no-underline"
                 >
-                  <span>❤️</span> My Wishlist
+                  <svg
+                    className="w-5 h-5 text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
+                  </svg>
+                  My Wishlist
                 </Link>
                 <Link
                   to="/cart"
                   className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 text-gray-700 text-sm font-medium hover:bg-indigo-50 hover:text-indigo-700 transition-colors no-underline"
                 >
-                  <span>🛒</span> My Cart
+                  <svg
+                    className="w-5 h-5 text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                  My Cart
                 </Link>
               </div>
             </div>
@@ -1009,11 +1240,14 @@ function Profile() {
                                 Order #{order.id}
                               </span>
                               <span className="text-xs text-gray-500">
-                                {new Date(order.date).toLocaleDateString("en-US", {
-                                  year: "numeric",
-                                  month: "short",
-                                  day: "numeric",
-                                })}
+                                {new Date(order.date).toLocaleDateString(
+                                  "en-US",
+                                  {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  },
+                                )}
                               </span>
                             </div>
                             {renderStatusBadge(order)}
@@ -1085,7 +1319,21 @@ function Profile() {
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center py-8 text-center">
-                      <span className="text-5xl mb-4">📦</span>
+                      <div className="text-5xl mb-4 text-gray-300">
+                        <svg
+                          className="w-16 h-16"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1}
+                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                          />
+                        </svg>
+                      </div>
                       <p className="text-gray-900 font-semibold text-lg m-0">
                         No orders yet
                       </p>
@@ -1114,8 +1362,21 @@ function Profile() {
                     className="flex justify-between items-center cursor-pointer"
                     onClick={() => setShowEditProfile(!showEditProfile)}
                   >
-                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2">
-                      <span>👤</span> Personal Information
+                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2 text-indigo-600">
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>{" "}
+                      Personal Information
                     </span>
                     <span className="text-indigo-600 text-sm font-semibold">
                       {showEditProfile ? "Close ↑" : "Edit →"}
@@ -1168,8 +1429,21 @@ function Profile() {
                     className="flex justify-between items-center cursor-pointer"
                     onClick={() => setShowPasswordChange(!showPasswordChange)}
                   >
-                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2">
-                      <span>🔒</span> Change Password
+                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2 text-indigo-600">
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                        />
+                      </svg>{" "}
+                      Change Password
                     </span>
                     <span className="text-indigo-600 text-sm font-semibold">
                       {showPasswordChange ? "Close ↑" : "Update →"}
@@ -1244,8 +1518,27 @@ function Profile() {
                     className="flex justify-between items-center cursor-pointer"
                     onClick={() => setShowAddresses(!showAddresses)}
                   >
-                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2">
-                      <span>📍</span> Shipping Addresses ({addresses.length})
+                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2 text-indigo-600">
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>{" "}
+                      Shipping Addresses ({addresses.length})
                     </span>
                     <span className="text-indigo-600 text-sm font-semibold">
                       {showAddresses ? "Close ↑" : "Manage →"}
@@ -1259,16 +1552,61 @@ function Profile() {
                           onClick={openAddAddressForm}
                           className="w-full py-3 border-2 border-dashed border-indigo-300 rounded-xl text-indigo-600 font-semibold hover:bg-indigo-50 transition-colors flex items-center justify-center gap-2"
                         >
-                          <span className="text-xl">+</span> Add New Address
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 4v16m8-8H4"
+                            />
+                          </svg>{" "}
+                          Add New Address
                         </button>
                       )}
 
                       {showAddressForm && (
                         <div className="bg-gray-50 rounded-xl p-5 border border-gray-200 animate-fadeIn">
                           <h4 className="font-bold text-gray-900 mb-4 text-sm flex items-center gap-2">
-                            {editingAddress
-                              ? "✏️ Edit Address"
-                              : "➕ Add New Address"}
+                            {editingAddress ? (
+                              <>
+                                <svg
+                                  className="w-4 h-4 text-indigo-600"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                                  />
+                                </svg>{" "}
+                                Edit Address
+                              </>
+                            ) : (
+                              <>
+                                <svg
+                                  className="w-4 h-4 text-indigo-600"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 4v16m8-8H4"
+                                  />
+                                </svg>{" "}
+                                Add New Address
+                              </>
+                            )}
                           </h4>
 
                           <div className="space-y-3">
@@ -1405,7 +1743,27 @@ function Profile() {
 
                       {addresses.length === 0 && !showAddressForm ? (
                         <div className="text-center py-6 bg-gray-50 rounded-xl">
-                          <span className="text-3xl mb-2 block">📍</span>
+                          <div className="text-3xl mb-2 flex justify-center text-gray-400">
+                            <svg
+                              className="w-10 h-10"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={1.5}
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={1.5}
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                            </svg>
+                          </div>
                           <p className="text-sm text-gray-500">
                             No saved addresses yet.
                           </p>
@@ -1465,7 +1823,20 @@ function Profile() {
                                     </p>
                                     {displayPhone && (
                                       <p className="text-gray-500 text-xs mt-2 flex items-center gap-1">
-                                        <span>📞</span> {displayPhone}
+                                        <svg
+                                          className="w-3 h-3"
+                                          fill="none"
+                                          stroke="currentColor"
+                                          viewBox="0 0 24 24"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                                          />
+                                        </svg>{" "}
+                                        {displayPhone}
                                       </p>
                                     )}
                                   </div>
@@ -1476,14 +1847,38 @@ function Profile() {
                                       className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer border-none"
                                       title="Edit Address"
                                     >
-                                      ✏️
+                                      <svg
+                                        className="w-4 h-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={2}
+                                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                                        />
+                                      </svg>
                                     </button>
                                     <button
                                       onClick={() => handleDeleteAddress(index)}
                                       className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer border-none"
                                       title="Delete Address"
                                     >
-                                      🗑️
+                                      <svg
+                                        className="w-4 h-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={2}
+                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                        />
+                                      </svg>
                                     </button>
                                     {index !== 0 && (
                                       <button
@@ -1491,7 +1886,19 @@ function Profile() {
                                         className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors cursor-pointer border-none"
                                         title="Set as Default"
                                       >
-                                        ⭐
+                                        <svg
+                                          className="w-4 h-4"
+                                          fill="none"
+                                          stroke="currentColor"
+                                          viewBox="0 0 24 24"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                                          />
+                                        </svg>
                                       </button>
                                     )}
                                   </div>
@@ -1511,8 +1918,21 @@ function Profile() {
                     className="flex justify-between items-center cursor-pointer"
                     onClick={() => setShowPaymentMethods(!showPaymentMethods)}
                   >
-                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2">
-                      <span>💳</span> Payment Methods
+                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2 text-indigo-600">
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                        />
+                      </svg>{" "}
+                      Payment Methods
                     </span>
                     <span className="text-indigo-600 text-sm font-semibold">
                       {showPaymentMethods ? "Close ↑" : "Manage →"}
@@ -1528,9 +1948,51 @@ function Profile() {
                         >
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-xl shadow-sm">
-                              {method.type === "CARD" && "💳"}
-                              {method.type === "UPI" && "📱"}
-                              {method.type === "NET_BANKING" && "🏦"}
+                              {method.type === "CARD" && (
+                                <svg
+                                  className="w-6 h-6 text-gray-600"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={1.5}
+                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                                  />
+                                </svg>
+                              )}
+                              {method.type === "UPI" && (
+                                <svg
+                                  className="w-6 h-6 text-gray-600"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={1.5}
+                                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                                  />
+                                </svg>
+                              )}
+                              {method.type === "NET_BANKING" && (
+                                <svg
+                                  className="w-6 h-6 text-gray-600"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={1.5}
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                  />
+                                </svg>
+                              )}
                             </div>
                             <div>
                               <p className="text-sm font-bold text-gray-900">
@@ -1553,7 +2015,19 @@ function Profile() {
                             onClick={() => handleDeletePayment(method.id)}
                             className="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors border-none cursor-pointer"
                           >
-                            🗑️
+                            <svg
+                              className="w-5 h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
+                            </svg>
                           </button>
                         </div>
                       ))}
@@ -1563,7 +2037,20 @@ function Profile() {
                           onClick={() => setShowPaymentForm(true)}
                           className="w-full py-3 border-2 border-dashed border-indigo-300 rounded-xl text-indigo-600 font-semibold hover:bg-indigo-50 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                         >
-                          <span className="text-xl">+</span> Add Payment Method
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 4v16m8-8H4"
+                            />
+                          </svg>{" "}
+                          Add Payment Method
                         </button>
                       ) : (
                         <div className="bg-gray-50 rounded-xl p-5 border border-gray-200 animate-fadeIn">
@@ -1591,8 +2078,8 @@ function Profile() {
                                 {type === "CARD"
                                   ? "Card"
                                   : type === "UPI"
-                                  ? "UPI"
-                                  : "Net Banking"}
+                                    ? "UPI"
+                                    : "Net Banking"}
                               </button>
                             ))}
                           </div>
@@ -1601,96 +2088,96 @@ function Profile() {
                             {paymentFormData.type === "CARD" && (
                               <>
                                 <div>
-                              <label className="block text-xs font-medium text-gray-600 mb-1">
-                                Card Number
-                              </label>
-                              <input
-                                type="text"
-                                value={paymentFormData.cardNumber}
-                                onChange={(e) =>
-                                  handlePaymentInputChange(
-                                    "cardNumber",
-                                    e.target.value,
-                                  )
-                                }
-                                placeholder="0000 0000 0000 0000"
-                                maxLength="19"
-                                className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-600 mb-1">
-                                Card Holder Name
-                              </label>
-                              <input
-                                type="text"
-                                value={paymentFormData.cardHolder}
-                                onChange={(e) =>
-                                  handlePaymentInputChange(
-                                    "cardHolder",
-                                    e.target.value,
-                                  )
-                                }
-                                placeholder="Name on card"
-                                className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
-                              />
-                            </div>
-                            <div className="grid grid-cols-3 gap-3">
-                              <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">
-                                  Expiry Month
-                                </label>
-                                <input
-                                  type="text"
-                                  placeholder="MM"
-                                  maxLength="2"
-                                  value={paymentFormData.expiryMonth}
-                                  onChange={(e) =>
-                                    handlePaymentInputChange(
-                                      "expiryMonth",
-                                      e.target.value,
-                                    )
-                                  }
-                                  className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
-                                />
-                              </div>
-                              <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">
-                                  Expiry Year
-                                </label>
-                                <input
-                                  type="text"
-                                  placeholder="YY"
-                                  maxLength="2"
-                                  value={paymentFormData.expiryYear}
-                                  onChange={(e) =>
-                                    handlePaymentInputChange(
-                                      "expiryYear",
-                                      e.target.value,
-                                    )
-                                  }
-                                  className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
-                                />
-                              </div>
-                              <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">
-                                  CVV
-                                </label>
-                                <input
-                                  type="password"
-                                  placeholder="123"
-                                  maxLength="3"
-                                  value={paymentFormData.cvv}
-                                  onChange={(e) =>
-                                    handlePaymentInputChange(
-                                      "cvv",
-                                      e.target.value,
-                                    )
-                                  }
-                                  className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
-                                />
-                              </div>
-                            </div>
+                                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                                    Card Number
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={paymentFormData.cardNumber}
+                                    onChange={(e) =>
+                                      handlePaymentInputChange(
+                                        "cardNumber",
+                                        e.target.value,
+                                      )
+                                    }
+                                    placeholder="0000 0000 0000 0000"
+                                    maxLength="19"
+                                    className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                                    Card Holder Name
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={paymentFormData.cardHolder}
+                                    onChange={(e) =>
+                                      handlePaymentInputChange(
+                                        "cardHolder",
+                                        e.target.value,
+                                      )
+                                    }
+                                    placeholder="Name on card"
+                                    className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
+                                  />
+                                </div>
+                                <div className="grid grid-cols-3 gap-3">
+                                  <div>
+                                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                                      Expiry Month
+                                    </label>
+                                    <input
+                                      type="text"
+                                      placeholder="MM"
+                                      maxLength="2"
+                                      value={paymentFormData.expiryMonth}
+                                      onChange={(e) =>
+                                        handlePaymentInputChange(
+                                          "expiryMonth",
+                                          e.target.value,
+                                        )
+                                      }
+                                      className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                                      Expiry Year
+                                    </label>
+                                    <input
+                                      type="text"
+                                      placeholder="YY"
+                                      maxLength="2"
+                                      value={paymentFormData.expiryYear}
+                                      onChange={(e) =>
+                                        handlePaymentInputChange(
+                                          "expiryYear",
+                                          e.target.value,
+                                        )
+                                      }
+                                      className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                                      CVV
+                                    </label>
+                                    <input
+                                      type="password"
+                                      placeholder="123"
+                                      maxLength="3"
+                                      value={paymentFormData.cvv}
+                                      onChange={(e) =>
+                                        handlePaymentInputChange(
+                                          "cvv",
+                                          e.target.value,
+                                        )
+                                      }
+                                      className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
+                                    />
+                                  </div>
+                                </div>
                               </>
                             )}
 
@@ -1703,7 +2190,10 @@ function Profile() {
                                   type="text"
                                   value={paymentFormData.upiId}
                                   onChange={(e) =>
-                                    handlePaymentInputChange("upiId", e.target.value)
+                                    handlePaymentInputChange(
+                                      "upiId",
+                                      e.target.value,
+                                    )
                                   }
                                   placeholder="username@bank"
                                   className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
@@ -1720,14 +2210,21 @@ function Profile() {
                                   <select
                                     value={paymentFormData.bankName}
                                     onChange={(e) =>
-                                      handlePaymentInputChange("bankName", e.target.value)
+                                      handlePaymentInputChange(
+                                        "bankName",
+                                        e.target.value,
+                                      )
                                     }
                                     className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
                                   >
                                     <option value="">Select Bank</option>
                                     <option value="HDFC Bank">HDFC Bank</option>
-                                    <option value="SBI">State Bank of India</option>
-                                    <option value="ICICI Bank">ICICI Bank</option>
+                                    <option value="SBI">
+                                      State Bank of India
+                                    </option>
+                                    <option value="ICICI Bank">
+                                      ICICI Bank
+                                    </option>
                                     <option value="Axis Bank">Axis Bank</option>
                                   </select>
                                 </div>
@@ -1739,7 +2236,10 @@ function Profile() {
                                     type="text"
                                     value={paymentFormData.accountNumber}
                                     onChange={(e) =>
-                                      handlePaymentInputChange("accountNumber", e.target.value)
+                                      handlePaymentInputChange(
+                                        "accountNumber",
+                                        e.target.value,
+                                      )
                                     }
                                     placeholder="Enter Account Number"
                                     className="w-full p-3 rounded-lg border border-gray-300 text-sm outline-none focus:border-indigo-600 bg-white text-gray-900"
@@ -1775,8 +2275,21 @@ function Profile() {
                     className="flex justify-between items-center cursor-pointer"
                     onClick={() => setShowSupport(!showSupport)}
                   >
-                    <span className="text-sm text-gray-700 font-semibold flex items-center gap-2">
-                      <span>❓</span> Help & Support
+                    <span className="text-sm font-semibold flex items-center gap-2 text-indigo-600">
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>{" "}
+                      Help & Support
                     </span>
                     <span className="text-indigo-600 text-sm font-semibold">
                       {showSupport ? "Close ↑" : "View →"}
@@ -1799,7 +2312,22 @@ function Profile() {
                             : "bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-indigo-700"
                         }`}
                       >
-                        <span>📞 Contact Customer Service</span>
+                        <span className="flex items-center gap-2">
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                            />
+                          </svg>{" "}
+                          Contact Customer Service
+                        </span>
                         <span>
                           {activeSupportSection === "contact" ? "−" : "+"}
                         </span>
@@ -1811,7 +2339,19 @@ function Profile() {
                           </p>
                           <div className="space-y-2">
                             <p className="flex items-center gap-2">
-                              <span>📧</span>{" "}
+                              <svg
+                                className="w-4 h-4 text-indigo-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                />
+                              </svg>
                               <a
                                 href="mailto:support@intellikart.com"
                                 className="text-indigo-600 hover:underline"
@@ -1820,7 +2360,19 @@ function Profile() {
                               </a>
                             </p>
                             <p className="flex items-center gap-2">
-                              <span>📞</span>{" "}
+                              <svg
+                                className="w-4 h-4 text-indigo-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                                />
+                              </svg>
                               <a
                                 href="tel:+919876543210"
                                 className="text-indigo-600 hover:underline"
@@ -1829,7 +2381,20 @@ function Profile() {
                               </a>
                             </p>
                             <p className="flex items-center gap-2">
-                              <span>🕒</span> Mon-Sat, 9:00 AM - 8:00 PM
+                              <svg
+                                className="w-4 h-4 text-indigo-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>{" "}
+                              Mon-Sat, 9:00 AM - 8:00 PM
                             </p>
                           </div>
                         </div>
@@ -1848,7 +2413,22 @@ function Profile() {
                             : "bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-indigo-700"
                         }`}
                       >
-                        <span>❓ Frequently Asked Questions</span>
+                        <span className="flex items-center gap-2">
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>{" "}
+                          Frequently Asked Questions
+                        </span>
                         <span>
                           {activeSupportSection === "faq" ? "−" : "+"}
                         </span>
@@ -1889,7 +2469,22 @@ function Profile() {
                             : "bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-indigo-700"
                         }`}
                       >
-                        <span>🔄 Return Policy</span>
+                        <span className="flex items-center gap-2">
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                            />
+                          </svg>{" "}
+                          Return Policy
+                        </span>
                         <span>
                           {activeSupportSection === "return" ? "−" : "+"}
                         </span>
@@ -1925,7 +2520,20 @@ function Profile() {
                     onClick={handleDeleteAccount}
                   >
                     <span className="text-sm text-red-600 font-semibold flex items-center gap-2">
-                      <span>🗑️</span> Delete Account
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>{" "}
+                      Delete Account
                     </span>
                     <span className="text-red-600 text-sm font-semibold">
                       Delete →
@@ -1937,33 +2545,6 @@ function Profile() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes slideIn {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        .animate-slideIn {
-          animation: slideIn 0.3s ease-out;
-        }
-        .animate-fadeIn { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-5px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .line-clamp-1 {
-          display: -webkit-box;
-          -webkit-line-clamp: 1;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-      `}</style>
     </div>
   );
 }

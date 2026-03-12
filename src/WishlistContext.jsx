@@ -26,14 +26,33 @@ export const WishlistProvider = ({ children }) => {
     return savedWishlist ? JSON.parse(savedWishlist) : [];
   });
   const isInitialized = useRef(false);
+  const prevUserEmail = useRef(userEmail);
 
   // Load wishlist when user changes
   useEffect(() => {
+    if (prevUserEmail.current === userEmail) return;
+
+    const prevEmail = prevUserEmail.current;
+    prevUserEmail.current = userEmail;
+
     isInitialized.current = false;
     const key = `wishlist_${userEmail}`;
     const savedWishlist = localStorage.getItem(key);
-    setWishlist(savedWishlist ? JSON.parse(savedWishlist) : []);
-  }, [userEmail]);
+    let newWishlist = savedWishlist ? JSON.parse(savedWishlist) : [];
+
+    // MERGE LOGIC: Guest -> User
+    if (prevEmail === "guest" && userEmail !== "guest" && wishlist.length > 0) {
+      wishlist.forEach((guestItem) => {
+        if (!newWishlist.some((item) => item.title === guestItem.title)) {
+          newWishlist.push(guestItem);
+        }
+      });
+      localStorage.setItem(key, JSON.stringify(newWishlist));
+      localStorage.removeItem("wishlist_guest");
+    }
+
+    setWishlist(newWishlist);
+  }, [userEmail, wishlist]);
 
   // Save wishlist when it changes
   useEffect(() => {

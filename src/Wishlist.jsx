@@ -122,7 +122,19 @@ function Wishlist() {
       {showToast && (
         <div className="fixed top-32 right-6 z-50 px-6 py-3 rounded-xl shadow-lg bg-emerald-500 text-white animate-slideIn">
           <div className="flex items-center gap-2">
-            <span className="text-lg">✓</span>
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
             <span className="font-medium text-sm">{toastMessage}</span>
           </div>
         </div>
@@ -138,9 +150,7 @@ function Wishlist() {
 
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              My Wishlist
-            </h1>
+            <h1 className="text-3xl font-bold text-gray-900">My Wishlist</h1>
             <p className="text-gray-500 mt-1">
               {wishlist.length} {wishlist.length === 1 ? "item" : "items"} saved
             </p>
@@ -156,8 +166,12 @@ function Wishlist() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {wishlist.map((product, index) => {
             const allItems = [...AllProducts, ...services, ...accessories];
-            const currentProduct = allItems.find((p) => p.title === product.title) || product;
-            const discount = getDiscount(currentProduct.OriginalPrice, currentProduct.MRP);
+            const currentProduct =
+              allItems.find((p) => p.title === product.title) || product;
+            const discount = getDiscount(
+              currentProduct.OriginalPrice,
+              currentProduct.MRP,
+            );
 
             return (
               <div
@@ -337,41 +351,6 @@ function Wishlist() {
           </div>
         </div>
       )}
-
-      <style>{`
-        @keyframes slideIn {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        .animate-slideIn {
-          animation: slideIn 0.3s ease-out;
-        }
-        .line-clamp-2 {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-        .line-clamp-4 {
-          display: -webkit-box;
-          -webkit-line-clamp: 4;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-        @keyframes scaleIn {
-          from { transform: scale(0.95); opacity: 0; }
-          to { transform: scale(1); opacity: 1; }
-        }
-        .animate-scaleIn {
-          animation: scaleIn 0.2s ease-out;
-        }
-      `}</style>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 const rawProducts = [
   // CATEGORY: TV
   {
+    stock: 25,
     src: "/EProducts/Samsung 65inch.jpg",
     title: "Samsung 138cm (55 inch) Crystal 4K Vision AI Smart TV",
     OriginalPrice: 45999,
@@ -26,6 +27,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 15,
     src: "/EProducts/OnePlus TV.jpg",
     title: "OnePlus U1 138cm (55 inch) Ultra HD 4K Smart Google TV",
     OriginalPrice: 32999,
@@ -51,6 +53,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 30,
     src: "/EProducts/LG 164cm.jpg",
     title: "LG 139cm (55 inch) Ultra HD 4K Smart LED TV",
     OriginalPrice: 42990,
@@ -76,6 +79,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 10,
     src: "/EProducts/MI Q1 75inch.png",
     title: "Xiaomi Mi TV 5X 138cm (55 inch) QLED 4K Smart Android TV",
     OriginalPrice: 49999,
@@ -101,6 +105,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 5,
     src: "/EProducts/VU 55inch.jpg",
     title: "VU 139cm (55 inch) Premium QLED 4K Ultra HD Smart TV",
     OriginalPrice: 35999,
@@ -126,6 +131,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 20,
     src: "/EProducts/Sony Bravia XR 85-inch 4K HDR OLED.jpg",
     title: "Sony Bravia 2 138cm (55 inch) 4K Ultra HD Smart LED TV",
     OriginalPrice: 54990,
@@ -151,6 +157,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 18,
     src: "/EProducts/TCL C655 138cm (55 inch) QLED 4K Google TV.webp",
     title: "TCL C655 138cm (55 inch) QLED 4K Google TV",
     OriginalPrice: 42990,
@@ -176,6 +183,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 22,
     src: "/EProducts/Hisense 139cm (55 inch) Ultra HD 4K Smart Google TV.jpg",
     title: "Hisense 139cm (55 inch) Ultra HD 4K Smart Google TV",
     OriginalPrice: 37990,
@@ -201,6 +209,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 8,
     src: "/EProducts/Philips 139cm (55 inch) Ultra HD 4K Android Smart TV.jpg",
     title: "Philips 139cm (55 inch) Ultra HD 4K Android Smart TV",
     OriginalPrice: 34990,
@@ -226,6 +235,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 40,
     src: "/EProducts/Acer 109cm (43 inch) Full HD Smart LED TV.webp",
     title: "Acer 109cm (43 inch) Full HD Smart LED TV",
     OriginalPrice: 19999,
@@ -251,6 +261,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 12,
     src: "/EProducts/Toshiba 108cm (43 inch) Ultra HD 4K Smart LED TV.webp",
     title: "Toshiba 108cm (43 inch) Ultra HD 4K Smart LED TV",
     OriginalPrice: 28990,
@@ -276,6 +287,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 0,
     src: "/EProducts/Motorola EnvisionX 108cm (43 inch) HD Ready Smart LED TV.webp",
     title: "Motorola EnvisionX 108cm (43 inch) HD Ready Smart LED TV",
     OriginalPrice: 15999,
@@ -301,6 +313,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 14,
     src: "/EProducts/Nokia 108cm (43 inch) Ultra HD 4K Smart Android TV.jpg",
     title: "Nokia 108cm (43 inch) Ultra HD 4K Smart Android TV",
     OriginalPrice: 24999,
@@ -326,6 +339,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 35,
     src: "/EProducts/Blaupunkt 55inch.webp",
     title: "Blaupuntt 108cm (43 inch) HD Ready Smart LED TV",
     OriginalPrice: 12999,
@@ -351,6 +365,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 9,
     src: "/EProducts/Samsung 163cm (65 inch) Crystal 4K Ultra HD Smart TV.webp",
     title: "Samsung 163cm (65 inch) Crystal 4K Ultra HD Smart TV",
     OriginalPrice: 79999,
@@ -376,6 +391,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 4,
     src: "/EProducts/Sony Bravia 164cm (65 inch) 4K Ultra HD Smart LED TV.jpeg",
     title: "Sony Bravia 164cm (65 inch) 4K Ultra HD Smart LED TV",
     OriginalPrice: 109990,
@@ -401,6 +417,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 11,
     src: "/EProducts/LG 164cm (65 inch) Ultra HD 4K Smart LED TV.jpg",
     title: "LG 164cm (65 inch) Ultra HD 4K Smart LED TV",
     OriginalPrice: 84990,
@@ -426,6 +443,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 3,
     src: "/EProducts/Samsung 189cm (75 inch) QLED 4K Smart TV.jpg",
     title: "Samsung 189cm (75 inch) QLED 4K Smart TV",
     OriginalPrice: 149990,
@@ -451,6 +469,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 0,
     src: "/EProducts/Xiaomi Mi TV 5 Pro 139cm (55 inch) QLED 4K.jpg",
     title: "Xiaomi Mi TV 5 Pro 139cm (55 inch) QLED 4K",
     OriginalPrice: 44999,
@@ -476,6 +495,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 7,
     src: "/EProducts/TCL 164cm (65 inch) C745 QLED 4K Google TV.webp",
     title: "TCL 164cm (65 inch) C745 QLED 4K Google TV",
     OriginalPrice: 89990,
@@ -501,6 +521,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 16,
     src: "/EProducts/OnePlus U1S 164cm (65 inch) 4K Ultra HD Smart TV.jpg",
     title: "OnePlus U1S 164cm (65 inch) 4K Ultra HD Smart TV",
     OriginalPrice: 54999,
@@ -526,6 +547,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 28,
     src: "/EProducts/Mi TV 4A Pro 108cm (43 inch) HD Ready Smart TV.avif",
     title: "Mi TV 4A Pro 108cm (43 inch) HD Ready Smart TV",
     OriginalPrice: 17999,
@@ -551,6 +573,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 6,
     src: "/EProducts/Philips 164cm (65 inch) 4K Ultra HD Android TV.webp",
     title: "Philips 164cm (65 inch) 4K Ultra HD Android TV",
     OriginalPrice: 69990,
@@ -576,6 +599,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 13,
     src: "/EProducts/Motorola 164cm (65 inch) 4K Ultra HD Smart TV.webp",
     title: "Motorola 164cm (65 inch) 4K Ultra HD Smart TV",
     OriginalPrice: 49999,
@@ -601,6 +625,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 19,
     src: "/EProducts/Nokia 139cm (55 inch) 4K Ultra HD Smart TV.jpg",
     title: "Nokia 139cm (55 inch) 4K Ultra HD Smart TV",
     OriginalPrice: 32999,
@@ -628,6 +653,7 @@ const rawProducts = [
 
   // CATEGORY: SMARTPHONES
   {
+    stock: 100,
     src: "/EProducts/Iphone 16 128GB Blue.jpg",
     title: "Iphone 16 (128GB) - Blue",
     OriginalPrice: 69900,
@@ -653,6 +679,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 45,
     src: "/EProducts/Vivo V60e 5G pink.jpg",
     title: "Vivo V60e 5G (8GB RAM, 256GB) - Royal Bronze",
     OriginalPrice: 27999,
@@ -678,6 +705,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 80,
     src: "/EProducts/Samsung Galaxy S24 Ultra 5G (12GB RAM, 256GB) - Titanium Black.jpg",
     title: "Samsung Galaxy S24 Ultra 5G (12GB RAM, 256GB) - Titanium Black",
     OriginalPrice: 129999,
@@ -703,6 +731,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 0,
     src: "/EProducts/Google Pixel 9 Pro (16GB RAM, 256GB) - Obsidian.webp",
     title: "Google Pixel 9 Pro (16GB RAM, 256GB) - Obsidian",
     OriginalPrice: 99999,
@@ -728,6 +757,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 60,
     src: "/EProducts/OnePlus 13 (16GB RAM, 512GB) - Flowy Emerald.jpg",
     title: "OnePlus 13 (16GB RAM, 512GB) - Flowy Emerald",
     OriginalPrice: 69999,
@@ -753,6 +783,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 120,
     src: "/EProducts/Iphone 15 Pro Max (256GB) - Natural Titanium.jpg",
     title: "Iphone 15 Pro Max (256GB) - Natural Titanium",
     OriginalPrice: 159900,
@@ -778,6 +809,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 30,
     src: "/EProducts/Samsung Galaxy Z Fold 6 (12GB RAM, 512GB) - Navy.webp",
     title: "Samsung Galaxy Z Fold 6 (12GB RAM, 512GB) - Navy",
     OriginalPrice: 149999,
@@ -803,6 +835,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 25,
     src: "/EProducts/Xiaomi 14 Ultra (16GB RAM, 512GB) - Black.webp",
     title: "Xiaomi 14 Ultra (16GB RAM, 512GB) - Black",
     OriginalPrice: 99999,
@@ -828,6 +861,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 40,
     src: "/EProducts/iQOO 13 (12GB RAM, 256GB) - Legend.jpg",
     title: "iQOO 13 (12GB RAM, 256GB) - Legend",
     OriginalPrice: 52999,
@@ -853,6 +887,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 55,
     src: "/EProducts/Nothing Phone 2a Plus (12GB RAM, 256GB) - Grey.webp",
     title: "Nothing Phone 2a Plus (12GB RAM, 256GB) - Black",
     OriginalPrice: 27999,
@@ -878,6 +913,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 38,
     src: "/EProducts/Motorola Edge 50 Pro (8GB RAM, 256GB) - Luxe Lavender.jpg",
     title: "Motorola Edge 50 Pro (8GB RAM, 256GB) - Luxe Lavender",
     OriginalPrice: 29999,
@@ -903,6 +939,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 28,
     src: "/EProducts/Realme GT 7 Pro (16GB RAM, 512GB) - Galaxy Grey.webp",
     title: "Realme GT 7 Pro (16GB RAM, 512GB) - Galaxy Grey",
     OriginalPrice: 59999,
@@ -928,6 +965,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 70,
     src: "/EProducts/Poco F6 Pro (12GB RAM, 512GB) - White.jpg",
     title: "Poco F6 Pro (12GB RAM, 512GB) - White",
     OriginalPrice: 41999,
@@ -953,6 +991,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 15,
     src: "/EProducts/Oppo Find X8 Pro (16GB RAM, 512GB) - Pearl White.webp",
     title: "Oppo Find X8 Pro (16GB RAM, 512GB) - Pearl White",
     OriginalPrice: 79999,
@@ -978,6 +1017,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 10,
     src: "/EProducts/Asus ROG Phone 9 (16GB RAM, 512GB) - Phantom Black.avif",
     title: "Asus ROG Phone 9 (16GB RAM, 512GB) - Phantom Black",
     OriginalPrice: 99999,
@@ -1003,6 +1043,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 90,
     src: "/EProducts/Samsung Galaxy A55 5G (8GB RAM, 256GB) - Awesome Iceblue.jpg",
     title: "Samsung Galaxy A55 5G (8GB RAM, 256GB) - Awesome Iceblue",
     OriginalPrice: 35999,
@@ -1028,6 +1069,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 150,
     src: "/EProducts/OnePlus Nord CE 4 (8GB RAM, 256GB) - Celadon Marble.webp",
     title: "OnePlus Nord CE 4 (8GB RAM, 256GB) - Celadon Marble",
     OriginalPrice: 22999,
@@ -1053,6 +1095,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 200,
     src: "/EProducts/iPhone 14 (128GB) - Midnight.webp",
     title: "Iphone 14 (128GB) - Midnight",
     OriginalPrice: 54999,
@@ -1077,6 +1120,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 85,
     src: "/EProducts/Google Pixel 8a (8GB RAM, 128GB) - Bay Blue.webp",
     title: "Google Pixel 8a (8GB RAM, 128GB) - Bay Blue",
     OriginalPrice: 35999,
@@ -1102,6 +1146,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 48,
     src: "/EProducts/Redmi Note 14 Pro+ 5G (12GB RAM, 256GB) - Titan Gold.png",
     title: "Redmi Note 14 Pro+ 5G (12GB RAM, 256GB) - Titan Gold",
     OriginalPrice: 29999,
@@ -1127,6 +1172,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 110,
     src: "/EProducts/Nothing Phone 2a (8GB RAM, 128GB) - White.jpg",
     title: "Nothing Phone 2a (8GB RAM, 128GB) - White",
     OriginalPrice: 19999,
@@ -1152,6 +1198,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 20,
     src: "/EProducts/Samsung Galaxy Z Flip 6 (12GB RAM, 256GB) - Mint.webp",
     title: "Samsung Galaxy Z Flip 6 (12GB RAM, 256GB) - Mint",
     OriginalPrice: 89999,
@@ -1178,6 +1225,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 18,
     src: "/EProducts/Motorola Razr 50 Ultra (12GB RAM, 512GB) - Hot Pink.webp",
     title: "Motorola Razr 50 Ultra (12GB RAM, 512GB) - Hot Pink",
     OriginalPrice: 79999,
@@ -1204,6 +1252,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 22,
     src: "/EProducts/Vivo X100 Pro (16GB RAM, 512GB) - Asteroid Black.png",
     title: "Vivo X100 Pro (16GB RAM, 512GB) - Asteroid Black",
     OriginalPrice: 89999,
@@ -1229,6 +1278,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 95,
     src: "/EProducts/iQOO Neo 9 Pro (12GB RAM, 256GB) - Conqueror Black.jpg",
     title: "iQOO Neo 9 Pro (12GB RAM, 256GB) - Conqueror Black",
     OriginalPrice: 34999,
@@ -1256,6 +1306,7 @@ const rawProducts = [
 
   // CATEGORY: LAPTOPS
   {
+    stock: 75,
     src: "/EProducts/Apple MacBook Air M3 (8GB RAM, 256GB SSD) - Midnight.jpg",
     title: "Apple MacBook Air M3 (8GB RAM, 256GB SSD) - Midnight",
     OriginalPrice: 92900,
@@ -1280,6 +1331,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 35,
     src: "/EProducts/ASUS ROG Strix G16 (RTX 4070, 16GB RAM, 1TB SSD).jpg",
     title: "ASUS ROG Strix G16 (RTX 4070, 16GB RAM, 1TB SSD)",
     OriginalPrice: 149990,
@@ -1304,6 +1356,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 50,
     src: "/EProducts/Dell XPS 15 (Intel Core i7, 16GB RAM, 512GB SSD).avif",
     title: "Dell XPS 15 (Intel Core i7, 16GB RAM, 512GB SSD)",
     OriginalPrice: 149990,
@@ -1328,6 +1381,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 40,
     src: "/EProducts/HP Spectre x360 (Intel Core i7, 16GB RAM, 1TB SSD).jpg",
     title: "HP Spectre x360 (Intel Core i7, 16GB RAM, 1TB SSD)",
     OriginalPrice: 129990,
@@ -1352,6 +1406,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 15,
     src: "/EProducts/Apple MacBook Pro 16 M3 Max (36GB RAM, 1TB SSD).jpg",
     title: "Apple MacBook Pro 16 M3 Max (36GB RAM, 1TB SSD)",
     OriginalPrice: 299900,
@@ -1376,6 +1431,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 60,
     src: "/EProducts/Lenovo ThinkPad X1 Carbon (Intel Core i7, 16GB RAM, 512GB).jpg",
     title: "Lenovo ThinkPad X1 Carbon (Intel Core i7, 16GB RAM, 512GB)",
     OriginalPrice: 135000,
@@ -1400,6 +1456,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 30,
     src: "/EProducts/Acer Predator Helios Neo 16 (RTX 4060, 16GB RAM).jpg",
     title: "Acer Predator Helios Neo 16 (RTX 4060, 16GB RAM)",
     OriginalPrice: 109990,
@@ -1424,6 +1481,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 25,
     src: "/EProducts/MSI Stealth 14 AI (Intel Core Ultra 7, 16GB RAM).jpg",
     title: "MSI Stealth 14 AI (Intel Core Ultra 7, 16GB RAM)",
     OriginalPrice: 129990,
@@ -1448,6 +1506,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 45,
     src: "/EProducts/Microsoft Surface Laptop 6 (Intel Core Ultra 7, 16GB).jpg",
     title: "Microsoft Surface Laptop 6 (Intel Core Ultra 7, 16GB)",
     OriginalPrice: 119990,
@@ -1472,6 +1531,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 8,
     src: "/EProducts/Razer Blade 16 (RTX 4080, 32GB RAM, 1TB SSD).jpg",
     title: "Razer Blade 16 (RTX 4080, 32GB RAM, 1TB SSD)",
     OriginalPrice: 289990,
@@ -1496,6 +1556,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 33,
     src: "/EProducts/Samsung Galaxy Book4 Pro 360 (Intel Core Ultra 7).jpg",
     title: "Samsung Galaxy Book4 Pro 360 (Intel Core Ultra 7)",
     OriginalPrice: 134990,
@@ -1520,6 +1581,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 28,
     src: "/EProducts/LG Gram 17 (Intel Core i7, 16GB RAM, 1TB SSD).jpg",
     title: "LG Gram 17 (Intel Core i7, 16GB RAM, 1TB SSD)",
     OriginalPrice: 159990,
@@ -1544,6 +1606,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 18,
     src: "/EProducts/Gigabyte AORUS 16X (RTX 4070, 16GB RAM).jpg",
     title: "Gigabyte AORUS 16X (RTX 4070, 16GB RAM)",
     OriginalPrice: 149990,
@@ -1568,6 +1631,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 5,
     src: "/EProducts/Alienware m18 R2 (RTX 4090, 64GB RAM, 2TB SSD).jpg",
     title: "Alienware m18 R2 (RTX 4090, 64GB RAM, 2TB SSD)",
     OriginalPrice: 349990,
@@ -1592,6 +1656,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 65,
     src: "/EProducts/Lenovo IdeaPad Pro 5 (AMD Ryzen 7, 16GB RAM, 512GB).jpg",
     title: "Lenovo IdeaPad Pro 5 (AMD Ryzen 7, 16GB RAM, 512GB)",
     OriginalPrice: 79990,
@@ -1616,6 +1681,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 80,
     src: "/EProducts/Apple MacBook Air 15 M3 (16GB RAM, 512GB SSD).webp",
     title: "Apple MacBook Air 15 M3 (16GB RAM, 512GB SSD)",
     OriginalPrice: 134900,
@@ -1640,6 +1706,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 42,
     src: "/EProducts/ASUS TUF Gaming F15 (RTX 4060, 16GB RAM, 512GB SSD).webp",
     title: "ASUS TUF Gaming F15 (RTX 4060, 16GB RAM, 512GB SSD)",
     OriginalPrice: 99990,
@@ -1664,6 +1731,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 55,
     src: "/EProducts/Dell Inspiron 16 Plus (Intel Core i7, 16GB RAM, 1TB).webp",
     title: "Dell Inspiron 16 Plus (Intel Core i7, 16GB RAM, 1TB)",
     OriginalPrice: 109990,
@@ -1688,6 +1756,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 70,
     src: "/EProducts/HP Pavilion Plus 14 (Intel Core i7, 16GB RAM, 1TB SSD).webp",
     title: "HP Pavilion Plus 14 (Intel Core i7, 16GB RAM, 1TB SSD)",
     OriginalPrice: 89990,
@@ -1712,6 +1781,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 0,
     src: "/EProducts/Acer Swift Go 14 OLED (AMD Ryzen 7, 16GB RAM, 512GB).webp",
     title: "Acer Swift Go 14 OLED (AMD Ryzen 7, 16GB RAM, 512GB)",
     OriginalPrice: 84990,
@@ -1736,6 +1806,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 12,
     src: "/EProducts/MSI Creator Z16 (Intel Core i9, RTX 3060, 32GB RAM).jpg",
     title: "MSI Creator Z16 (Intel Core i9, RTX 3060, 32GB RAM)",
     OriginalPrice: 179990,
@@ -1760,6 +1831,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 20,
     src: "/EProducts/Lenovo Legion Pro 5 (RTX 4070, 16GB RAM, 1TB SSD).webp",
     title: "Lenovo Legion Pro 5 (RTX 4070, 16GB RAM, 1TB SSD)",
     OriginalPrice: 149990,
@@ -1784,6 +1856,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 22,
     src: "/EProducts/ASUS Zenbook Pro 14 OLED (Intel Core i7, 16GB RAM).jpg",
     title: "ASUS Zenbook Pro 14 OLED (Intel Core i7, 16GB RAM)",
     OriginalPrice: 119990,
@@ -1808,6 +1881,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 9,
     src: "/EProducts/Dell Alienware x16 R1 (RTX 4090, 32GB RAM).jpg",
     title: "Dell Alienware x16 R1 (RTX 4090, 32GB RAM)",
     OriginalPrice: 329990,
@@ -1832,6 +1906,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 40,
     src: "/EProducts/Apple MacBook Pro 14 M3 Pro (18GB RAM, 512GB SSD).jpg",
     title: "Apple MacBook Pro 14 M3 Pro (18GB RAM, 512GB SSD)",
     OriginalPrice: 199900,
@@ -1858,6 +1933,7 @@ const rawProducts = [
 
   // CATEGORY: AUDIO
   {
+    stock: 88,
     src: "/EProducts/Sony WH-1000XM5 Wireless Noise Cancelling Headphones.webp",
     title: "Sony WH-1000XM5 Wireless Noise Cancelling Headphones",
     OriginalPrice: 26990,
@@ -1882,6 +1958,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 150,
     src: "/EProducts/Apple AirPods Pro 2nd Gen with USB-C.jpg",
     title: "Apple AirPods Pro 2nd Gen with USB-C",
     OriginalPrice: 24900,
@@ -1905,6 +1982,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 70,
     src: "/EProducts/Bose QuietComfort 45 Noise Cancelling Headphones.webp",
     title: "Bose QuietComfort 45 Noise Cancelling Headphones",
     OriginalPrice: 26900,
@@ -1928,6 +2006,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 200,
     src: "/EProducts/JBL Flip 6 Portable Bluetooth Speaker.jpg",
     title: "JBL Flip 6 Portable Bluetooth Speaker",
     OriginalPrice: 10999,
@@ -1951,6 +2030,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 110,
     src: "/EProducts/Soundcore Headphone.png",
     title: "Anker Soundcore Space Q45 Wireless ANC Headphones",
     OriginalPrice: 8999,
@@ -1974,6 +2054,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 60,
     src: "/EProducts/Skullcandy Crusher Evo Wireless Headphones.jpg",
     title: "Skullcandy Crusher Evo Wireless Headphones",
     OriginalPrice: 15999,
@@ -1997,6 +2078,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 300,
     src: "/EProducts/boAt Nirvana Ion TWS Earbuds with 120H Playback.jpg",
     title: "boAt Nirvana Ion TWS Earbuds with 120H Playback",
     OriginalPrice: 1999,
@@ -2020,6 +2102,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 250,
     src: "/EProducts/Noise Buds VS104 Pro ANC TWS Earbuds.jpg",
     title: "Noise Buds VS104 Pro ANC TWS Earbuds",
     OriginalPrice: 1499,
@@ -2043,6 +2126,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 90,
     src: "/EProducts/Samsung Galaxy Buds 3 Pro Wireless Earbuds.jpg",
     title: "Samsung Galaxy Buds 3 Pro Wireless Earbuds",
     OriginalPrice: 14999,
@@ -2066,6 +2150,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 80,
     src: "/EProducts/JBL Charge 5 Waterproof Portable Speaker.jpg",
     title: "JBL Charge 5 Waterproof Portable Speaker",
     OriginalPrice: 12999,
@@ -2089,6 +2174,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 25,
     src: "/EProducts/Marshall Stanmore III Wireless Bluetooth Speaker.jpg",
     title: "Marshall Stanmore III Wireless Bluetooth Speaker",
     OriginalPrice: 34999,
@@ -2113,6 +2199,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 50,
     src: "/EProducts/Beats Studio Pro Wireless Headphones.webp",
     title: "Beats Studio Pro Wireless Headphones",
     OriginalPrice: 34900,
@@ -2136,6 +2223,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 0,
     src: "/EProducts/Jabra Elite 8 Active ANC True Wireless Earbuds.webp",
     title: "Jabra Elite 8 Active ANC True Wireless Earbuds",
     OriginalPrice: 14999,
@@ -2159,6 +2247,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 100,
     src: "/EProducts/Sony WF-1000XM5 True Wireless Earbuds.jpg",
     title: "Sony WF-1000XM5 True Wireless Earbuds",
     OriginalPrice: 19990,
@@ -2182,6 +2271,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 40,
     src: "/EProducts/Bose SoundLink Revolve+ II Portable Speaker.jpg",
     title: "Bose SoundLink Revolve+ II Portable Speaker",
     OriginalPrice: 22900,
@@ -2205,6 +2295,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 65,
     src: "/EProducts/Marshall Emberton II Portable Speaker.jpg",
     title: "Marshall Emberton II Portable Speaker",
     OriginalPrice: 13999,
@@ -2228,6 +2319,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 120,
     src: "/EProducts/OnePlus Buds Pro 3 ANC TWS Earbuds.jpg",
     title: "OnePlus Buds Pro 3 ANC TWS Earbuds",
     OriginalPrice: 9999,
@@ -2251,6 +2343,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 180,
     src: "/EProducts/Realme Buds Air 6 Pro TWS Earbuds.jpg",
     title: "Realme Buds Air 6 Pro TWS Earbuds",
     OriginalPrice: 4999,
@@ -2274,6 +2367,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 95,
     src: "/EProducts/Nothing Ear (2) True Wireless Earbuds.jpg",
     title: "Nothing Ear (2) True Wireless Earbuds",
     OriginalPrice: 9999,
@@ -2297,6 +2391,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 400,
     src: "/EProducts/boAt Airdopes 441 Pro TWS Earbuds.jpg",
     title: "boAt Airdopes 441 Pro TWS Earbuds",
     OriginalPrice: 2499,
@@ -2320,6 +2415,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 75,
     src: "/EProducts/Sennheiser HD 450BT Active Noise Cancelling.jpg",
     title: "Sennheiser HD 450BT Active Noise Cancelling",
     OriginalPrice: 11990,
@@ -2343,6 +2439,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 30,
     src: "/EProducts/LG XBOOM Go PL7 Portable Bluetooth Speaker.jpg",
     title: "LG XBOOM Go PL7 Portable Bluetooth Speaker",
     OriginalPrice: 9990,
@@ -2366,6 +2463,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 10,
     src: "/EProducts/Bowers & Wilkins Pi7 S2 True Wireless Earbuds.jpg",
     title: "Bowers & Wilkins Pi7 S2 True Wireless Earbuds",
     OriginalPrice: 32900,
@@ -2389,6 +2487,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 250,
     src: "/EProducts/Apple AirPods 3rd Generation with MagSafe Case.jpg",
     title: "Apple AirPods 3rd Generation with MagSafe Case",
     OriginalPrice: 18900,
@@ -2412,6 +2511,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 500,
     src: "/EProducts/boAt Rockerz 550 Over-Ear Wireless Headphones.jpg",
     title: "boAt Rockerz 550 Over-Ear Wireless Headphones",
     OriginalPrice: 1999,
@@ -2437,6 +2537,7 @@ const rawProducts = [
 
   // CATEGORY: WEARABLES
   {
+    stock: 100,
     src: "/EProducts/Apple Watch Series 9 GPS 45mm Smartwatch.jpg",
     title: "Apple Watch Series 9 GPS 45mm Smartwatch",
     OriginalPrice: 41900,
@@ -2461,6 +2562,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 80,
     src: "/EProducts/Samsung Galaxy Watch 6 Classic 47mm Smartwatch.jpg",
     title: "Samsung Galaxy Watch 6 Classic 47mm Smart Watch",
     OriginalPrice: 27999,
@@ -2484,6 +2586,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 40,
     src: "/EProducts/Apple Watch Ultra 2 GPS + Cellular 49mm.jpg",
     title: "Apple Watch Ultra 2 GPS + Cellular 49mm",
     OriginalPrice: 89900,
@@ -2507,6 +2610,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 30,
     src: "/EProducts/Samsung Galaxy Watch 5 Pro LTE Smartwatch.jpg",
     title: "Samsung Galaxy Watch 5 Pro LTE Smartwatch",
     OriginalPrice: 24999,
@@ -2530,6 +2634,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 60,
     src: "/EProducts/Google Pixel Watch 2 WiFi Smartwatch.jpg",
     title: "Google Pixel Watch 2 WiFi Smartwatch",
     OriginalPrice: 27999,
@@ -2553,6 +2658,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 120,
     src: "/EProducts/Apple Watch SE 2nd Gen GPS 44mm.jpg",
     title: "Apple Watch SE 2nd Gen GPS 44mm",
     OriginalPrice: 24900,
@@ -2576,6 +2682,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 200,
     src: "/EProducts/Fitbit Charge 6 Advanced Fitness Tracker.jpg",
     title: "Fitbit Charge 6 Advanced Fitness Tracker",
     OriginalPrice: 7999,
@@ -2599,6 +2706,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 150,
     src: "/EProducts/Fitbit Versa 3 Smartwatch.jpg",
     title: "Fitbit Versa 3 Smartwatch",
     OriginalPrice: 14999,
@@ -2622,6 +2730,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 10,
     src: "/EProducts/Garmin Fenix 7X Pro Sapphire Solar Smartwatch.jpg",
     title: "Garmin Fenix 7X Pro Sapphire Solar Smartwatch",
     OriginalPrice: 89990,
@@ -2645,6 +2754,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 50,
     src: "/EProducts/Garmin Venu 3S AMOLED Fitness Watch.jpg",
     title: "Garmin Venu 3S AMOLED Fitness Watch",
     OriginalPrice: 34990,
@@ -2668,6 +2778,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 90,
     src: "/EProducts/Amazfit GTR 4 Premium Smartwatch.jpg",
     title: "Amazfit GTR 4 Premium Smartwatch",
     OriginalPrice: 11999,
@@ -2691,6 +2802,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 25,
     src: "/EProducts/Amazfit T-Rex Ultra Rugged GPS Smartwatch.jpg",
     title: "Amazfit T-Rex Ultra Rugged GPS Smartwatch",
     OriginalPrice: 19999,
@@ -2714,6 +2826,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 300,
     src: "/EProducts/Fastrack FS1 Pro Smartwatch.jpg",
     title: "Fastrack FS1 Pro Smartwatch",
     OriginalPrice: 5999,
@@ -2737,6 +2850,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 400,
     src: "/EProducts/Noise ColorFit Pro 5 Max Smartwatch.jpg",
     title: "Noise ColorFit Pro 5 Max Smartwatch",
     OriginalPrice: 3999,
@@ -2760,6 +2874,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 250,
     src: "/EProducts/NoiseFit Halo Premium Round Smartwatch.jpg",
     title: "NoiseFit Halo Premium Round Smartwatch",
     OriginalPrice: 3499,
@@ -2783,6 +2898,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 180,
     src: "/EProducts/boAt Xtend Pro Calling Smartwatch.jpg",
     title: "boAt Xtend Pro Calling Smartwatch",
     OriginalPrice: 2999,
@@ -2806,6 +2922,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 0,
     src: "/EProducts/boAt Lunar Connect Ace Pro Smartwatch.jpg",
     title: "boAt Lunar Connect Ace Pro Smartwatch",
     OriginalPrice: 7999,
@@ -2829,6 +2946,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 150,
     src: "/EProducts/CrossBeats Ignite S4 Max Smartwatch.jpg",
     title: "CrossBeats Ignite S4 Max Smartwatch",
     OriginalPrice: 4999,
@@ -2852,6 +2970,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 80,
     src: "/EProducts/Fire-Boltt Invincible Plus Smartwatch.jpg",
     title: "Fire-Boltt Invincible Plus Smartwatch",
     OriginalPrice: 7999,
@@ -2875,6 +2994,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 200,
     src: "/EProducts/Pebble Cosmos Max 1.81 inch Smartwatch.jpg",
     title: "Pebble Cosmos Max 1.81 inch Smartwatch",
     OriginalPrice: 3999,
@@ -2898,6 +3018,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 45,
     src: "/EProducts/Fossil Gen 6 Wellness Edition Smartwatch.jpg",
     title: "Fossil Gen 6 Wellness Edition Smartwatch",
     OriginalPrice: 22999,
@@ -2921,6 +3042,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 90,
     src: "/EProducts/Titan Smart 3 Premium Smartwatch.jpg",
     title: "Titan Smart 3 Premium Smartwatch",
     OriginalPrice: 7990,
@@ -2944,6 +3066,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 130,
     src: "/EProducts/Xiaomi Smart Band 8 Pro Fitness Tracker.jpg",
     title: "Xiaomi Smart Band 8 Pro Fitness Tracker",
     OriginalPrice: 3999,
@@ -2967,6 +3090,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 70,
     src: "/EProducts/OnePlus Watch 2R Smartwatch.png",
     title: "OnePlus Watch 2R Smartwatch",
     OriginalPrice: 15999,
@@ -2990,6 +3114,7 @@ const rawProducts = [
     },
   },
   {
+    stock: 100,
     src: "/EProducts/Realme Watch 3 Pro AMOLED Smartwatch.jpg",
     title: "Realme Watch 3 Pro AMOLED Smartwatch",
     OriginalPrice: 5999,
@@ -3017,6 +3142,7 @@ const rawProducts = [
 // Accessories
 const accessoriesRaw = [
   {
+    stock: 50,
     src: "/EProducts/Premium Tempered Glass Screen Protector.jpg",
     title: "Premium Tempered Glass Screen Protector",
     OriginalPrice: 299,
@@ -3027,6 +3153,7 @@ const accessoriesRaw = [
     features: ["9H Hardness", "Anti-Fingerprint", "Easy Installation"],
   },
   {
+    stock: 80,
     src: "/EProducts/Shockproof Transparent Back Cover Case.jpg",
     title: "Shockproof Transparent Back Cover Case",
     OriginalPrice: 199,
@@ -3037,6 +3164,7 @@ const accessoriesRaw = [
     features: ["Shockproof", "Transparent", "Slim Fit"],
   },
   {
+    stock: 150,
     src: "/EProducts/Heavy Duty Wall Mount Bracket for TV.jpg",
     title: "Heavy Duty Wall Mount Bracket for TV",
     OriginalPrice: 999,
@@ -3046,6 +3174,7 @@ const accessoriesRaw = [
     features: ["Heavy Duty Steel", "Universal Fit", "Easy Installation"],
   },
   {
+    stock: 30,
     src: "/EProducts/High-Speed HDMI Cable (2m).jpg",
     title: "High-Speed HDMI Cable (2m)",
     OriginalPrice: 499,
@@ -3055,6 +3184,7 @@ const accessoriesRaw = [
     features: ["4K Support", "Gold Plated Connectors", "2 Meters Length"],
   },
   {
+    stock: 40,
     src: "/EProducts/Wireless Optical Mouse.jpg",
     title: "Wireless Optical Mouse",
     OriginalPrice: 599,
@@ -3064,6 +3194,7 @@ const accessoriesRaw = [
     features: ["Wireless", "Ergonomic Design", "Long Battery Life"],
   },
   {
+    stock: 20,
     src: "/EProducts/Laptop Sleeve.jpg",
     title: "Laptop Sleeve / Carrying Case",
     OriginalPrice: 799,
@@ -3074,6 +3205,7 @@ const accessoriesRaw = [
     features: ["Water Resistant", "Shock Protection", "Extra Pockets"],
   },
   {
+    stock: 60,
     src: "/EProducts/Protective Silicone Case for Earbuds.jpg",
     title: "Protective Silicone Case for Earbuds",
     OriginalPrice: 299,
@@ -3083,6 +3215,7 @@ const accessoriesRaw = [
     features: ["Shock Absorption", "Carabiner Included", "Precise Cutouts"],
   },
   {
+    stock: 100,
     src: "/EProducts/Universal Headphone Stand.jpg",
     title: "Universal Headphone Stand",
     OriginalPrice: 899,
@@ -3092,6 +3225,7 @@ const accessoriesRaw = [
     features: ["Aluminium Build", "Anti-slip Base", "Universal Compatibility"],
   },
   {
+    stock: 70,
     src: "/EProducts/Replacement Silicone Strap.jpg",
     title: "Replacement Silicone Strap",
     OriginalPrice: 399,
@@ -3101,6 +3235,7 @@ const accessoriesRaw = [
     features: ["Soft Silicone", "Quick Release", "Multiple Colors"],
   },
   {
+    stock: 80,
     src: "/EProducts/Screen Protector for Smartwatch.webp",
     title: "Screen Protector for Smartwatch",
     OriginalPrice: 199,
@@ -3110,6 +3245,7 @@ const accessoriesRaw = [
     features: ["HD Clarity", "Bubble Free", "Edge to Edge"],
   },
   {
+    stock: 50,
     src: "/EProducts/USB-C to 3.5mm Headphone Jack Adapter.jpg",
     title: "USB-C to 3.5mm Headphone Jack Adapter",
     OriginalPrice: 349,
@@ -3120,6 +3256,7 @@ const accessoriesRaw = [
     features: ["DAC Chip", "Durable Braided Cable", "Wide Compatibility"],
   },
   {
+    stock: 50,
     src: "/EProducts/Portable Power Bank 10000mAh.jpg",
     title: "Portable Power Bank 10000mAh",
     OriginalPrice: 1299,
@@ -3134,6 +3271,7 @@ const accessoriesRaw = [
     ],
   },
   {
+    stock: 35,
     src: "/EProducts/Car Charger with Dual USB Ports.jpg",
     title: "Car Charger with Dual USB Ports",
     OriginalPrice: 499,
@@ -3144,6 +3282,7 @@ const accessoriesRaw = [
     features: ["3.1A Total Output", "Smart IC Technology", "Compact Design"],
   },
   {
+    stock: 50,
     src: "/EProducts/Braided USB-C to USB-C Cable.jpg",
     title: "Braided USB-C to USB-C Cable (2m)",
     OriginalPrice: 599,
@@ -3154,6 +3293,7 @@ const accessoriesRaw = [
     features: ["100W Power Delivery", "480Mbps Data Transfer", "Nylon Braided"],
   },
   {
+    stock: 50,
     src: "/EProducts/Adjustable Aluminum Laptop Stand.jpg",
     title: "Adjustable Aluminum Laptop Stand",
     OriginalPrice: 1499,
@@ -3164,6 +3304,7 @@ const accessoriesRaw = [
     features: ["Ergonomic Design", "Sturdy Aluminum", "Ventilated for Cooling"],
   },
   {
+    stock: 100,
     src: "/EProducts/Webcam Cover Slide.jpg",
     title: "Webcam Cover Slide (3-Pack)",
     OriginalPrice: 149,
@@ -3174,6 +3315,7 @@ const accessoriesRaw = [
     features: ["Ultra-Thin Design", "Easy to Apply", "Fits Most Devices"],
   },
   {
+    stock: 90,
     src: "/EProducts/Microfiber Cleaning Cloths.jpg",
     title: "Microfiber Cleaning Cloths (6-Pack)",
     OriginalPrice: 249,
@@ -3184,6 +3326,7 @@ const accessoriesRaw = [
     features: ["Lint-Free", "Scratch-Free", "Washable & Reusable"],
   },
   {
+    stock: 40,
     src: "/EProducts/Cable Management Sleeves.jpg",
     title: "Cable Management Sleeves (4-Pack)",
     OriginalPrice: 399,
@@ -3194,6 +3337,7 @@ const accessoriesRaw = [
     features: ["Flexible Neoprene", "Zip-up Design", "Reversible Black/White"],
   },
   {
+    stock: 50,
     src: "/EProducts/Smartwatch Charging Stand.jpg",
     title: "Smartwatch Charging Stand",
     OriginalPrice: 699,
@@ -3204,6 +3348,7 @@ const accessoriesRaw = [
     features: ["Non-slip Base", "Cable Management", "Durable Silicone"],
   },
   {
+    stock: 30,
     src: "/EProducts/Wireless Charging Pad.jpg",
     title: "Wireless Charging Pad (Qi-Certified)",
     OriginalPrice: 999,
@@ -3214,6 +3359,7 @@ const accessoriesRaw = [
     features: ["15W Fast Charging", "Case Friendly", "LED Indicator"],
   },
   {
+    stock: 50,
     src: "/EProducts/Bluetooth Car Kit with FM Transmitter.jpg",
     title: "Bluetooth Car Kit with FM Transmitter",
     OriginalPrice: 899,
@@ -3224,6 +3370,7 @@ const accessoriesRaw = [
     features: ["Hands-free Calling", "Dual USB Charging", "MicroSD Card Slot"],
   },
   {
+    stock: 80,
     src: "/EProducts/Gaming Mouse Pad.jpg",
     title: "Gaming Mouse Pad (Extended)",
     OriginalPrice: 799,
@@ -3238,6 +3385,7 @@ const accessoriesRaw = [
     ],
   },
   {
+    stock: 60,
     src: "/EProducts/Screen Cleaning Spray Kit.jpg",
     title: "Screen Cleaning Spray Kit",
     OriginalPrice: 349,
@@ -3252,6 +3400,7 @@ const accessoriesRaw = [
     ],
   },
   {
+    stock: 80,
     src: "/EProducts/Hard Shell Case for MacBook Air.jpg",
     title: "Hard Shell Case for MacBook Air",
     OriginalPrice: 1199,
@@ -3266,6 +3415,7 @@ const accessoriesRaw = [
     ],
   },
   {
+    stock: 70,
     src: "/EProducts/Silicone Nibs for Apple Pencil.jpg",
     title: "Silicone Nibs for Apple Pencil (4-Pack)",
     OriginalPrice: 299,
@@ -3280,6 +3430,7 @@ const accessoriesRaw = [
 // Services
 const servicesRaw = [
   {
+    stock: 99,
     src: "/EProducts/1 Year Extended Warranty for Smartphones.jpg",
     title: "1 Year Extended Warranty for Smartphones",
     OriginalPrice: 1499,
@@ -3294,6 +3445,7 @@ const servicesRaw = [
     ],
   },
   {
+    stock: 99,
     src: "/EProducts/2 Year Extended Warranty for Smart TVs.jpg",
     title: "2 Year Extended Warranty for Smart TVs",
     OriginalPrice: 2999,
@@ -3304,6 +3456,7 @@ const servicesRaw = [
     features: ["2 Year Extension", "On-site Service", "All Parts Covered"],
   },
   {
+        stock: 99,
     src: "/EProducts/1 Year Accidental Damage Protection for Laptops.png",
     title: "1 Year Accidental Damage Protection for Laptops",
     OriginalPrice: 2499,

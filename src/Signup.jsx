@@ -278,10 +278,7 @@ function Signup() {
               />
               <span className="text-sm text-gray-600">
                 I agree to the{" "}
-                <a
-                  href="#"
-                  className="text-indigo-600 hover:underline"
-                >
+                <a href="#" className="text-indigo-600 hover:underline">
                   Terms and Conditions
                 </a>
               </span>
@@ -295,7 +292,7 @@ function Signup() {
 
           <button
             type="submit"
-            className="w-full py-3.5 rounded-xl border-none bg-gray-900 text-white font-semibold text-base cursor-pointer mt-2.5 transition-all duration-200 hover:bg-gray-700 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-gray-900"
+            className="w-full py-3.5 rounded-xl border-none bg-indigo-600 text-white font-semibold text-base cursor-pointer mt-2.5 transition-all duration-200 hover:bg-indigo-700 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-indigo-600"
             disabled={status === "loading" || status === "success"}
           >
             {status === "loading" ? (
@@ -311,15 +308,40 @@ function Signup() {
 
         {status === "success" && (
           <div className="mt-6 p-3 bg-emerald-50 text-emerald-600 rounded-lg text-sm font-medium flex items-center justify-center border border-emerald-300">
-            <span className="mr-2">✨</span> Account created! Redirecting to
-            login...
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>{" "}
+            Account created! Redirecting to login...
           </div>
         )}
 
         {/* 🔹 UPDATED: Now dynamically displays the professional error message */}
         {status === "error" && (
           <div className="mt-6 p-3 bg-red-50 text-red-600 rounded-lg text-sm font-medium flex items-center justify-center border border-red-300 text-center">
-            <span className="mr-2">⚠️</span> {errorMessage}
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>{" "}
+            {errorMessage}
           </div>
         )}
 

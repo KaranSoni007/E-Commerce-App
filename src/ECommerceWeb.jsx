@@ -29,7 +29,35 @@ const Toast = memo(({ message, type, onClose }) => {
       }`}
     >
       <div className="flex items-center gap-2">
-        <span className="text-lg">{type === "success" ? "✓" : "✕"}</span>
+        {type === "success" ? (
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        ) : (
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        )}
         <span className="font-medium text-sm">{message}</span>
       </div>
     </motion.div>
@@ -260,14 +288,48 @@ const CardView = memo(
           {/* Add to Cart Button */}
           <button
             onClick={handleAddToCart}
-            className={`w-full py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 relative z-30 ${
+            className={`w-full py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 relative z-30 flex items-center justify-center gap-2 ${
               isAdded
                 ? "bg-emerald-500 text-white"
                 : "bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98]"
             }`}
             aria-label={isAdded ? "Added to cart" : "Add to cart"}
           >
-            {isAdded ? "✓ Added" : "🛒 Add to Cart"}
+            {isAdded ? (
+              <>
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>{" "}
+                Added
+              </>
+            ) : (
+              <>
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>{" "}
+                Add to Cart
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -343,7 +405,11 @@ function ECommerceWeb() {
 
   // Get price range from products
   const priceStats = useMemo(() => {
-    if (!AllProducts || !Array.isArray(AllProducts) || AllProducts.length === 0) {
+    if (
+      !AllProducts ||
+      !Array.isArray(AllProducts) ||
+      AllProducts.length === 0
+    ) {
       return { min: 0, max: 100000 };
     }
     const prices = AllProducts.map((p) => p.OriginalPrice || 0).filter(
@@ -572,7 +638,7 @@ function ECommerceWeb() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded-2xl mb-10 bg-linear-to-r from-indigo-600 to-purple-600 p-8 shadow-xl"
+          className="relative overflow-hidden rounded-2xl mb-10 bg-gradient-to-r from-indigo-600 to-purple-600 p-8 shadow-xl"
         >
           <div className="relative z-10 text-center">
             <span className="inline-block bg-yellow-400 text-yellow-900 text-xs font-bold px-4 py-2 rounded-full mb-4 shadow-md">
@@ -610,7 +676,7 @@ function ECommerceWeb() {
                     product={product}
                     index={index}
                     productIndex={productIndex >= 0 ? productIndex : index}
-                  productId={product.id}
+                    productId={product.id}
                     addToCart={addToCart}
                     showToast={showToast}
                     formatPrice={formatPrice}
@@ -868,7 +934,21 @@ function ECommerceWeb() {
             })
           ) : (
             <div className="col-span-full text-center py-16 bg-white rounded-2xl border border-gray-200">
-              <span className="text-4xl mb-4 block">🔍</span>
+              <div className="flex justify-center mb-4 text-gray-300">
+                <svg
+                  className="w-16 h-16"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 No products found
               </h3>
@@ -909,7 +989,19 @@ function ECommerceWeb() {
         >
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-indigo-100 flex items-center justify-center">
-              <span className="text-3xl">💬</span>
+              <svg
+                className="w-8 h-8 text-indigo-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                />
+              </svg>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
               Need Help?
@@ -923,14 +1015,38 @@ function ECommerceWeb() {
                 href="mailto:ks.telecom999@gmail.com"
                 className="flex items-center gap-3 px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-700 font-medium hover:bg-gray-100 transition-colors"
               >
-                <span className="text-xl">📧</span>
+                <svg
+                  className="w-5 h-5 text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
                 ks.telecom999@gmail.com
               </a>
               <a
                 href="tel:+919876543210"
                 className="flex items-center gap-3 px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-700 font-medium hover:bg-gray-100 transition-colors"
               >
-                <span className="text-xl">📞</span>
+                <svg
+                  className="w-5 h-5 text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  />
+                </svg>
                 +91 98765 43210
               </a>
             </div>

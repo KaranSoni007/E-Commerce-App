@@ -28,14 +28,41 @@ export const CartProvider = ({ children }) => {
     return savedCart ? JSON.parse(savedCart) : [];
   });
   const isInitialized = useRef(false);
+  const prevUserEmail = useRef(userEmail);
 
   // Load cart when user changes
   useEffect(() => {
+    // If user hasn't changed (or initial mount), skip logic unless we want to force load
+    if (prevUserEmail.current === userEmail) return;
+
+    const prevEmail = prevUserEmail.current;
+    prevUserEmail.current = userEmail;
+
     isInitialized.current = false; // Prevent saving during load
     const key = `cart_${userEmail}`;
     const savedCart = localStorage.getItem(key);
-    setCart(savedCart ? JSON.parse(savedCart) : []);
-  }, [userEmail]);
+    let newCart = savedCart ? JSON.parse(savedCart) : [];
+
+    // MERGE LOGIC: If switching from 'guest' to a user, merge guest cart into user cart
+    if (prevEmail === "guest" && userEmail !== "guest" && cart.length > 0) {
+      cart.forEach((guestItem) => {
+        const existingItem = newCart.find(
+          (item) => item.title === guestItem.title,
+        );
+        if (existingItem) {
+          existingItem.quantity += guestItem.quantity;
+        } else {
+          newCart.push(guestItem);
+        }
+      });
+      // Save merged cart immediately to avoid loss on refresh
+      localStorage.setItem(key, JSON.stringify(newCart));
+      // Optional: Clear guest cart
+      localStorage.removeItem("cart_guest");
+    }
+
+    setCart(newCart);
+  }, [userEmail, cart]); // Add cart to deps to capture guest state
 
   // Save cart when it changes, but only to the current user's key
   useEffect(() => {

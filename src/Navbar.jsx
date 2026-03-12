@@ -87,7 +87,10 @@ function Navbar() {
   // Close profile dropdown on outside click
   useEffect(() => {
     function handleClickOutside(event) {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target)
+      ) {
         setShowProfileDropdown(false);
       }
     }
@@ -1184,25 +1187,6 @@ function Navbar() {
           </div>
         </div>
       )}
-
-      <style>{`
-        html { scroll-behavior: smooth; }
-        .animate-pop { animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes pop { 
-          0% { transform: scale(0); } 
-          100% { transform: scale(1); } 
-        }
-        @keyframes slideDown {
-          from { opacity: 0; transform: translateY(-10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: scale(0.95) translateY(-5px); }
-          to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        .animate-fadeIn { animation: fadeIn 0.2s ease-out; }
-        .animate-slideDown { animation: slideDown 0.2s ease-out; }
-      `}</style>
     </nav>
   );
 }

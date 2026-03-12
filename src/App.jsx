@@ -13,6 +13,7 @@ import { WishlistProvider } from "./WishlistContext";
 import { ReviewProvider } from "./ReviewContext";
 import { CompareProvider } from "./CompareContext";
 import { AuthProvider } from "./AuthContext";
+import { StockProvider } from "./StockContext";
 
 // Lazy load page components for better performance - reduces initial bundle size
 const Profile = lazy(() => import("./Profile"));
@@ -53,53 +54,55 @@ const ScrollToTop = () => {
 function App() {
   return (
     <AuthProvider>
-      <CartProvider>
-        <WishlistProvider>
-          <ReviewProvider>
-            <CompareProvider>
-              <Router>
-                <ScrollToTop />
-                <div className="flex flex-col min-h-screen transition-colors duration-200">
-                  <Navbar />
-                  <div className="grow">
-                    <Suspense fallback={<PageLoader />}>
-                      <Routes>
-                        <Route path="/" element={<ECommerceWeb />} />
-                        <Route path="/cart" element={<Cart />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="/signup" element={<Signup />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route
-                          path="/forgot-password"
-                          element={<ForgotPassword />}
-                        />
-                        <Route
-                          path="/product/:id"
-                          element={<ProductDetail />}
-                        />
-                        <Route path="/wishlist" element={<Wishlist />} />
-                        <Route path="/compare" element={<Compare />} />
-                        <Route
-                          path="/track-order/:orderId"
-                          element={<OrderTracking />}
-                        />
-                        <Route
-                          path="/order-confirmation/:orderId"
-                          element={<OrderConfirmation />}
-                        />
-                        <Route path="/support" element={<Support />} />
-                        <Route path="/admin" element={<AdminPanel />} />
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </Suspense>
+      <StockProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <ReviewProvider>
+              <CompareProvider>
+                <Router>
+                  <ScrollToTop />
+                  <div className="flex flex-col min-h-screen transition-colors duration-200">
+                    <Navbar />
+                    <div className="grow">
+                      <Suspense fallback={<PageLoader />}>
+                        <Routes>
+                          <Route path="/" element={<ECommerceWeb />} />
+                          <Route path="/cart" element={<Cart />} />
+                          <Route path="/profile" element={<Profile />} />
+                          <Route path="/signup" element={<Signup />} />
+                          <Route path="/login" element={<Login />} />
+                          <Route
+                            path="/forgot-password"
+                            element={<ForgotPassword />}
+                          />
+                          <Route
+                            path="/product/:id"
+                            element={<ProductDetail />}
+                          />
+                          <Route path="/wishlist" element={<Wishlist />} />
+                          <Route path="/compare" element={<Compare />} />
+                          <Route
+                            path="/track-order/:orderId"
+                            element={<OrderTracking />}
+                          />
+                          <Route
+                            path="/order-confirmation/:orderId"
+                            element={<OrderConfirmation />}
+                          />
+                          <Route path="/support" element={<Support />} />
+                          <Route path="/admin" element={<AdminPanel />} />
+                          <Route path="*" element={<NotFound />} />
+                        </Routes>
+                      </Suspense>
+                    </div>
+                    <Footer />
                   </div>
-                  <Footer />
-                </div>
-              </Router>
-            </CompareProvider>
-          </ReviewProvider>
-        </WishlistProvider>
-      </CartProvider>
+                </Router>
+              </CompareProvider>
+            </ReviewProvider>
+          </WishlistProvider>
+        </CartProvider>
+      </StockProvider>
     </AuthProvider>
   );
 }

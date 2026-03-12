@@ -21,23 +21,26 @@ export const AIService = {
     );
 
     // 2. Score every other product based on token overlap (Jaccard Similarity concept)
-    const scoredProducts = AllProducts
-      .filter((p) => p.id !== currentProduct.id && p.category === currentProduct.category)
-      .map((p) => {
-        const pFeatures = p.features || [];
-        const productText = `${p.category} ${p.description} ${pFeatures.join(" ")}`;
-        const productTokens = productText.toLowerCase().split(/\W+/);
+    const scoredProducts = AllProducts.filter(
+      (p) =>
+        p.id !== currentProduct.id && p.category === currentProduct.category,
+    ).map((p) => {
+      const pFeatures = p.features || [];
+      const productText = `${p.category} ${p.description} ${pFeatures.join(" ")}`;
+      const productTokens = productText.toLowerCase().split(/\W+/);
 
-        // Count how many important words match
-        const matchCount = productTokens.reduce((acc, token) => {
-          return currentTokens.has(token) ? acc + 1 : acc;
-        }, 0);
+      // Count how many important words match
+      const matchCount = productTokens.reduce((acc, token) => {
+        return currentTokens.has(token) ? acc + 1 : acc;
+      }, 0);
 
-        // Boost score for exact feature matches
-        const sharedFeatures = pFeatures.filter(f => features.includes(f)).length;
+      // Boost score for exact feature matches
+      const sharedFeatures = pFeatures.filter((f) =>
+        features.includes(f),
+      ).length;
 
-        return { ...p, score: matchCount + (sharedFeatures * 5) };
-      });
+      return { ...p, score: matchCount + sharedFeatures * 5 };
+    });
 
     // 3. Sort by score (highest match first) and return top N
     return scoredProducts.sort((a, b) => b.score - a.score).slice(0, limit);
@@ -64,12 +67,10 @@ export const AIService = {
 
     // 1. Create a "profile" of the user's interests from their recently viewed items
     const userProfileText = recentlyViewed
-      .map(
-        (p) => {
-          const features = p.features || [];
-          return `${p.category} ${p.title} ${p.description} ${features.join(" ")}`;
-        }
-      )
+      .map((p) => {
+        const features = p.features || [];
+        return `${p.category} ${p.title} ${p.description} ${features.join(" ")}`;
+      })
       .join(" ");
 
     const userTokens = new Set(
@@ -81,11 +82,17 @@ export const AIService = {
 
     // 2. Score all products based on this profile (similar to getRecommendations)
     const recentlyViewedTitles = new Set(recentlyViewed.map((p) => p.title));
-    const scoredProducts = AllProducts
-      .filter((p) => !recentlyViewedTitles.has(p.title)) // Exclude items they've already seen
+    const scoredProducts = AllProducts.filter(
+      (p) => !recentlyViewedTitles.has(p.title),
+    ) // Exclude items they've already seen
       .map((p) => {
-        const productTokens = `${p.category} ${p.title} ${p.description}`.toLowerCase().split(/\W+/);
-        const score = productTokens.reduce((acc, token) => userTokens.has(token) ? acc + 1 : acc, 0);
+        const productTokens = `${p.category} ${p.title} ${p.description}`
+          .toLowerCase()
+          .split(/\W+/);
+        const score = productTokens.reduce(
+          (acc, token) => (userTokens.has(token) ? acc + 1 : acc),
+          0,
+        );
         return { ...p, score };
       });
 
@@ -104,7 +111,7 @@ export const AIService = {
     } catch (e) {
       allOrders = [];
     }
-    
+
     const coOccurrences = {};
 
     // 1. Analyze orders to find items bought with the current product
@@ -151,7 +158,10 @@ export const AIService = {
       } else if (cat === "Audio") {
         accessoryKeywords = ["Silicone Case", "Headphone Stand"];
       } else if (cat === "Wearables") {
-        accessoryKeywords = ["Silicone Strap", "Screen Protector for Smartwatch"];
+        accessoryKeywords = [
+          "Silicone Strap",
+          "Screen Protector for Smartwatch",
+        ];
       }
 
       const foundItems = [];
@@ -184,7 +194,8 @@ export const AIService = {
     // 4. Fallback if not enough data: pick items from same category (excluding current)
     if (recommendations.length < limit) {
       const fallback = products
-        .filter( // Fallback to similar main products if still not enough
+        .filter(
+          // Fallback to similar main products if still not enough
           (p) =>
             p.category === currentProduct.category &&
             p.id !== currentProduct.id &&

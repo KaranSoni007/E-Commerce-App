@@ -281,9 +281,7 @@ function ProductReviews({ productTitle, product }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
         {/* Rating Breakdown - Left Column */}
         <div className="lg:col-span-1">
-          <h4 className="font-semibold text-gray-900 mb-4">
-            Rating Breakdown
-          </h4>
+          <h4 className="font-semibold text-gray-900 mb-4">Rating Breakdown</h4>
           <div className="space-y-2">
             {[5, 4, 3, 2, 1].map((rating) => (
               <div key={rating} className="flex items-center gap-3">
@@ -310,25 +308,17 @@ function ProductReviews({ productTitle, product }) {
             </h5>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">
-                  Total Reviews
-                </span>
-                <span className="font-medium text-gray-900">
-                  {reviewCount}
-                </span>
+                <span className="text-gray-600">Total Reviews</span>
+                <span className="font-medium text-gray-900">{reviewCount}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">
-                  Verified Purchases
-                </span>
+                <span className="text-gray-600">Verified Purchases</span>
                 <span className="font-medium text-gray-900">
                   {reviews.filter((r) => r.verified).length}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">
-                  Would Recommend
-                </span>
+                <span className="text-gray-600">Would Recommend</span>
                 <span className="font-medium text-gray-900">
                   {reviews.filter((r) => r.recommend).length}
                 </span>
@@ -496,7 +486,20 @@ function ProductReviews({ productTitle, product }) {
                           </span>
                           {review.verified && (
                             <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full">
-                              ✓ Verified Purchase
+                              <svg
+                                className="w-3 h-3 inline-block mr-1"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>{" "}
+                              Verified Purchase
                             </span>
                           )}
                         </div>
@@ -585,7 +588,21 @@ function ProductReviews({ productTitle, product }) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                       {review.pros && (
                         <div className="flex items-start gap-2">
-                          <span className="text-green-500 font-bold">+</span>
+                          <span className="text-green-500 font-bold mt-0.5">
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 4v16m8-8H4"
+                              />
+                            </svg>
+                          </span>
                           <div>
                             <span className="text-xs font-semibold text-gray-700 block">
                               Pros
@@ -598,7 +615,21 @@ function ProductReviews({ productTitle, product }) {
                       )}
                       {review.cons && (
                         <div className="flex items-start gap-2">
-                          <span className="text-red-500 font-bold">-</span>
+                          <span className="text-red-500 font-bold mt-0.5">
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M20 12H4"
+                              />
+                            </svg>
+                          </span>
                           <div>
                             <span className="text-xs font-semibold text-gray-700 block">
                               Cons
@@ -683,7 +714,21 @@ function ProductReviews({ productTitle, product }) {
               ))
             ) : (
               <div className="text-center py-12">
-                <span className="text-4xl mb-4 block">📝</span>
+                <div className="flex justify-center mb-4 text-gray-300">
+                  <svg
+                    className="w-12 h-12"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">
                   No reviews yet
                 </h4>
@@ -705,8 +750,8 @@ function ProductReviews({ productTitle, product }) {
                     {!isLoggedIn
                       ? "Please log in to write a review."
                       : !canReview && !userHasReviewed
-                      ? "You can review products you've purchased after they are delivered."
-                      : ""}
+                        ? "You can review products you've purchased after they are delivered."
+                        : ""}
                   </p>
                 )}
               </div>
@@ -714,16 +759,6 @@ function ProductReviews({ productTitle, product }) {
           </div>
         </div>
       </div>
-
-      <style>{`
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-in-out;
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }

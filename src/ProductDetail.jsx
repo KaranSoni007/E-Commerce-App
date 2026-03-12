@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useCart } from "./CartContext";
 import { useWishlist } from "./WishlistContext";
+import { useCompare } from "./CompareContext";
 import { useReviews } from "./ReviewContext";
 import AllProducts, { services } from "./Products";
 import { useAuth } from "./AuthContext";
@@ -13,6 +14,7 @@ function ProductDetail() {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { addToCompare, removeFromCompare, isInCompare } = useCompare();
   const { getAverageRating, getReviewCount } = useReviews();
   const { user } = useAuth();
 
@@ -27,6 +29,7 @@ function ProductDetail() {
   const [averageRating, setAverageRating] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isCompared, setIsCompared] = useState(false);
   const [stockStatus, setStockStatus] = useState({
     isInStock: true,
     stockCount: 50,
@@ -64,6 +67,9 @@ function ProductDetail() {
       // Check wishlist status
       setIsWishlisted(isInWishlist(foundProduct.title));
 
+      // Check compare status
+      setIsCompared(isInCompare(foundProduct.title));
+
       // Use AI Service to get smart recommendations
       const related = AIService.getRecommendations(foundProduct);
       setSimilarProducts(related);
@@ -74,7 +80,7 @@ function ProductDetail() {
       setSelectedBundleIds(freq.map((p) => p.id));
     }
     setLoading(false);
-  }, [id, getAverageRating, getReviewCount, isInWishlist, user]);
+  }, [id, getAverageRating, getReviewCount, isInWishlist, user, isInCompare]);
 
   const getDiscount = useCallback(() => {
     if (!product || !product.MRP || !product.OriginalPrice) return 0;
@@ -137,6 +143,25 @@ function ProductDetail() {
     setTimeout(() => setShowToast(false), 2500);
   }, [product, toggleWishlist]);
 
+  const handleCompareClick = useCallback(() => {
+    if (!product) return;
+    let message;
+    if (isCompared) {
+      removeFromCompare(product.title);
+      message = "Removed from comparison";
+      setIsCompared(false);
+    } else {
+      const result = addToCompare(product);
+      message = result.message;
+      if (result.success) {
+        setIsCompared(true);
+      }
+    }
+    setToastMessage(message);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2500);
+  }, [product, isCompared, addToCompare, removeFromCompare]);
+
   const handleBundleAddToCart = () => {
     // Add main product
     addToCart(product, quantity);
@@ -196,7 +221,21 @@ function ProductDetail() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <span className="text-6xl mb-4 block">🔍</span>
+          <div className="text-6xl mb-4 flex justify-center text-gray-300">
+            <svg
+              className="w-24 h-24"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             Product Not Found
           </h2>
@@ -222,7 +261,19 @@ function ProductDetail() {
       {showToast && (
         <div className="fixed top-32 right-6 z-50 px-6 py-3 rounded-xl shadow-lg bg-emerald-500 text-white animate-slideIn">
           <div className="flex items-center gap-2">
-            <span className="text-lg">✓</span>
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
             <span className="font-medium text-sm">{toastMessage}</span>
           </div>
         </div>
@@ -300,15 +351,51 @@ function ProductDetail() {
                 </span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600">
-                <span>🚚</span>
+                <svg
+                  className="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                  />
+                </svg>
                 <span>Free delivery within 3-5 business days</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600 mt-2">
-                <span>🛡️</span>
+                <svg
+                  className="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  />
+                </svg>
                 <span>1 Year Warranty</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600 mt-2">
-                <span>🔄</span>
+                <svg
+                  className="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
                 <span>Easy 30-day returns</span>
               </div>
             </div>
@@ -403,21 +490,106 @@ function ProductDetail() {
                           : "bg-gray-300 text-gray-500 cursor-not-allowed"
                     }`}
                   >
-                    {isAdded
-                      ? "✓ Added"
-                      : isInStock
-                        ? "🛒 Add to Cart"
-                        : "Out of Stock"}
+                    {isAdded ? (
+                      <>
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>{" "}
+                        Added
+                      </>
+                    ) : isInStock ? (
+                      <>
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                          />
+                        </svg>{" "}
+                        Add to Cart
+                      </>
+                    ) : (
+                      "Out of Stock"
+                    )}
                   </button>
                   <button
                     onClick={handleWishlistClick}
-                    className={`px-5 py-3.5 rounded-xl border-2 font-bold transition-all ${
+                    className={`px-5 py-3.5 rounded-xl border-2 font-bold transition-all flex items-center justify-center ${
                       isWishlisted
                         ? "bg-pink-500 border-pink-500 text-white hover:bg-pink-600"
                         : "border-red-500 text-pink-500 hover:bg-pink-50"
                     }`}
                   >
-                    {isWishlisted ? "🤍" : "❤️"}
+                    {isWishlisted ? (
+                      <svg
+                        className="w-6 h-6 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        className="w-6 h-6 text-pink-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                  <button
+                    onClick={handleCompareClick}
+                    title={
+                      isCompared ? "Remove from Compare" : "Add to Compare"
+                    }
+                    className={`px-5 py-3.5 rounded-xl border-2 font-bold transition-all ${
+                      isCompared
+                        ? "bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700"
+                        : "border-indigo-600 text-indigo-600 hover:bg-indigo-50"
+                    }`}
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                      />
+                    </svg>
                   </button>
                 </div>
                 {isInStock && (
@@ -425,7 +597,20 @@ function ProductDetail() {
                     onClick={handleBuyNow}
                     className="w-full py-3.5 rounded-xl font-bold text-lg bg-orange-500 text-white hover:bg-orange-600 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
                   >
-                    <span>⚡</span> Buy Now
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                    Buy Now
                   </button>
                 )}
               </div>
@@ -445,8 +630,20 @@ function ProductDetail() {
                       key={index}
                       className="flex items-start gap-3 text-sm text-gray-600"
                     >
-                      <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs shrink-0 mt-0.5">
-                        ★
+                      <span className="w-5 h-5 mt-0.5 text-indigo-600 flex items-center justify-center shrink-0">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
                       </span>
                       {feature}
                     </li>
@@ -454,26 +651,74 @@ function ProductDetail() {
                 ) : (
                   <>
                     <li className="flex items-center gap-3 text-sm text-gray-600">
-                      <span className="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">
-                        ✓
+                      <span className="w-5 h-5 text-green-600 flex items-center justify-center">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
                       </span>
                       100% Original Products
                     </li>
                     <li className="flex items-center gap-3 text-sm text-gray-600">
-                      <span className="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">
-                        ✓
+                      <span className="w-5 h-5 text-green-600 flex items-center justify-center">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
                       </span>
                       Pay on Delivery Available
                     </li>
                     <li className="flex items-center gap-3 text-sm text-gray-600">
-                      <span className="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">
-                        ✓
+                      <span className="w-5 h-5 text-green-600 flex items-center justify-center">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
                       </span>
                       Free Shipping on orders above ₹500
                     </li>
                     <li className="flex items-center gap-3 text-sm text-gray-600">
-                      <span className="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">
-                        ✓
+                      <span className="w-5 h-5 text-green-600 flex items-center justify-center">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
                       </span>
                       Easy 30-day return policy
                     </li>
@@ -612,7 +857,9 @@ function ProductDetail() {
 
                 {frequentlyBought.map((item) => (
                   <React.Fragment key={item.id}>
-                    <span className="text-gray-400 text-xl font-bold">+</span>
+                    <span className="text-gray-400 text-xl font-bold flex items-center">
+                      +
+                    </span>
                     <div className="relative">
                       {item.category === "Services" ? (
                         <img
@@ -793,29 +1040,6 @@ function ProductDetail() {
           </div>
         )}
       </div>
-
-      <style>{`
-        @keyframes slideIn {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        .animate-slideIn {
-          animation: slideIn 0.3s ease-out;
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-in-out;
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-      `}</style>
     </div>
   );
 }

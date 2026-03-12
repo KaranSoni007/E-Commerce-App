@@ -113,17 +113,17 @@ function Cart() {
 
     if (code === "INTERN20") {
       setDiscountPercent(0.2);
-      setCouponMessage({ type: "success", text: "✨ Coupon applied! 20% OFF" });
+      setCouponMessage({ type: "success", text: "Coupon applied! 20% OFF" });
     } else if (code === "WELCOME50") {
       setDiscountPercent(0.5);
-      setCouponMessage({ type: "success", text: "✨ Coupon applied! 50% OFF" });
+      setCouponMessage({ type: "success", text: "Coupon applied! 50% OFF" });
     } else if (code === "") {
       setCouponMessage({ type: "error", text: "Please enter a code." });
     } else {
       setDiscountPercent(0);
       setCouponMessage({
         type: "error",
-        text: "❌ Invalid or expired coupon code.",
+        text: "Invalid or expired coupon code.",
       });
     }
   };
@@ -413,6 +413,7 @@ function Cart() {
     const newOrder = {
       id: Math.floor(100000 + Math.random() * 900000),
       userEmail: userEmail,
+      deliveryAddress: address,
       items: [...cart],
       total: total,
       paymentMethod: finalPaymentMethod,
@@ -422,7 +423,7 @@ function Cart() {
     const existingOrders = JSON.parse(localStorage.getItem("mockOrders")) || [];
     existingOrders.push(newOrder);
     localStorage.setItem("mockOrders", JSON.stringify(existingOrders));
-    
+
     clearCart();
 
     navigate(`/order-confirmation/${newOrder.id}`);
@@ -432,7 +433,21 @@ function Cart() {
     return (
       <div className="bg-gray-50 min-h-screen font-sans pb-20 transition-colors duration-200">
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-          <span className="text-[60px] block mb-4">🛒</span>
+          <div className="w-24 h-24 bg-indigo-50 rounded-full flex items-center justify-center mb-6 text-indigo-200">
+            <svg
+              className="w-12 h-12"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+          </div>
           <h2 className="text-[24px] text-gray-900 mb-2 font-bold">
             Your cart is empty
           </h2>
@@ -642,8 +657,37 @@ function Cart() {
 
                 {couponMessage.text && (
                   <p
-                    className={`mt-2 text-[13px] font-medium ${couponMessage.type === "success" ? "text-emerald-600" : "text-red-600"}`}
+                    className={`mt-2 text-[13px] font-medium flex items-center gap-1.5 ${couponMessage.type === "success" ? "text-emerald-600" : "text-red-600"}`}
                   >
+                    {couponMessage.type === "success" ? (
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    )}
                     {couponMessage.text}
                   </p>
                 )}
@@ -773,7 +817,20 @@ function Cart() {
                                 </p>
                                 {displayPhone && (
                                   <p className="text-gray-500 text-xs mt-1">
-                                    📞 {displayPhone}
+                                    <svg
+                                      className="w-3 h-3 inline mr-1"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                                      />
+                                    </svg>{" "}
+                                    {displayPhone}
                                   </p>
                                 )}
                               </div>
@@ -813,9 +870,41 @@ function Cart() {
                 {showAddressForm && (
                   <div className="bg-gray-50 rounded-xl p-5 border border-gray-200 mb-4 animate-fadeIn">
                     <h4 className="font-bold text-gray-900 mb-4 text-sm flex items-center gap-2">
-                      {editingAddress
-                        ? "✏️ Edit Address"
-                        : "➕ Add New Address"}
+                      {editingAddress ? (
+                        <>
+                          <svg
+                            className="w-4 h-4 text-indigo-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                            />
+                          </svg>{" "}
+                          Edit Address
+                        </>
+                      ) : (
+                        <>
+                          <svg
+                            className="w-4 h-4 text-indigo-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 4v16m8-8H4"
+                            />
+                          </svg>{" "}
+                          Add New Address
+                        </>
+                      )}
                     </h4>
 
                     <div className="space-y-3">
@@ -933,7 +1022,20 @@ function Cart() {
                     onClick={openAddForm}
                     className="mt-4 w-full py-3 border-2 border-dashed border-indigo-300 rounded-xl text-indigo-600 font-semibold hover:bg-indigo-50 transition-colors flex items-center justify-center gap-2"
                   >
-                    <span className="text-xl">+</span> Add New Address
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>{" "}
+                    Add New Address
                   </button>
                 )}
               </div>
@@ -1028,7 +1130,20 @@ function Cart() {
                         <div className="w-2 h-2 rounded-full bg-indigo-600" />
                       )}
                     </div>
-                    <span className="font-bold text-gray-900 text-sm">
+                    <span className="font-bold text-gray-900 text-sm flex items-center gap-2">
+                      <svg
+                        className="w-5 h-5 text-green-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
+                      </svg>
                       Cash on Delivery
                     </span>
                   </div>
@@ -1078,7 +1193,20 @@ function Cart() {
                       onClick={() => setShowPaymentForm(true)}
                       className="w-full py-3 border-2 border-dashed border-indigo-300 rounded-xl text-indigo-600 font-semibold hover:bg-indigo-50 transition-colors flex items-center justify-center gap-2"
                     >
-                      <span className="text-xl">+</span> Add New Payment Method
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 4v16m8-8H4"
+                        />
+                      </svg>{" "}
+                      Add New Payment Method
                     </button>
                   )}
 
@@ -1265,14 +1393,6 @@ function Cart() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        .animate-fadeIn { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-5px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }

@@ -44,7 +44,21 @@ function OrderConfirmation() {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4 transition-colors duration-200">
         <div className="text-center max-w-md">
-          <span className="text-6xl mb-6 block">😕</span>
+          <div className="text-6xl mb-6 flex justify-center text-gray-300">
+            <svg
+              className="w-24 h-24"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
             Order Not Found
           </h2>
@@ -68,11 +82,23 @@ function OrderConfirmation() {
       <div className="max-w-3xl mx-auto animate-fadeIn">
         <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
           {/* Success Header */}
-          <div className="bg-linear-to-r from-indigo-600 to-purple-600 p-10 text-center relative overflow-hidden">
+          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-10 text-center relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
             <div className="relative z-10">
               <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl animate-bounce-slow">
-                <span className="text-5xl">🎉</span>
+                <svg
+                  className="w-12 h-12 text-indigo-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
               </div>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-3 tracking-tight">
                 Order Placed Successfully!
@@ -92,8 +118,8 @@ function OrderConfirmation() {
               <p className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
                 #{order.id}
               </p>
-              <div className="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-bold text-sm">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+              <div className="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-bold text-sm">
+                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
                 Confirmed
               </div>
             </div>
@@ -119,13 +145,68 @@ function OrderConfirmation() {
                   </p>
                   <p className="font-semibold text-gray-900 dark:text-white text-lg flex items-center gap-2">
                     <span>
-                      {order.paymentMethod === "Cash on Delivery"
-                        ? "💵"
-                        : order.paymentMethod === "UPI"
-                          ? "📱"
-                          : order.paymentMethod === "Net Banking"
-                            ? "🏦"
-                            : "💳"}
+                      {order.paymentMethod === "Cash on Delivery" && (
+                        <svg
+                          className="w-5 h-5 text-gray-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                          />
+                        </svg>
+                      )}
+                      {order.paymentMethod === "UPI" && (
+                        <svg
+                          className="w-5 h-5 text-gray-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                          />
+                        </svg>
+                      )}
+                      {order.paymentMethod === "Net Banking" && (
+                        <svg
+                          className="w-5 h-5 text-gray-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                          />
+                        </svg>
+                      )}
+                      {!["Cash on Delivery", "UPI", "Net Banking"].includes(
+                        order.paymentMethod,
+                      ) && (
+                        <svg
+                          className="w-5 h-5 text-gray-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                          />
+                        </svg>
+                      )}
                     </span>{" "}
                     {order.paymentMethod || "Credit/Debit Card"}
                   </p>
@@ -209,23 +290,6 @@ function OrderConfirmation() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.6s ease-out forwards;
-        }
-        @keyframes bounce-slow {
-          0%, 100% { transform: translateY(-5%); }
-          50% { transform: translateY(5%); }
-        }
-        .animate-bounce-slow {
-          animation: bounce-slow 3s infinite ease-in-out;
-        }
-      `}</style>
     </div>
   );
 }

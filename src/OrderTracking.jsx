@@ -41,27 +41,38 @@ function OrderTracking() {
       }
 
       // Deterministic courier based on ID
-      const couriers = ["FedEx", "BlueDart", "DHL", "Delhivery", "Ecom Express"];
+      const couriers = [
+        "FedEx",
+        "BlueDart",
+        "DHL",
+        "Delhivery",
+        "Ecom Express",
+      ];
       setCourier(couriers[foundOrder.id % couriers.length]);
 
       // Calculate estimated delivery (3 days from order)
       const orderDate = new Date(foundOrder.date);
       const deliveryDate = new Date(orderDate);
       deliveryDate.setDate(deliveryDate.getDate() + 3);
-      setEstimatedDelivery(deliveryDate.toLocaleDateString("en-US", { 
-        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' 
-      }));
+      setEstimatedDelivery(
+        deliveryDate.toLocaleDateString("en-US", {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }),
+      );
     }
     setLoading(false);
   }, [orderId]);
 
   // Order status timeline
-  const getOrderStatus = (orderDate) => {
-    // Check if order has an explicit status (e.g. cancelled)
-    if (order && order.status) {
-      return order.status;
-    }
-    const orderTime = new Date(orderDate).getTime();
+  const getOrderStatus = (order) => {
+    if (!order) return null;
+    // Prioritize the explicit status from the database (localStorage)
+    if (order.status) return order.status;
+
+    const orderTime = new Date(order.date).getTime();
     const now = new Date().getTime();
     const hoursDiff = (now - orderTime) / (1000 * 60 * 60);
 
@@ -74,7 +85,7 @@ function OrderTracking() {
 
   const getStatusTimeline = (currentStatus) => {
     if (!order) return [];
-    
+
     const orderDate = new Date(order.date);
     orderDate.setHours(9, 0, 0, 0); // Normalize start time
 
@@ -98,42 +109,132 @@ function OrderTracking() {
         key: "confirmed",
         label: "Order Confirmed",
         description: "Your order has been confirmed",
-        icon: "📋",
+        icon: (
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        ),
         time: addTime(0),
       },
       {
         key: "processing",
         label: "Processing",
         description: "Order is being prepared",
-        icon: "📦",
+        icon: (
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+            />
+          </svg>
+        ),
         time: addTime(4),
       },
       {
         key: "shipped",
         label: "Shipped",
         description: "Order has been shipped",
-        icon: "🚚",
+        icon: (
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
+            />
+          </svg>
+        ),
         time: addTime(24),
       },
       {
         key: "out_for_delivery",
         label: "Out for Delivery",
         description: "Order is on the way",
-        icon: "🛵",
+        icon: (
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+        ),
         time: addTime(48),
       },
       {
         key: "delivered",
         label: "Delivered",
         description: "Order has been delivered",
-        icon: "✅",
+        icon: (
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        ),
         time: addTime(54),
       },
       {
         key: "cancelled",
         label: "Cancelled",
         description: "This order has been cancelled",
-        icon: "❌",
+        icon: (
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        ),
         time: order.cancelledAt
           ? formatTime(new Date(order.cancelledAt))
           : formatTime(new Date()),
@@ -146,7 +247,21 @@ function OrderTracking() {
           key: "return_requested",
           label: "Return Requested",
           description: "Return request under review",
-          icon: "↩️",
+          icon: (
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+              />
+            </svg>
+          ),
           time: order.returnRequestedAt
             ? formatTime(new Date(order.returnRequestedAt))
             : formatTime(new Date()),
@@ -155,9 +270,23 @@ function OrderTracking() {
           key: "returned",
           label: "Returned",
           description: "Return processed",
-          icon: "📦",
+          icon: (
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+              />
+            </svg>
+          ),
           time: "", // Future: Add returnedAt if admin processing is implemented
-        }
+        },
       );
     } else if (
       currentStatus === "exchange_requested" ||
@@ -168,7 +297,21 @@ function OrderTracking() {
           key: "exchange_requested",
           label: "Exchange Requested",
           description: "Exchange request under review",
-          icon: "🔄",
+          icon: (
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+          ),
           time: order.exchangeRequestedAt
             ? formatTime(new Date(order.exchangeRequestedAt))
             : formatTime(new Date()),
@@ -177,9 +320,31 @@ function OrderTracking() {
           key: "exchanged",
           label: "Exchanged",
           description: "Exchange processed",
-          icon: "📦",
+          icon: (
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+              />
+            </svg>
+          ),
           time: "", // Future: Add exchangedAt if admin processing is implemented
-        }
+        },
+      );
+    }
+
+    // If order is cancelled, returned, or exchanged, filter out subsequent delivery steps for a more realistic timeline
+    const terminalStatues = ["cancelled", "returned", "exchanged"];
+    if (terminalStatues.includes(currentStatus)) {
+      statuses = statuses.filter(
+        (s) => s.key !== "out_for_delivery" && s.key !== "delivered",
       );
     }
 
@@ -265,7 +430,7 @@ function OrderTracking() {
     });
     setShowActionModal(false);
     alert(
-      `${actionType === "return" ? "Return" : "Exchange"} request submitted successfully.`
+      `${actionType === "return" ? "Return" : "Exchange"} request submitted successfully.`,
     );
   };
 
@@ -286,7 +451,21 @@ function OrderTracking() {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <span className="text-6xl mb-4 block">📦</span>
+          <div className="text-6xl mb-4 flex justify-center text-gray-300">
+            <svg
+              className="w-24 h-24"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
+              />
+            </svg>
+          </div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Order Not Found
           </h2>
@@ -304,7 +483,7 @@ function OrderTracking() {
     );
   }
 
-  const currentStatus = getOrderStatus(order.date);
+  const currentStatus = getOrderStatus(order);
   const timeline = getStatusTimeline(currentStatus);
 
   return (
@@ -339,7 +518,8 @@ function OrderTracking() {
                 Order #{order.id}
               </h1>
               <p className="text-gray-500 dark:text-gray-400 text-sm">
-                Placed on {new Date(order.date).toLocaleDateString("en-US", {
+                Placed on{" "}
+                {new Date(order.date).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
@@ -351,17 +531,23 @@ function OrderTracking() {
                 className={`px-4 py-2 rounded-full text-sm font-semibold ${
                   currentStatus === "delivered"
                     ? "bg-green-100 text-green-700"
-                    : currentStatus === "return_requested"
-                    ? "bg-orange-100 text-orange-700"
-                    : currentStatus === "returned"
-                    ? "bg-gray-100 text-gray-700"
-                    : currentStatus === "exchange_requested"
-                    ? "bg-blue-100 text-blue-700"
-                    : currentStatus === "exchanged"
-                    ? "bg-indigo-100 text-indigo-700"
-                    : currentStatus === "cancelled"
-                      ? "bg-red-100 text-red-700"
-                      : "bg-blue-100 text-blue-700"
+                    : currentStatus === "processing"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : currentStatus === "shipped"
+                        ? "bg-indigo-100 text-indigo-700"
+                        : currentStatus === "out_for_delivery"
+                          ? "bg-purple-100 text-purple-700"
+                          : currentStatus === "return_requested"
+                            ? "bg-orange-100 text-orange-700"
+                            : currentStatus === "returned"
+                              ? "bg-gray-100 text-gray-700"
+                              : currentStatus === "exchange_requested"
+                                ? "bg-blue-100 text-blue-700"
+                                : currentStatus === "exchanged"
+                                  ? "bg-indigo-100 text-indigo-700"
+                                  : currentStatus === "cancelled"
+                                    ? "bg-red-100 text-red-700"
+                                    : "bg-blue-100 text-blue-700"
                 }`}
               >
                 {currentStatus === "confirmed" && "Confirmed"}
@@ -417,8 +603,18 @@ function OrderTracking() {
                   className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
                   title="Copy Tracking Number"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
                   </svg>
                 </button>
               </div>
@@ -466,7 +662,23 @@ function OrderTracking() {
                           : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
                     }`}
                   >
-                    {item.state === "completed" ? "✓" : item.icon}
+                    {item.state === "completed" ? (
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    ) : (
+                      item.icon
+                    )}
                   </div>
 
                   {/* Content */}
@@ -520,7 +732,10 @@ function OrderTracking() {
                 className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl"
               >
                 <div className="w-16 h-16 rounded-lg bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-600 overflow-hidden shrink-0">
-                  <Link to={`/product/${item.id}`} className="block w-full h-full">
+                  <Link
+                    to={`/product/${item.id}`}
+                    className="block w-full h-full"
+                  >
                     <img
                       src={item.src}
                       alt={item.title}
@@ -534,7 +749,10 @@ function OrderTracking() {
                   </Link>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <Link to={`/product/${item.id}`} className="no-underline hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                  <Link
+                    to={`/product/${item.id}`}
+                    className="no-underline hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                  >
                     <h4 className="font-medium text-gray-900 dark:text-white text-sm line-clamp-2">
                       {item.title}
                     </h4>
@@ -583,14 +801,42 @@ function OrderTracking() {
             Delivery Address
           </h2>
           <div className="flex items-start gap-3">
-            <span className="text-2xl">📍</span>
+            <div className="mt-1">
+              <svg
+                className="w-6 h-6 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+            </div>
             <div>
-              <p className="text-gray-700 dark:text-gray-300">
-                Delivery to registered address
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                Estimated delivery: 3-5 business days
-              </p>
+              {order.deliveryAddress ? (
+                <>
+                  <p className="font-semibold text-gray-800 dark:text-gray-200">
+                    {order.deliveryAddress.split(",")[0]}
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                    {order.deliveryAddress.substring(order.deliveryAddress.indexOf(",") + 2)}
+                  </p>
+                </>
+              ) : (
+                <p className="text-gray-700 dark:text-gray-300">
+                  Delivery to registered address
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -599,168 +845,60 @@ function OrderTracking() {
         <div className="flex flex-wrap gap-4">
           <Link
             to="/profile"
-            className="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            className="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center gap-2"
           >
-            ← Back to Orders
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>{" "}
+            Back to Orders
           </Link>
           <button
             onClick={() => {
               const printWindow = window.open("", "_blank");
-              const invoiceDate = new Date(order.date).toLocaleDateString("en-IN", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              });
-              const invoiceTime = new Date(order.date).toLocaleTimeString("en-IN", {
-                hour: "2-digit",
-                minute: "2-digit",
-              });
+              const invoiceDate = new Date(order.date).toLocaleDateString(
+                "en-IN",
+                {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                },
+              );
+              const invoiceTime = new Date(order.date).toLocaleTimeString(
+                "en-IN",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                },
+              );
 
               const invoiceHTML = `
                 <!DOCTYPE html>
                 <html>
                 <head>
                   <title>Invoice #${order.id}</title>
+                  <script src="https://cdn.tailwindcss.com"></script>
                   <style>
-                    * { margin: 0; padding: 0; box-sizing: border-box; }
-                    body { 
-                      font-family: 'Segoe UI', Arial, sans-serif; 
-                      background: #f5f5f5; 
-                      padding: 20px;
-                      color: #333;
-                    }
-                    .invoice-container {
-                      max-width: 800px;
-                      margin: 0 auto;
-                      background: white;
-                      padding: 40px;
-                      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                    }
-                    .invoice-header {
-                      display: flex;
-                      justify-content: space-between;
-                      align-items: flex-start;
-                      margin-bottom: 30px;
-                      padding-bottom: 20px;
-                      border-bottom: 3px solid #4f46e5;
-                    }
-                    .company-info h1 {
-                      color: #4f46e5;
-                      font-size: 28px;
-                      margin-bottom: 5px;
-                    }
-                    .company-info p {
-                      color: #666;
-                      font-size: 12px;
-                      line-height: 1.5;
-                    }
-                    .invoice-details {
-                      text-align: right;
-                    }
-                    .invoice-details h2 {
-                      color: #4f46e5;
-                      font-size: 24px;
-                      margin-bottom: 10px;
-                    }
-                    .invoice-details p {
-                      font-size: 13px;
-                      color: #555;
-                      margin: 3px 0;
-                    }
-                    .bill-to {
-                      margin-bottom: 30px;
-                      padding: 15px;
-                      background: #f8f9fa;
-                      border-radius: 8px;
-                    }
-                    .bill-to h3 {
-                      color: #4f46e5;
-                      font-size: 14px;
-                      margin-bottom: 8px;
-                      text-transform: uppercase;
-                      letter-spacing: 1px;
-                    }
-                    .bill-to p {
-                      font-size: 13px;
-                      color: #555;
-                      line-height: 1.6;
-                    }
-                    table {
-                      width: 100%;
-                      border-collapse: collapse;
-                      margin-bottom: 30px;
-                    }
-                    th {
-                      background: #4f46e5;
-                      color: white;
-                      padding: 12px;
-                      text-align: left;
-                      font-size: 12px;
-                      text-transform: uppercase;
-                      letter-spacing: 0.5px;
-                    }
-                    td {
-                      padding: 12px;
-                      border-bottom: 1px solid #e5e7eb;
-                      font-size: 13px;
-                    }
-                    .text-right { text-align: right; }
-                    .text-center { text-align: center; }
-                    .summary-section {
-                      margin-top: 20px;
-                      border-top: 2px solid #e5e7eb;
-                      padding-top: 20px;
-                    }
-                    .summary-row {
-                      display: flex;
-                      justify-content: space-between;
-                      padding: 8px 0;
-                      font-size: 13px;
-                    }
-                    .summary-row.total {
-                      border-top: 2px solid #4f46e5;
-                      margin-top: 10px;
-                      padding-top: 15px;
-                      font-size: 16px;
-                      font-weight: bold;
-                      color: #4f46e5;
-                    }
-                    .footer {
-                      margin-top: 40px;
-                      padding-top: 20px;
-                      border-top: 1px solid #e5e7eb;
-                      text-align: center;
-                      font-size: 12px;
-                      color: #666;
-                    }
-                    .footer p {
-                      margin: 5px 0;
-                    }
-                    .thank-you {
-                      text-align: center;
-                      margin: 30px 0;
-                      padding: 20px;
-                      background: #f0fdf4;
-                      border-radius: 8px;
-                      color: #166534;
-                    }
-                    .thank-you h3 {
-                      font-size: 18px;
-                      margin-bottom: 5px;
-                    }
                     @media print {
-                      body { background: white; padding: 0; }
-                      .invoice-container { box-shadow: none; padding: 20px; }
                       .no-print { display: none; }
                     }
                   </style>
                 </head>
-                <body>
-                  <div class="invoice-container">
-                    <div class="invoice-header">
+                <body class="bg-gray-100 font-sans p-5 text-gray-800">
+                  <div class="max-w-4xl mx-auto bg-white p-10 shadow-lg rounded-lg">
+                    <div class="flex justify-between items-start mb-8 pb-5 border-b-4 border-indigo-600">
                       <div class="company-info">
-                        <h1>INTELLIKART</h1>
-                        <p>
+                        <h1 class="text-indigo-600 text-3xl font-bold mb-1">INTELLIKART</h1>
+                        <p class="text-gray-500 text-xs leading-relaxed">
                           Premium Electronics Store<br>
                           123 Tech Park, Innovation Street<br>
                           Mumbai, Maharashtra - 400001<br>
@@ -768,19 +906,19 @@ function OrderTracking() {
                           Email: support@intellikart.com | Phone: +91 63550 72986
                         </p>
                       </div>
-                      <div class="invoice-details">
-                        <h2>TAX INVOICE</h2>
-                        <p><strong>Invoice No:</strong> INV-${order.id}</p>
-                        <p><strong>Order ID:</strong> #${order.id}</p>
-                        <p><strong>Date:</strong> ${invoiceDate}</p>
-                        <p><strong>Time:</strong> ${invoiceTime}</p>
-                        <p><strong>Tracking:</strong> ${trackingNumber}</p>
+                      <div class="text-right">
+                        <h2 class="text-indigo-600 text-2xl font-bold mb-2">TAX INVOICE</h2>
+                        <p class="text-sm text-gray-600"><strong>Invoice No:</strong> INV-${order.id}</p>
+                        <p class="text-sm text-gray-600"><strong>Order ID:</strong> #${order.id}</p>
+                        <p class="text-sm text-gray-600"><strong>Date:</strong> ${invoiceDate}</p>
+                        <p class="text-sm text-gray-600"><strong>Time:</strong> ${invoiceTime}</p>
+                        <p class="text-sm text-gray-600"><strong>Tracking:</strong> ${trackingNumber}</p>
                       </div>
                     </div>
                     
-                    <div class="bill-to">
-                      <h3>Bill To</h3>
-                      <p>
+                    <div class="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-100">
+                      <h3 class="text-indigo-600 text-sm font-bold uppercase tracking-wider mb-2">Bill To</h3>
+                      <p class="text-sm text-gray-600 leading-relaxed">
                         <strong>${userData?.name || "Customer"}</strong><br>
                         ${userData?.email || "customer@email.com"}<br>
                         Delivery Address: As per order details<br>
@@ -788,14 +926,14 @@ function OrderTracking() {
                       </p>
                     </div>
                     
-                    <table>
+                    <table class="w-full mb-8 border-collapse">
                       <thead>
-                        <tr>
-                          <th style="width: 8%">S.No</th>
-                          <th style="width: 45%">Product Description</th>
-                          <th style="width: 12%" class="text-center">Qty</th>
-                          <th style="width: 17%" class="text-right">Unit Price</th>
-                          <th style="width: 18%" class="text-right">Amount</th>
+                        <tr class="bg-indigo-600 text-white">
+                          <th class="p-3 text-left text-xs uppercase tracking-wide rounded-tl-lg">S.No</th>
+                          <th class="p-3 text-left text-xs uppercase tracking-wide w-5/12">Product Description</th>
+                          <th class="p-3 text-center text-xs uppercase tracking-wide">Qty</th>
+                          <th class="p-3 text-right text-xs uppercase tracking-wide">Unit Price</th>
+                          <th class="p-3 text-right text-xs uppercase tracking-wide rounded-tr-lg">Amount</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -805,15 +943,15 @@ function OrderTracking() {
                             const qty = item.quantity || 1;
                             const amount = unitPrice * qty;
                             return `
-                            <tr>
-                              <td>${idx + 1}</td>
-                              <td>
+                            <tr class="border-b border-gray-200">
+                              <td class="p-3 text-sm">${idx + 1}</td>
+                              <td class="p-3 text-sm">
                                 <strong>${item.title}</strong><br>
-                                <span style="color: #666; font-size: 11px;">Category: ${item.category || "Electronics"} | SKU: SKU-${Math.random().toString(36).substr(2, 8).toUpperCase()}</span>
+                                <span class="text-gray-500 text-xs">Category: ${item.category || "Electronics"} | SKU: SKU-${Math.random().toString(36).substr(2, 8).toUpperCase()}</span>
                               </td>
-                              <td class="text-center">${qty}</td>
-                              <td class="text-right">₹${unitPrice.toLocaleString("en-IN")}</td>
-                              <td class="text-right">₹${amount.toLocaleString("en-IN")}</td>
+                              <td class="p-3 text-center text-sm">${qty}</td>
+                              <td class="p-3 text-right text-sm">₹${unitPrice.toLocaleString("en-IN")}</td>
+                              <td class="p-3 text-right text-sm">₹${amount.toLocaleString("en-IN")}</td>
                             </tr>
                           `;
                           })
@@ -821,44 +959,44 @@ function OrderTracking() {
                       </tbody>
                     </table>
                     
-                    <div class="summary-section">
-                      <div class="summary-row">
+                    <div class="border-t-2 border-gray-200 pt-5">
+                      <div class="flex justify-between py-2 text-sm">
                         <span>Subtotal</span>
                         <span>₹${(order.total * 0.95).toLocaleString("en-IN", { maximumFractionDigits: 0 })}</span>
                       </div>
-                      <div class="summary-row">
+                      <div class="flex justify-between py-2 text-sm">
                         <span>CGST (2.5%)</span>
                         <span>₹${(order.total * 0.025).toLocaleString("en-IN", { maximumFractionDigits: 0 })}</span>
                       </div>
-                      <div class="summary-row">
+                      <div class="flex justify-between py-2 text-sm">
                         <span>SGST (2.5%)</span>
                         <span>₹${(order.total * 0.025).toLocaleString("en-IN", { maximumFractionDigits: 0 })}</span>
                       </div>
-                      <div class="summary-row">
+                      <div class="flex justify-between py-2 text-sm">
                         <span>Shipping Charges</span>
-                        <span style="color: #16a34a;">FREE</span>
+                        <span class="text-green-600 font-bold">FREE</span>
                       </div>
-                      <div class="summary-row total">
+                      <div class="flex justify-between py-4 mt-2 border-t-2 border-indigo-600 text-indigo-600 font-bold text-lg">
                         <span>Total Amount (Inclusive of all taxes)</span>
                         <span>₹${order.total.toLocaleString("en-IN", { maximumFractionDigits: 0 })}</span>
                       </div>
                     </div>
                     
-                    <div class="thank-you">
-                      <h3>Thank You for Your Purchase!</h3>
-                      <p>We appreciate your business. For any queries, please contact our customer support.</p>
+                    <div class="text-center my-8 p-5 bg-green-50 rounded-lg text-green-800 border border-green-100">
+                      <h3 class="text-lg font-bold mb-1">Thank You for Your Purchase!</h3>
+                      <p class="text-sm">We appreciate your business. For any queries, please contact our customer support.</p>
                     </div>
                     
-                    <div class="footer">
-                      <p><strong>Terms & Conditions:</strong></p>
+                    <div class="mt-10 pt-5 border-t border-gray-200 text-center text-xs text-gray-500">
+                      <p class="font-bold text-gray-700 mb-1">Terms & Conditions:</p>
                       <p>1. Goods once sold will not be taken back or exchanged</p>
                       <p>2. All disputes are subject to Mumbai jurisdiction</p>
                       <p>3. This is a computer generated invoice and does not require signature</p>
-                      <p style="margin-top: 15px; color: #999;">© 2024 IntelliKart Electronics. All rights reserved.</p>
+                      <p class="mt-4 text-gray-400">© 2024 IntelliKart Electronics. All rights reserved.</p>
                     </div>
                     
-                    <div class="no-print" style="text-align: center; margin-top: 30px;">
-                      <button onclick="window.print()" style="padding: 12px 30px; background: #4f46e5; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer;">
+                    <div class="no-print text-center mt-8">
+                      <button onclick="window.print()" class="px-8 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-sm">
                         Print Invoice
                       </button>
                     </div>
@@ -897,8 +1035,8 @@ function OrderTracking() {
                 {!actionType
                   ? "Select Action"
                   : actionType === "return"
-                  ? "Return Order"
-                  : "Exchange Order"}
+                    ? "Return Order"
+                    : "Exchange Order"}
               </h3>
 
               {!actionType ? (
@@ -911,7 +1049,21 @@ function OrderTracking() {
                       onClick={() => setActionType("return")}
                       className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all text-center"
                     >
-                      <span className="text-2xl block mb-2">↩️</span>
+                      <div className="flex justify-center mb-2">
+                        <svg
+                          className="w-8 h-8 text-indigo-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                          />
+                        </svg>
+                      </div>
                       <span className="font-semibold text-gray-900 dark:text-white">
                         Return
                       </span>
@@ -920,7 +1072,21 @@ function OrderTracking() {
                       onClick={() => setActionType("exchange")}
                       className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all text-center"
                     >
-                      <span className="text-2xl block mb-2">🔄</span>
+                      <div className="flex justify-center mb-2">
+                        <svg
+                          className="w-8 h-8 text-indigo-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                          />
+                        </svg>
+                      </div>
                       <span className="font-semibold text-gray-900 dark:text-white">
                         Exchange
                       </span>
