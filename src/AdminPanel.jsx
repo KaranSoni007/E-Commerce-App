@@ -45,6 +45,7 @@ function AdminPanel() {
   const [productForm, setProductForm] = useState({});
   const [productSearch, setProductSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [stockFilter, setStockFilter] = useState("all");
 
   const ITEMS_PER_PAGE = 10;
 
@@ -497,7 +498,14 @@ function AdminPanel() {
       .includes(productSearch.toLowerCase());
     const matchesCategory =
       categoryFilter === "All" || p.category === categoryFilter;
-    return matchesSearch && matchesCategory;
+
+    const stock = getStock(p.title);
+    let matchesStock = true;
+    if (stockFilter === "in") matchesStock = stock > 0;
+    else if (stockFilter === "low") matchesStock = stock <= 10;
+    else if (stockFilter === "out") matchesStock = stock === 0;
+
+    return matchesSearch && matchesCategory && matchesStock;
   });
 
   return (
@@ -972,17 +980,29 @@ function AdminPanel() {
                     </svg>
                   </div>
                 </div>
-                <select
-                  value={categoryFilter}
-                  onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-white"
-                >
-                  {uniqueCategories.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
+                <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
+                  <select
+                    value={stockFilter}
+                    onChange={(e) => setStockFilter(e.target.value)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-white min-w-[140px]"
+                  >
+                    <option value="all">All Stock Status</option>
+                    <option value="in">In Stock</option>
+                    <option value="low">Low Stock (≤10)</option>
+                    <option value="out">Out of Stock</option>
+                  </select>
+                  <select
+                    value={categoryFilter}
+                    onChange={(e) => setCategoryFilter(e.target.value)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-white min-w-[140px]"
+                  >
+                    {uniqueCategories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <button
                   onClick={handleAddProduct}
                   className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 font-medium flex items-center justify-center gap-2"

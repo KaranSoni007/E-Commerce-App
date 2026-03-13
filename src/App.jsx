@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -12,7 +13,7 @@ import { CartProvider } from "./CartContext";
 import { WishlistProvider } from "./WishlistContext";
 import { ReviewProvider } from "./ReviewContext";
 import { CompareProvider } from "./CompareContext";
-import { AuthProvider } from "./AuthContext";
+import { AuthProvider, useAuth } from "./AuthContext";
 import { StockProvider } from "./StockContext";
 
 // Lazy load page components for better performance - reduces initial bundle size
@@ -53,12 +54,21 @@ const ScrollToTop = () => {
 
 const AppLayout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, loading } = useAuth();
 
   const isAdminRoute = location.pathname.startsWith("/admin");
   const isAuthRoute = ["/login", "/signup", "/forgot-password"].includes(
     location.pathname,
   );
-  const shouldShowNavbarFooter = !isAdminRoute && !isAuthRoute;
+  const isAdminUser = user?.email === "admin@intellikart.com";
+  const shouldShowNavbarFooter = !isAdminRoute && !isAuthRoute && !isAdminUser;
+
+  useEffect(() => {
+    if (!loading && isAdminUser && !isAdminRoute && !isAuthRoute) {
+      navigate("/admin", { replace: true });
+    }
+  }, [loading, isAdminUser, isAdminRoute, isAuthRoute, navigate]);
 
   return (
     <div className="flex flex-col min-h-screen transition-colors duration-200">
