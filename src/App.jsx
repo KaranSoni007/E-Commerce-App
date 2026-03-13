@@ -30,6 +30,7 @@ const OrderConfirmation = lazy(() => import("./OrderConfirmation"));
 const NotFound = lazy(() => import("./NotFound"));
 const Support = lazy(() => import("./Support"));
 const AdminPanel = lazy(() => import("./AdminPanel"));
+const Chatbot = lazy(() => import("./Chatbot"));
 
 // Loading fallback component for lazy loaded routes
 const PageLoader = () => (
@@ -97,6 +98,7 @@ const AppLayout = () => {
         </Suspense>
       </div>
       {shouldShowNavbarFooter && <Footer />}
+      {shouldShowNavbarFooter && <Suspense fallback={null}><Chatbot /></Suspense>}
     </div>
   );
 };
