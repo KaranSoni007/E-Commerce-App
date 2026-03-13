@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { useStock } from "./StockContext";
+import { useCart } from "./CartContext";
 
 function OrderTracking() {
   const { orderId } = useParams();
   const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { incrementStock } = useStock();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [trackingNumber, setTrackingNumber] = useState("");
@@ -348,18 +352,30 @@ function OrderTracking() {
       );
     }
 
+    const terminalStates = ["delivered", "cancelled", "returned", "exchanged"];
+    const isTerminal = terminalStates.includes(currentStatus);
+
     const currentIndex = statuses.findIndex((s) => s.key === currentStatus);
 
-    return statuses.map((status, index) => ({
-      ...status,
-      state:
-        index < currentIndex
-          ? "completed"
-          : index === currentIndex
-            ? "current"
-            : "pending",
-      actualTime: index <= currentIndex ? status.time : "",
-    }));
+    return statuses.map((status, index) => {
+      let state;
+      if (isTerminal) {
+        state = index <= currentIndex ? "completed" : "pending";
+      } else {
+        state =
+          index < currentIndex
+            ? "completed"
+            : index === currentIndex
+              ? "current"
+              : "pending";
+      }
+
+      return {
+        ...status,
+        state,
+        actualTime: index <= currentIndex ? status.time : "",
+      };
+    });
   };
 
   const formatPrice = (priceVal) => {
@@ -385,6 +401,7 @@ function OrderTracking() {
         }
         return o;
       });
+      incrementStock(order.items); // Replenish stock on cancellation
 
       localStorage.setItem("mockOrders", JSON.stringify(updatedOrders));
       setOrder({ ...order, status: "cancelled", cancelledAt });
@@ -432,6 +449,28 @@ function OrderTracking() {
     alert(
       `${actionType === "return" ? "Return" : "Exchange"} request submitted successfully.`,
     );
+  };
+
+  const handleBuyAgain = (order) => {
+    const addedItems = [];
+    const failedItems = [];
+    order.items.forEach((item) => {
+      try {
+        addToCart(item, item.quantity || 1);
+        addedItems.push(item.title);
+      } catch (error) {
+        failedItems.push(item.title);
+      }
+    });
+
+    if (failedItems.length > 0) {
+      alert(
+        `Successfully re-added: ${addedItems.join(", ") || "None"}.\n\nOut of stock: ${failedItems.join(", ")}.`,
+      );
+    } else {
+      alert("All items from the order have been added to your cart!");
+    }
+    navigate("/cart");
   };
 
   if (loading) {
@@ -829,7 +868,9 @@ function OrderTracking() {
                     {order.deliveryAddress.split(",")[0]}
                   </p>
                   <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
-                    {order.deliveryAddress.substring(order.deliveryAddress.indexOf(",") + 2)}
+                    {order.deliveryAddress.substring(
+                      order.deliveryAddress.indexOf(",") + 2,
+                    )}
                   </p>
                 </>
               ) : (
@@ -862,6 +903,12 @@ function OrderTracking() {
             </svg>{" "}
             Back to Orders
           </Link>
+          <button
+            onClick={() => handleBuyAgain(order)}
+            className="px-6 py-3 bg-white border-2 border-indigo-600 text-indigo-600 rounded-lg font-semibold hover:bg-indigo-50 transition-colors flex items-center gap-2"
+          >
+            Buy Again
+          </button>
           <button
             onClick={() => {
               const printWindow = window.open("", "_blank");
@@ -921,11 +968,18 @@ function OrderTracking() {
                       <p class="text-sm text-gray-600 leading-relaxed">
                         <strong>${userData?.name || "Customer"}</strong><br>
                         ${userData?.email || "customer@email.com"}<br>
-                        Delivery Address: As per order details<br>
-                        Place of Supply: Maharashtra (27)
+                        <b>Delivery Address:</b> <br>
+                        ${order.deliveryAddress || "As per order details"}<br>
+                        <b>Payment method:</b>
+                        ${order.paymentMethod || "Cash on delivery"}<br>
+                        <b>Place of Supply:</b> <br />
+                        Premium Electronics Store<br>
+                        Mumbai, Maharashtra - 400001<br>
+                        <b>GSTIN:</b> 27AABCU9603R1ZX<br>
+                        <b>Email:</b> support@intellikart.com | <b>Phone:</b> +91 63550 72986
                       </p>
                     </div>
-                    
+                    >
                     <table class="w-full mb-8 border-collapse">
                       <thead>
                         <tr class="bg-indigo-600 text-white">

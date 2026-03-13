@@ -1,5 +1,14 @@
 // src/AIService.js
-import AllProducts, { products, accessories, services } from "./Products";
+import AllProducts from "./Products";
+
+const getAllProducts = () => {
+  try {
+    const stored = localStorage.getItem("allProducts");
+    return stored ? JSON.parse(stored) : AllProducts;
+  } catch (e) {
+    return AllProducts;
+  }
+};
 
 export const AIService = {
   /**
@@ -10,6 +19,7 @@ export const AIService = {
     if (!currentProduct) return [];
 
     const features = currentProduct.features || [];
+    const allItems = getAllProducts();
     // 1. Tokenize the current product's description and category
     // We convert to lowercase and split by non-word characters
     const currentText = `${currentProduct.category} ${currentProduct.description} ${features.join(" ")}`;
@@ -21,7 +31,7 @@ export const AIService = {
     );
 
     // 2. Score every other product based on token overlap (Jaccard Similarity concept)
-    const scoredProducts = AllProducts.filter(
+    const scoredProducts = allItems.filter(
       (p) =>
         p.id !== currentProduct.id && p.category === currentProduct.category,
     ).map((p) => {
@@ -51,6 +61,7 @@ export const AIService = {
    * This uses recently viewed items to generate personalized suggestions.
    */
   getPersonalizedSuggestions: (userEmail, limit = 5) => {
+    const allItems = getAllProducts();
     const viewedKey = `recentlyViewed_${userEmail || "guest"}`;
     let recentlyViewed = [];
     try {
@@ -62,7 +73,7 @@ export const AIService = {
 
     if (recentlyViewed.length === 0) {
       // If no history, return some popular items as a fallback
-      return AllProducts.slice(0, limit);
+      return allItems.slice(0, limit);
     }
 
     // 1. Create a "profile" of the user's interests from their recently viewed items
@@ -82,7 +93,7 @@ export const AIService = {
 
     // 2. Score all products based on this profile (similar to getRecommendations)
     const recentlyViewedTitles = new Set(recentlyViewed.map((p) => p.title));
-    const scoredProducts = AllProducts.filter(
+    const scoredProducts = allItems.filter(
       (p) => !recentlyViewedTitles.has(p.title),
     ) // Exclude items they've already seen
       .map((p) => {
@@ -134,7 +145,7 @@ export const AIService = {
       (a, b) => coOccurrences[b] - coOccurrences[a],
     );
 
-    const allItems = [...products, ...accessories, ...services];
+    const allItems = getAllProducts();
     let recommendations = sortedTitles
       .map((title) => allItems.find((p) => p.title === title))
       .filter(Boolean)
@@ -167,14 +178,14 @@ export const AIService = {
       const foundItems = [];
       if (accessoryKeywords.length > 0) {
         foundItems.push(
-          ...accessories.filter((p) =>
+          ...allItems.filter((p) => p.category === "Accessories" &&
             accessoryKeywords.some((k) => p.title.includes(k)),
           ),
         );
       }
       if (serviceKeywords.length > 0) {
         foundItems.push(
-          ...services.filter((p) =>
+          ...allItems.filter((p) => p.category === "Services" &&
             serviceKeywords.some((k) => p.title.includes(k)),
           ),
         );
@@ -193,7 +204,7 @@ export const AIService = {
 
     // 4. Fallback if not enough data: pick items from same category (excluding current)
     if (recommendations.length < limit) {
-      const fallback = products
+      const fallback = allItems
         .filter(
           // Fallback to similar main products if still not enough
           (p) =>

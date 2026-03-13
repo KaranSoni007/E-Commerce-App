@@ -147,6 +147,18 @@ export const ReviewProvider = ({ children }) => {
     });
   }, []);
 
+  const deleteAllUserReviews = useCallback((userEmail) => {
+    setReviews((prevReviews) => {
+      const newReviews = { ...prevReviews };
+      Object.keys(newReviews).forEach((product) => {
+        if (newReviews[product]) {
+          newReviews[product] = newReviews[product].filter((r) => r.userEmail !== userEmail);
+        }
+      });
+      return newReviews;
+    });
+  }, []);
+
   return (
     <ReviewContext.Provider
       value={{
@@ -162,6 +174,7 @@ export const ReviewProvider = ({ children }) => {
         hasUserReviewed,
         getUserReview,
         editReview,
+        deleteAllUserReviews,
       }}
     >
       {children}

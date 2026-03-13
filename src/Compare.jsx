@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useCompare } from "./CompareContext";
 import { useCart } from "./CartContext";
+import AllProducts from "./Products";
 
 function Compare() {
   const { compareList, removeFromCompare, clearCompare } = useCompare();
   const { addToCart } = useCart();
+
+  const productSource = useMemo(() => JSON.parse(localStorage.getItem("allProducts")) || AllProducts, []);
+  const freshCompareList = useMemo(() => compareList.map(item => {
+    const currentProductData = productSource.find(p => p.title === item.title);
+    // Return the fresh data but keep the original object as a fallback if not found
+    return currentProductData ? { ...item, ...currentProductData } : item;
+  }), [compareList, productSource]);
 
   if (compareList.length === 0) {
     return (
@@ -52,13 +60,13 @@ function Compare() {
   // Get all unique specification keys from all products in the compare list
   const allSpecKeys = React.useMemo(() => {
     const keys = new Set();
-    compareList.forEach((product) => {
+    freshCompareList.forEach((product) => {
       if (product.specifications) {
         Object.keys(product.specifications).forEach((k) => keys.add(k));
       }
     });
     return Array.from(keys);
-  }, [compareList]);
+  }, [freshCompareList]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-4 sm:px-6 font-sans transition-colors duration-200">
@@ -82,7 +90,7 @@ function Compare() {
                 <th className="p-4 text-left w-40 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-semibold">
                   Features
                 </th>
-                {compareList.map((product) => (
+                {freshCompareList.map((product) => (
                   <th
                     key={product.title}
                     className="p-4 w-64 border-b border-gray-200 dark:border-gray-700 align-top relative"
@@ -109,7 +117,7 @@ function Compare() {
                   </th>
                 ))}
                 {/* Fill empty columns if less than 4 items */}
-                {[...Array(4 - compareList.length)].map((_, i) => (
+                {[...Array(4 - freshCompareList.length)].map((_, i) => (
                   <th
                     key={i}
                     className="p-4 w-64 border-b border-gray-200 dark:border-gray-700 bg-gray-50/30 dark:bg-gray-700/30"
@@ -122,7 +130,7 @@ function Compare() {
                 <td className="p-4 font-semibold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700">
                   Category
                 </td>
-                {compareList.map((product) => (
+                {freshCompareList.map((product) => (
                   <td
                     key={product.title}
                     className="p-4 text-center text-sm text-gray-700 dark:text-gray-200"
@@ -130,12 +138,12 @@ function Compare() {
                     {product.category}
                   </td>
                 ))}
-                {[...Array(4 - compareList.length)].map((_, i) => (
+                {[...Array(4 - freshCompareList.length)].map((_, i) => (
                   <td key={i}></td>
                 ))}
               </tr>
               <tr>
-                {[...Array(4 - compareList.length)].map((_, i) => (
+                {[...Array(4 - freshCompareList.length)].map((_, i) => (
                   <td key={i}></td>
                 ))}
               </tr>
@@ -144,7 +152,7 @@ function Compare() {
                 <td className="p-4 font-semibold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 align-top">
                   Key Features
                 </td>
-                {compareList.map((product) => (
+                {freshCompareList.map((product) => (
                   <td
                     key={product.title}
                     className="p-4 text-sm text-gray-700 dark:text-gray-200 align-top"
@@ -156,17 +164,17 @@ function Compare() {
                     </ul>
                   </td>
                 ))}
-                {[...Array(4 - compareList.length)].map((_, i) => (
+                {[...Array(4 - freshCompareList.length)].map((_, i) => (
                   <td key={i}></td>
                 ))}
               </tr>
               {/* Specifications */}
               {allSpecKeys.map((key) => {
-                const values = compareList.map(
+                const values = freshCompareList.map(
                   (product) => product.specifications?.[key],
                 );
                 const hasDifferences =
-                  compareList.length > 1 && new Set(values).size > 1;
+                  freshCompareList.length > 1 && new Set(values).size > 1;
 
                 return (
                   <tr
@@ -178,7 +186,7 @@ function Compare() {
                     <td className="p-4 font-semibold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700">
                       {key}
                     </td>
-                    {compareList.map((product) => (
+                    {freshCompareList.map((product) => (
                       <td
                         key={product.title}
                         className={`p-4 text-center text-sm text-gray-700 dark:text-gray-200 ${
@@ -190,7 +198,7 @@ function Compare() {
                         {product.specifications?.[key] || "-"}
                       </td>
                     ))}
-                    {[...Array(4 - compareList.length)].map((_, i) => (
+                    {[...Array(4 - freshCompareList.length)].map((_, i) => (
                       <td key={i}></td>
                     ))}
                   </tr>
@@ -200,12 +208,12 @@ function Compare() {
                 <td className="p-4 font-semibold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700">
                   Availability
                 </td>
-                {compareList.map((product) => (
+                {freshCompareList.map((product) => (
                   <td key={product.title} className="p-4 text-center text-sm">
                     <span className="text-green-600 font-medium">In Stock</span>
                   </td>
                 ))}
-                {[...Array(4 - compareList.length)].map((_, i) => (
+                {[...Array(4 - freshCompareList.length)].map((_, i) => (
                   <td key={i}></td>
                 ))}
               </tr>
@@ -213,7 +221,7 @@ function Compare() {
                 <td className="p-4 font-semibold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700">
                   Action
                 </td>
-                {compareList.map((product) => (
+                {freshCompareList.map((product) => (
                   <td key={product.title} className="p-4 text-center">
                     <button
                       onClick={() => addToCart(product)}
@@ -223,7 +231,7 @@ function Compare() {
                     </button>
                   </td>
                 ))}
-                {[...Array(4 - compareList.length)].map((_, i) => (
+                {[...Array(4 - freshCompareList.length)].map((_, i) => (
                   <td key={i}></td>
                 ))}
               </tr>

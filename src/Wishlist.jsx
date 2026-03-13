@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useWishlist } from "./WishlistContext";
 import { useCart } from "./CartContext";
-import AllProducts, { services, accessories } from "./Products";
+import AllProducts from "./Products";
 
 function Wishlist() {
   const navigate = useNavigate();
@@ -13,6 +13,16 @@ function Wishlist() {
   const [toastMessage, setToastMessage] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productSource, setProductSource] = useState(AllProducts);
+
+  useEffect(() => {
+    // Prioritize loading products from localStorage to reflect admin updates
+    const storedProducts = JSON.parse(localStorage.getItem("allProducts"));
+    if (storedProducts && storedProducts.length > 0) {
+      setProductSource(storedProducts);
+    }
+  }, []);
+
 
   const showToastMessage = useCallback((message) => {
     setToastMessage(message);
@@ -44,9 +54,13 @@ function Wishlist() {
   }, []);
 
   const handleMoveToCart = (product) => {
-    addToCart(product);
-    removeFromWishlist(product.title);
-    showToastMessage("Moved to cart!");
+    try {
+      addToCart(product);
+      removeFromWishlist(product.title);
+      showToastMessage("Moved to cart!");
+    } catch (error) {
+      showToastMessage(error.message);
+    }
   };
 
   const handleRemove = (title) => {
@@ -165,9 +179,8 @@ function Wishlist() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {wishlist.map((product, index) => {
-            const allItems = [...AllProducts, ...services, ...accessories];
             const currentProduct =
-              allItems.find((p) => p.title === product.title) || product;
+              productSource.find((p) => p.title === product.title) || product;
             const discount = getDiscount(
               currentProduct.OriginalPrice,
               currentProduct.MRP,

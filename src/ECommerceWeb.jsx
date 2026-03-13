@@ -8,6 +8,7 @@ import { useReviews } from "./ReviewContext";
 import { useCompare } from "./CompareContext";
 import { AIService } from "./AIService";
 import { useAuth } from "./AuthContext";
+import { useStock } from "./StockContext";
 
 // Professional Toast
 const Toast = memo(({ message, type, onClose }) => {
@@ -89,6 +90,7 @@ const CardView = memo(
     productId,
     reviewCount,
     averageRating,
+    stockCount,
     isWishlisted: propIsWishlisted,
   }) => {
     const navigate = useNavigate();
@@ -99,6 +101,7 @@ const CardView = memo(
     const [isAdded, setIsAdded] = useState(false);
     const [isWishlisted, setIsWishlisted] = useState(propIsWishlisted || false);
     const isCompared = isInCompare(title);
+    const isInStock = stockCount > 0;
 
     // Sync with prop when it changes
     useEffect(() => {
@@ -110,9 +113,14 @@ const CardView = memo(
     const handleAddToCart = useCallback(
       (e) => {
         e.stopPropagation();
-        addToCart(product);
-        setIsAdded(true);
-        showToast(`${title.substring(0, 25)}... added!`, "success");
+        try {
+          addToCart(product);
+          setIsAdded(true);
+          showToast(`${title.substring(0, 25)}... added!`, "success");
+        } catch (error) {
+          // Show error toast if addToCart fails (e.g., out of stock)
+          showToast(error.message, "error");
+        }
       },
       [addToCart, product, showToast, title],
     );
@@ -142,6 +150,19 @@ const CardView = memo(
         }
       },
       [addToCompare, removeFromCompare, product, showToast, title, isCompared],
+    );
+
+    const handleBuyNow = useCallback(
+      (e) => {
+        e.stopPropagation();
+        try {
+          addToCart(product);
+          navigate("/cart");
+        } catch (error) {
+          showToast(error.message, "error");
+        }
+      },
+      [addToCart, product, navigate, showToast],
     );
 
     const handleCardClick = useCallback(() => {
@@ -285,18 +306,66 @@ const CardView = memo(
             </div>
           </div>
 
-          {/* Add to Cart Button */}
-          <button
-            onClick={handleAddToCart}
-            className={`w-full py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 relative z-30 flex items-center justify-center gap-2 ${
-              isAdded
-                ? "bg-emerald-500 text-white"
-                : "bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98]"
-            }`}
-            aria-label={isAdded ? "Added to cart" : "Add to cart"}
-          >
-            {isAdded ? (
-              <>
+          {/* Action Buttons */}
+          <div className="flex gap-2 mt-auto">
+            <button
+              onClick={handleAddToCart}
+              disabled={!isInStock}
+              className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 relative z-30 flex items-center justify-center gap-2 ${
+                isAdded
+                  ? "bg-emerald-500 text-white"
+                  : isInStock
+                    ? "bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98]"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
+              aria-label={isAdded ? "Added to cart" : "Add to cart"}
+            >
+              {isAdded ? (
+                <>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>{" "}
+                  Added
+                </>
+              ) : !isInStock ? (
+                "Out of Stock"
+              ) : (
+                <>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>{" "}
+                  Add
+                </>
+              )}
+            </button>
+            <button
+              onClick={handleBuyNow}
+              disabled={!isInStock}
+              className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 relative z-30 flex items-center justify-center gap-2 ${
+                isInStock ? "bg-orange-500 text-white hover:bg-orange-600 hover:scale-[1.02] active:scale-[0.98]" : "bg-gray-300 text-gray-500 cursor-not-allowed hidden"
+              }`}
+              aria-label="Buy Now"
+            >
                 <svg
                   className="w-4 h-4"
                   fill="none"
@@ -307,30 +376,12 @@ const CardView = memo(
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M5 13l4 4L19 7"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
                   />
                 </svg>{" "}
-                Added
-              </>
-            ) : (
-              <>
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>{" "}
-                Add to Cart
-              </>
-            )}
-          </button>
+                Buy
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -358,6 +409,7 @@ function ECommerceWeb() {
   const [discountFilter, setDiscountFilter] = useState("all");
   const [visibleCount, setVisibleCount] = useState(12);
   const { user } = useAuth();
+  const { getStock } = useStock();
   const [personalizedSuggestions, setPersonalizedSuggestions] = useState([]);
 
   useEffect(() => {
@@ -472,12 +524,13 @@ function ECommerceWeb() {
 
   useEffect(() => {
     const loadLocalData = () => {
-      if (!AllProducts || !Array.isArray(AllProducts)) {
-        setData([]);
-        setLoading(false);
-        return;
+      // Try to load from local storage first (to pick up Admin Panel updates)
+      const storedProducts = JSON.parse(localStorage.getItem("allProducts"));
+      if (storedProducts && Array.isArray(storedProducts) && storedProducts.length > 0) {
+        setData(storedProducts);
+      } else {
+        setData(AllProducts || []);
       }
-      setData(AllProducts);
       setLoading(false);
     };
     const timer = setTimeout(loadLocalData, 500);
@@ -638,7 +691,7 @@ function ECommerceWeb() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded-2xl mb-10 bg-gradient-to-r from-indigo-600 to-purple-600 p-8 shadow-xl"
+          className="relative overflow-hidden rounded-2xl mb-10 bg-linear-to-r from-indigo-600 to-purple-600 p-8 shadow-xl"
         >
           <div className="relative z-10 text-center">
             <span className="inline-block bg-yellow-400 text-yellow-900 text-xs font-bold px-4 py-2 rounded-full mb-4 shadow-md">
@@ -670,6 +723,7 @@ function ECommerceWeb() {
                 );
                 const reviewCount = getReviewCount(product.title);
                 const averageRating = getAverageRating(product.title);
+                const stockCount = getStock(product.title);
                 return (
                   <CardView
                     key={`personalized-${product.id}-${index}`}
@@ -683,6 +737,7 @@ function ECommerceWeb() {
                     getDiscount={getDiscount}
                     reviewCount={reviewCount}
                     averageRating={averageRating}
+                    stockCount={stockCount}
                   />
                 );
               })}
@@ -788,13 +843,14 @@ function ECommerceWeb() {
                       <input
                         type="number"
                         placeholder="Min"
+                        min="0"
                         value={priceRange.min}
-                        onChange={(e) =>
-                          setPriceRange((prev) => ({
-                            ...prev,
-                            min: e.target.value,
-                          }))
-                        }
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === "" || Number(val) >= 0) {
+                            setPriceRange((prev) => ({ ...prev, min: val }));
+                          }
+                        }}
                         className="w-full py-2 pl-7 pr-3 rounded-lg border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:border-indigo-500"
                       />
                     </div>
@@ -806,13 +862,14 @@ function ECommerceWeb() {
                       <input
                         type="number"
                         placeholder="Max"
+                        min="0"
                         value={priceRange.max}
-                        onChange={(e) =>
-                          setPriceRange((prev) => ({
-                            ...prev,
-                            max: e.target.value,
-                          }))
-                        }
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === "" || Number(val) >= 0) {
+                            setPriceRange((prev) => ({ ...prev, max: val }));
+                          }
+                        }}
                         className="w-full py-2 pl-7 pr-3 rounded-lg border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:border-indigo-500"
                       />
                     </div>
@@ -916,6 +973,7 @@ function ECommerceWeb() {
               );
               const reviewCount = getReviewCount(product.title);
               const averageRating = getAverageRating(product.title);
+              const stockCount = getStock(product.title);
               return (
                 <CardView
                   key={`${product.title}-${index}`}
@@ -929,6 +987,7 @@ function ECommerceWeb() {
                   getDiscount={getDiscount}
                   reviewCount={reviewCount}
                   averageRating={averageRating}
+                  stockCount={stockCount}
                 />
               );
             })

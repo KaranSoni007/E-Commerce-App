@@ -51,6 +51,46 @@ const ScrollToTop = () => {
   return null;
 };
 
+const AppLayout = () => {
+  const location = useLocation();
+
+  const isAdminRoute = location.pathname.startsWith("/admin");
+  const isAuthRoute = ["/login", "/signup", "/forgot-password"].includes(
+    location.pathname,
+  );
+  const shouldShowNavbarFooter = !isAdminRoute && !isAuthRoute;
+
+  return (
+    <div className="flex flex-col min-h-screen transition-colors duration-200">
+      {shouldShowNavbarFooter && <Navbar />}
+      <div className="grow">
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<ECommerceWeb />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/compare" element={<Compare />} />
+            <Route path="/track-order/:orderId" element={<OrderTracking />} />
+            <Route
+              path="/order-confirmation/:orderId"
+              element={<OrderConfirmation />}
+            />
+            <Route path="/support" element={<Support />} />
+            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </div>
+      {shouldShowNavbarFooter && <Footer />}
+    </div>
+  );
+};
+
 function App() {
   return (
     <AuthProvider>
@@ -61,42 +101,7 @@ function App() {
               <CompareProvider>
                 <Router>
                   <ScrollToTop />
-                  <div className="flex flex-col min-h-screen transition-colors duration-200">
-                    <Navbar />
-                    <div className="grow">
-                      <Suspense fallback={<PageLoader />}>
-                        <Routes>
-                          <Route path="/" element={<ECommerceWeb />} />
-                          <Route path="/cart" element={<Cart />} />
-                          <Route path="/profile" element={<Profile />} />
-                          <Route path="/signup" element={<Signup />} />
-                          <Route path="/login" element={<Login />} />
-                          <Route
-                            path="/forgot-password"
-                            element={<ForgotPassword />}
-                          />
-                          <Route
-                            path="/product/:id"
-                            element={<ProductDetail />}
-                          />
-                          <Route path="/wishlist" element={<Wishlist />} />
-                          <Route path="/compare" element={<Compare />} />
-                          <Route
-                            path="/track-order/:orderId"
-                            element={<OrderTracking />}
-                          />
-                          <Route
-                            path="/order-confirmation/:orderId"
-                            element={<OrderConfirmation />}
-                          />
-                          <Route path="/support" element={<Support />} />
-                          <Route path="/admin" element={<AdminPanel />} />
-                          <Route path="*" element={<NotFound />} />
-                        </Routes>
-                      </Suspense>
-                    </div>
-                    <Footer />
-                  </div>
+                  <AppLayout />
                 </Router>
               </CompareProvider>
             </ReviewProvider>

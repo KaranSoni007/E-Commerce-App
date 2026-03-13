@@ -3,12 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "./CartContext";
 import { useWishlist } from "./WishlistContext";
 import { useAuth } from "./AuthContext";
+import { useStock } from "./StockContext";
+import { useReviews } from "./ReviewContext";
+import { parseAddressText } from "./addressUtils";
 
 function Profile() {
   const navigate = useNavigate();
   const { cart, addToCart } = useCart();
   const { wishlist } = useWishlist();
   const { user, logout, updateUser } = useAuth();
+  const { incrementStock } = useStock();
+  const { deleteAllUserReviews } = useReviews();
 
   const [orders, setOrders] = useState([]);
   const [showOrders, setShowOrders] = useState(false);
@@ -185,38 +190,53 @@ function Profile() {
   };
 
   const handleCancelOrder = (orderId) => {
-    if (window.confirm("Are you sure you want to cancel this order?")) {
+    if (
+      window.confirm(
+        "Are you sure you want to cancel this order? This action cannot be undone.",
+      )
+    ) {
       const allOrders = JSON.parse(localStorage.getItem("mockOrders")) || [];
       const cancelledAt = new Date().toISOString();
+      let orderToCancel;
+
       const updatedOrders = allOrders.map((o) => {
         if (o.id === orderId) {
-          return { ...o, status: "cancelled", cancelledAt };
+          orderToCancel = { ...o, status: "cancelled", cancelledAt };
+          return orderToCancel;
         }
         return o;
       });
 
-      localStorage.setItem("mockOrders", JSON.stringify(updatedOrders));
-
-      setOrders((prevOrders) =>
-        prevOrders.map((o) => {
-          if (o.id === orderId) {
-            return { ...o, status: "cancelled", cancelledAt };
-          }
-          return o;
-        }),
-      );
-
-      alert("Order cancelled successfully.");
+      if (orderToCancel) {
+        incrementStock(orderToCancel.items); // Replenish stock
+        localStorage.setItem("mockOrders", JSON.stringify(updatedOrders));
+        setOrders((prevOrders) =>
+          prevOrders.map((o) => (o.id === orderId ? orderToCancel : o)),
+        );
+        alert("Order cancelled successfully.");
+      }
     }
   };
 
   const handleBuyAgain = (order) => {
-    // Add all items from the order to the cart
+    const addedItems = [];
+    const failedItems = [];
     order.items.forEach((item) => {
-      // We use the cart context's addToCart.
-      // Note: This assumes addToCart handles duplicates by increasing quantity
-      addToCart(item, item.quantity || 1);
+      try {
+        addToCart(item, item.quantity || 1);
+        addedItems.push(item.title);
+      } catch (error) {
+        failedItems.push(item.title);
+      }
     });
+
+    if (failedItems.length > 0) {
+      alert(
+        `Successfully re-added: ${addedItems.join(", ") || "None"}.\n\nOut of stock: ${failedItems.join(", ")}.`,
+      );
+    } else {
+      alert("All items from the order have been added to your cart!");
+    }
     navigate("/cart");
   };
 
@@ -488,10 +508,25 @@ function Profile() {
 
     // Mock password change
     const existingUsers = JSON.parse(localStorage.getItem("mockUsers")) || [];
+    const userIndex = existingUsers.findIndex((u) => u.email === user.email);
+
+    if (
+      userIndex === -1 ||
+      existingUsers[userIndex].password !== passwordData.currentPassword
+    ) {
+      alert("Your current password is not correct.");
+      return;
+    }
+
     const updatedUsers = existingUsers.map((u) =>
       u.email === user.email ? { ...u, password: passwordData.newPassword } : u,
     );
     localStorage.setItem("mockUsers", JSON.stringify(updatedUsers));
+
+    // If the user has "Remember Me" enabled, clear the old password
+    if (localStorage.getItem("rememberedEmail") === user.email) {
+      localStorage.removeItem("rememberedPassword");
+    }
 
     alert("✅ Password changed successfully!");
     setShowPasswordChange(false);
@@ -518,40 +553,7 @@ function Profile() {
 
   const openEditAddressForm = (addressItem) => {
     setEditingAddress(addressItem);
-
-    let parsedData = {
-      // FIX: Changed userData to user
-      fullName: user.name || "",
-      phone: "",
-      street: "",
-      city: "",
-      state: "",
-      pincode: "",
-    };
-
-    if (addressItem.fullName || addressItem.phone || addressItem.street) {
-      parsedData = {
-        fullName: addressItem.fullName || user.name || "",
-        phone: addressItem.phone || "",
-        street: addressItem.street || "",
-        city: addressItem.city || "",
-        state: addressItem.state || "",
-        pincode: addressItem.pincode || "",
-      };
-    } else if (addressItem.text) {
-      const parts = addressItem.text.split(", ");
-      if (parts.length >= 6) {
-        parsedData = {
-          fullName: parts[0] || user.name || "",
-          phone: parts[1] || "",
-          street: parts[2] || "",
-          city: parts[3] || "",
-          state: parts[4] || "",
-          pincode: parts[5].replace(/^-\s*/, "") || "",
-        };
-      }
-    }
-
+    const parsedData = parseAddressText(addressItem, user.name);
     setAddressFormData(parsedData);
     setShowAddressForm(true);
   };
@@ -721,15 +723,8 @@ function Profile() {
       localStorage.setItem("mockPayments", JSON.stringify(remainingPayments));
 
       // 4. Cleanup Reviews
-      const allReviews =
-        JSON.parse(localStorage.getItem("productReviews")) || {};
-      const cleanedReviews = {};
-      Object.keys(allReviews).forEach((productTitle) => {
-        cleanedReviews[productTitle] = allReviews[productTitle].filter(
-          (r) => r.userEmail !== userEmail,
-        );
-      });
-      localStorage.setItem("productReviews", JSON.stringify(cleanedReviews));
+      // Use Context to ensure state sync
+      deleteAllUserReviews(userEmail);
 
       // 5. Cleanup Preferences & Metadata
       localStorage.removeItem("notificationPrefs_" + userEmail);

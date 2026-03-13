@@ -37,14 +37,43 @@ export const StockProvider = ({ children }) => {
       const newStock = { ...prevStock };
       cartItems.forEach((item) => {
         if (newStock[item.title] !== undefined) {
-          newStock[item.title] -= item.quantity || 1;
+          const quantityToBuy = item.quantity || 1;
+          newStock[item.title] = Math.max(0, newStock[item.title] - quantityToBuy);
         }
       });
       return newStock;
     });
   };
 
-  const value = { getStock, decrementStock };
+  const incrementStock = (orderItems) => {
+    setStock((prevStock) => {
+      const newStock = { ...prevStock };
+      orderItems.forEach((item) => {
+        if (newStock[item.title] !== undefined) {
+          newStock[item.title] += item.quantity || 1;
+        } else {
+          // If for some reason the product isn't in stock, initialize it
+          newStock[item.title] = item.quantity || 1;
+        }
+      });
+      return newStock;
+    });
+  };
+
+  const updateProductStock = (title, quantity) => {
+    setStock((prevStock) => ({
+      ...prevStock,
+      [title]: quantity,
+    }));
+  };
+
+  const removeProductStock = (title) => {
+    setStock((prevStock) => {
+      const { [title]: _, ...rest } = prevStock;
+      return rest;
+    });
+  };
+  const value = { getStock, decrementStock, incrementStock, updateProductStock, removeProductStock };
 
   return (
     <StockContext.Provider value={value}>{children}</StockContext.Provider>

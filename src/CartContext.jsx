@@ -6,6 +6,7 @@ import React, {
   useRef,
 } from "react";
 import { useAuth } from "./AuthContext";
+import { useStock } from "./StockContext";
 
 const CartContext = createContext();
 
@@ -15,6 +16,7 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }) => {
   const { user } = useAuth();
+  const { getStock } = useStock();
   // Determine current email based on AuthContext, defaulting to guest
   const userEmail = user?.email || "guest";
 
@@ -75,6 +77,21 @@ export const CartProvider = ({ children }) => {
   }, [cart, userEmail]);
 
   const addToCart = (product, quantity = 1) => {
+    const availableStock = getStock(product.title);
+    const existingItemInCart = cart.find((item) => item.title === product.title);
+    const currentQuantityInCart = existingItemInCart
+      ? existingItemInCart.quantity
+      : 0;
+
+    if (currentQuantityInCart + quantity > availableStock) {
+      throw new Error(
+        `Only ${availableStock} of "${product.title.substring(
+          0,
+          20,
+        )}..." available.`,
+      );
+    }
+
     setCart((prevCart) => {
       const existingItem = prevCart.find(
         (item) => item.title === product.title,
@@ -97,15 +114,24 @@ export const CartProvider = ({ children }) => {
 
   // 🔹 Increase or decrease quantity
   const updateQuantity = (title, delta) => {
-    setCart((prevCart) =>
-      prevCart.map((item) => {
-        if (item.title === title) {
-          const newQuantity = item.quantity + delta;
-          return newQuantity > 0 ? { ...item, quantity: newQuantity } : item;
-        }
-        return item;
-      }),
-    );
+    setCart((prevCart) => {
+      const newCart = prevCart
+        .map((item) => {
+          if (item.title === title) {
+            const newQuantity = (item.quantity || 1) + delta;
+            const availableStock = getStock(title);
+
+            // Cap quantity at available stock, and ensure it doesn't go below 1
+            const finalQuantity = Math.min(
+              Math.max(1, newQuantity),
+              availableStock,
+            );
+            return { ...item, quantity: finalQuantity };
+          }
+          return item;
+        });
+      return newCart;
+    });
   };
 
   // 🔹 FIX: Added clearCart function so the checkout page can actually empty the cart

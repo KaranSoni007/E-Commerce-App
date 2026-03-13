@@ -2,16 +2,36 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "./CartContext";
 import { useAuth } from "./AuthContext";
+import { useStock } from "./StockContext";
+import AllProducts from "./Products";
+import { parseAddressText } from "./addressUtils";
 
 function Cart() {
   const navigate = useNavigate();
   const { cart, removeFromCart, updateQuantity, clearCart, setCart } =
     useCart();
   const { user } = useAuth();
+  const { getStock, decrementStock } = useStock();
 
   const [couponCode, setCouponCode] = useState("");
   const [discountPercent, setDiscountPercent] = useState(0);
   const [couponMessage, setCouponMessage] = useState({ type: "", text: "" });
+
+  // Get the single source of truth for product data
+  const productSource = useMemo(() => JSON.parse(localStorage.getItem("allProducts")) || AllProducts, []);
+
+  // Create a cart with up-to-date product info (price, stock, etc.)
+  const freshCart = useMemo(() => cart.map(item => {
+    const currentProductData = productSource.find(p => p.title === item.title);
+    return {
+      ...item, // Keep original quantity
+      ...(currentProductData || {}), // Overwrite with fresh data, handle case where product was deleted
+      availableStock: getStock(item.title),
+      isInvalid: !currentProductData || (item.quantity || 1) > getStock(item.title),
+    };
+  }), [cart, productSource, getStock]);
+
+  const isCartInvalid = freshCart.some((item) => item.isInvalid);
 
   const [showOffers, setShowOffers] = useState(false);
 
@@ -115,6 +135,16 @@ function Cart() {
       setDiscountPercent(0.2);
       setCouponMessage({ type: "success", text: "Coupon applied! 20% OFF" });
     } else if (code === "WELCOME50") {
+      // Check if user is actually new (has no previous orders)
+      const userEmail = getUserEmail();
+      const allOrders = JSON.parse(localStorage.getItem("mockOrders")) || [];
+      const previousOrders = allOrders.filter(
+        (o) => o.userEmail === userEmail
+      );
+      if (previousOrders.length > 0) {
+        setCouponMessage({ type: "error", text: "Offer valid for new users only." });
+        return;
+      }
       setDiscountPercent(0.5);
       setCouponMessage({ type: "success", text: "Coupon applied! 50% OFF" });
     } else if (code === "") {
@@ -128,7 +158,7 @@ function Cart() {
     }
   };
 
-  const subtotal = cart.reduce(
+  const subtotal = freshCart.reduce(
     (total, item) =>
       total + getNumericPrice(item.OriginalPrice) * (item.quantity || 1),
     0,
@@ -154,59 +184,7 @@ function Cart() {
 
   const openEditForm = (addressItem) => {
     setEditingAddress(addressItem);
-
-    // Parse address data - handle both structured and old text-only formats
-    let parsedData = {
-      fullName: "",
-      phone: "",
-      street: "",
-      city: "",
-      state: "",
-      pincode: "",
-    };
-
-    if (addressItem.fullName || addressItem.phone || addressItem.street) {
-      // New structured format
-      parsedData = {
-        fullName: addressItem.fullName || "",
-        phone: addressItem.phone || "",
-        street: addressItem.street || "",
-        city: addressItem.city || "",
-        state: addressItem.state || "",
-        pincode: addressItem.pincode || "",
-      };
-    } else if (addressItem.text) {
-      // Old text format - parse from comma-separated string
-      const parts = addressItem.text.split(", ");
-      if (parts.length >= 6) {
-        parsedData = {
-          fullName: parts[0] || "",
-          phone: parts[1] || "",
-          street: parts[2] || "",
-          city: parts[3] || "",
-          state: parts[4] || "",
-          pincode: parts[5].replace(/^-\s*/, "") || "",
-        };
-      } else if (parts.length >= 5) {
-        parsedData = {
-          fullName: parts[0] || "",
-          phone: parts[1] || "",
-          street: parts[2] || "",
-          city: parts[3] || "",
-          state: parts[4] || "",
-          pincode: parts[5] ? parts[5].replace(/^-\s*/, "") : "",
-        };
-      } else if (parts.length === 1) {
-        parsedData.street = addressItem.text;
-      } else {
-        parsedData.fullName = parts[0] || "";
-        parsedData.phone = parts[1] || "";
-        parsedData.street = parts[2] || "";
-        if (parts[3]) parsedData.city = parts[3];
-        if (parts[4]) parsedData.state = parts[4];
-      }
-    }
-
+    const parsedData = parseAddressText(addressItem, user?.name);
     setFormData(parsedData);
     setShowAddressForm(true);
   };
@@ -373,10 +351,30 @@ function Cart() {
   const handleCheckout = (e) => {
     if (e) e.preventDefault();
 
+    if (!user) {
+      alert("Please log in to place your order.");
+      navigate("/login");
+      return;
+    }
+
     if (!address.trim()) {
       alert(
         "⚠️ Please enter or select a delivery address before checking out.",
       );
+      return;
+    }
+
+    // Final Stock Validation before placement
+    // This prevents race conditions where an item might go out of stock 
+    // between the time the user viewed the cart and clicked checkout.
+    const outOfStockItems = cart.filter(item => {
+      const currentStock = getStock(item.title);
+      return (item.quantity || 1) > currentStock;
+    });
+
+    if (outOfStockItems.length > 0) {
+      const itemNames = outOfStockItems.map(i => i.title).join(", ");
+      alert(`⚠️ One or more items in your cart are no longer available in the desired quantity:\n\n${itemNames}\n\nPlease adjust your cart.`);
       return;
     }
 
@@ -424,6 +422,7 @@ function Cart() {
     existingOrders.push(newOrder);
     localStorage.setItem("mockOrders", JSON.stringify(existingOrders));
 
+    decrementStock(cart);
     clearCart();
 
     navigate(`/order-confirmation/${newOrder.id}`);
@@ -483,6 +482,7 @@ function Cart() {
 
   const isCheckoutDisabled = () => {
     if (!address.trim()) return true;
+    if (isCartInvalid) return true;
     if (selectedPaymentId && selectedPaymentId !== "COD") {
       if (!otpSent || otp.length !== 6) {
         return true;
@@ -506,11 +506,13 @@ function Cart() {
 
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* Left Column: Cart Items */}
-          <div className="flex-1 w-full flex flex-col gap-4">
-            {cart.map((item, index) => (
+          <div className="flex-1 w-full space-y-4">
+            {freshCart.map((item, index) => (
               <div
                 key={item.id || index}
-                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row gap-5 items-start sm:items-center transition-all hover:shadow-md"
+                className={`rounded-2xl shadow-sm p-4 sm:p-5 flex flex-col sm:flex-row gap-5 items-start sm:items-center transition-all hover:shadow-md ${
+                  item.isInvalid ? "bg-red-50 border-red-300" : "bg-white border-gray-100"
+                }`}
               >
                 <div className="w-full sm:w-32 h-32 rounded-xl bg-gray-50 p-2 flex items-center justify-center border border-gray-100 shrink-0">
                   <Link
@@ -546,7 +548,7 @@ function Cart() {
                     <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white">
                       <button
                         onClick={() =>
-                          updateQuantity && updateQuantity(item.title, -1)
+                          updateQuantity(item.title, -1)
                         }
                         className="w-9 h-9 flex items-center justify-center bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors active:bg-gray-200"
                       >
@@ -557,12 +559,17 @@ function Cart() {
                       </span>
                       <button
                         onClick={() =>
-                          updateQuantity && updateQuantity(item.title, 1)
+                          updateQuantity(item.title, 1)
                         }
                         className="w-9 h-9 flex items-center justify-center bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors active:bg-gray-200"
                       >
                         +
                       </button>
+                      {item.isInvalid && (
+                        <div className="text-red-600 text-xs font-semibold ml-3">
+                          Only {item.availableStock} left
+                        </div>
+                      )}
                     </div>
                     <button
                       onClick={() => removeFromCart(item.title)}
@@ -586,6 +593,15 @@ function Cart() {
                 </div>
               </div>
             ))}
+            {isCartInvalid && (
+              <div className="p-4 bg-red-100 text-red-800 rounded-xl text-sm font-semibold flex items-center gap-3">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span>
+                  Some items in your cart have insufficient stock. Please adjust
+                  quantities before proceeding.
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Right Column: Order Summary */}

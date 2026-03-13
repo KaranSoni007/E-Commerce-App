@@ -8,6 +8,7 @@ import AllProducts, { services } from "./Products";
 import { useAuth } from "./AuthContext";
 import ProductReviews from "./ProductReviews";
 import { AIService } from "./AIService";
+import { useStock } from "./StockContext";
 
 function ProductDetail() {
   const { id } = useParams();
@@ -17,23 +18,19 @@ function ProductDetail() {
   const { addToCompare, removeFromCompare, isInCompare } = useCompare();
   const { getAverageRating, getReviewCount } = useReviews();
   const { user } = useAuth();
+  const { getStock } = useStock();
 
   const [product, setProduct] = useState(null);
 
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
+  const [toastInfo, setToastInfo] = useState({ show: false, message: "", type: "success" });
   const [activeTab, setActiveTab] = useState("description");
   const [averageRating, setAverageRating] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isCompared, setIsCompared] = useState(false);
-  const [stockStatus, setStockStatus] = useState({
-    isInStock: true,
-    stockCount: 50,
-  });
 
   // Recently viewed products
   const [recentlyViewed, setRecentlyViewed] = useState([]);
@@ -41,9 +38,19 @@ function ProductDetail() {
   const [frequentlyBought, setFrequentlyBought] = useState([]);
   const [selectedBundleIds, setSelectedBundleIds] = useState([]);
 
+  // Get real stock status from context
+  const stockCount = product ? getStock(product.title) : 0;
+  const isInStock = stockCount > 0;
+
   useEffect(() => {
     // Find product by ID
-    const allItems = [...AllProducts, ...services];
+    let allItems = [];
+    const storedProducts = JSON.parse(localStorage.getItem("allProducts"));
+    if (storedProducts && storedProducts.length > 0) {
+      allItems = storedProducts;
+    } else {
+      allItems = [...AllProducts, ...services];
+    }
     const foundProduct = allItems.find((p) => p.id === parseInt(id));
 
     if (foundProduct) {
@@ -109,28 +116,43 @@ function ProductDetail() {
 
   const handleAddToCart = useCallback(() => {
     if (!product) return;
+    try {
+      addToCart(product, quantity);
+      setIsAdded(true);
+      setToastInfo({
+        show: true,
+        message: `${product.title.substring(0, 30)}... added to cart!`,
+        type: "success",
+      });
 
-    addToCart(product, quantity);
-
-    setIsAdded(true);
-    setShowToast(true);
-    setToastMessage(`${product.title.substring(0, 30)}... added to cart!`);
-
-    setTimeout(() => {
-      setIsAdded(false);
-      setShowToast(false);
-    }, 2500);
+      setTimeout(() => {
+        setIsAdded(false);
+        setToastInfo((prev) => ({ ...prev, show: false }));
+      }, 2500);
+    } catch (error) {
+      setToastInfo({ show: true, message: error.message, type: "error" });
+      setTimeout(() => setToastInfo((prev) => ({ ...prev, show: false })), 3000);
+    }
   }, [product, quantity, addToCart]);
 
   const handleBuyNow = useCallback(() => {
     if (!product) return;
-    addToCart(product, quantity);
-    navigate("/cart");
+    try {
+      addToCart(product, quantity);
+      navigate("/cart");
+    } catch (error) {
+      setToastInfo({
+        show: true,
+        message: `Could not add to cart: ${error.message}`,
+        type: "error",
+      });
+      setTimeout(() => setToastInfo((prev) => ({ ...prev, show: false })), 3000);
+    }
   }, [product, quantity, addToCart, navigate]);
 
   const handleQuantityChange = (delta) => {
     setQuantity((prev) =>
-      Math.min(stockStatus.stockCount, Math.max(1, prev + delta)),
+      Math.min(stockCount, Math.max(1, prev + delta)),
     );
   };
 
@@ -138,9 +160,12 @@ function ProductDetail() {
     if (!product) return;
     const added = toggleWishlist(product);
     setIsWishlisted(added);
-    setShowToast(true);
-    setToastMessage(added ? "Added to wishlist!" : "Removed from wishlist");
-    setTimeout(() => setShowToast(false), 2500);
+    setToastInfo({
+      show: true,
+      message: added ? "Added to wishlist!" : "Removed from wishlist",
+      type: "success",
+    });
+    setTimeout(() => setToastInfo((prev) => ({ ...prev, show: false })), 2500);
   }, [product, toggleWishlist]);
 
   const handleCompareClick = useCallback(() => {
@@ -157,32 +182,43 @@ function ProductDetail() {
         setIsCompared(true);
       }
     }
-    setToastMessage(message);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 2500);
+    setToastInfo({ show: true, message, type: "success" });
+    setTimeout(() => setToastInfo((prev) => ({ ...prev, show: false })), 2500);
   }, [product, isCompared, addToCompare, removeFromCompare]);
 
   const handleBundleAddToCart = () => {
-    // Add main product
-    addToCart(product, quantity);
+    try {
+      // Add main product
+      addToCart(product, quantity);
 
-    // Add selected bundle items
-    let addedCount = 1;
-    selectedBundleIds.forEach((id) => {
-      const item = frequentlyBought.find((p) => p.id === id);
-      if (item) {
-        addToCart(item, 1);
-        addedCount++;
-      }
-    });
+      // Add selected bundle items
+      let addedCount = 1;
+      selectedBundleIds.forEach((id) => {
+        const item = frequentlyBought.find((p) => p.id === id);
+        if (item) {
+          addToCart(item, 1);
+          addedCount++;
+        }
+      });
 
-    setIsAdded(true);
-    setShowToast(true);
-    setToastMessage(`${addedCount} items added to cart!`);
-    setTimeout(() => {
-      setIsAdded(false);
-      setShowToast(false);
-    }, 2500);
+      setIsAdded(true);
+      setToastInfo({
+        show: true,
+        message: `${addedCount} items added to cart!`,
+        type: "success",
+      });
+      setTimeout(() => {
+        setIsAdded(false);
+        setToastInfo((prev) => ({ ...prev, show: false }));
+      }, 2500);
+    } catch (error) {
+      setToastInfo({
+        show: true,
+        message: `Bundle add failed: ${error.message}`,
+        type: "error",
+      });
+      setTimeout(() => setToastInfo((prev) => ({ ...prev, show: false })), 3000);
+    }
   };
 
   const toggleBundleItem = (id) => {
@@ -201,8 +237,15 @@ function ProductDetail() {
     return total;
   }, [product, selectedBundleIds, frequentlyBought]);
 
-  // Stock status is now persisted in state and localStorage
-  const { isInStock, stockCount } = stockStatus;
+  const isBundleInStock = useMemo(() => {
+    if (!isInStock) return false;
+    for (const id of selectedBundleIds) {
+      const item = frequentlyBought.find((p) => p.id === id);
+      if (item && getStock(item.title) < 1) return false;
+    }
+    return true;
+  }, [selectedBundleIds, frequentlyBought, getStock, isInStock]);
+
 
   if (loading) {
     return (
@@ -258,8 +301,12 @@ function ProductDetail() {
   return (
     <div className="min-h-screen bg-gray-50 pb-16 transition-colors duration-200">
       {/* Toast Notification */}
-      {showToast && (
-        <div className="fixed top-32 right-6 z-50 px-6 py-3 rounded-xl shadow-lg bg-emerald-500 text-white animate-slideIn">
+      {toastInfo.show && (
+        <div
+          className={`fixed top-32 right-6 z-50 px-6 py-3 rounded-xl shadow-lg text-white animate-slideIn ${
+            toastInfo.type === "success" ? "bg-emerald-500" : "bg-red-500"
+          }`}
+        >
           <div className="flex items-center gap-2">
             <svg
               className="w-5 h-5"
@@ -274,7 +321,7 @@ function ProductDetail() {
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <span className="font-medium text-sm">{toastMessage}</span>
+            <span className="font-medium text-sm">{toastInfo.message}</span>
           </div>
         </div>
       )}
@@ -482,7 +529,7 @@ function ProductDetail() {
                   <button
                     onClick={handleAddToCart}
                     disabled={!isInStock}
-                    className={`flex-1 py-3.5 rounded-xl font-bold transition-all shadow-md hover:shadow-lg ${
+                    className={`flex-1 py-3 rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 ${
                       isAdded
                         ? "bg-green-500 text-white"
                         : isInStock
@@ -504,7 +551,7 @@ function ProductDetail() {
                             strokeWidth={2}
                             d="M5 13l4 4L19 7"
                           />
-                        </svg>{" "}
+                        </svg>
                         Added
                       </>
                     ) : isInStock ? (
@@ -521,7 +568,7 @@ function ProductDetail() {
                             strokeWidth={2}
                             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                           />
-                        </svg>{" "}
+                        </svg>
                         Add to Cart
                       </>
                     ) : (
@@ -530,7 +577,7 @@ function ProductDetail() {
                   </button>
                   <button
                     onClick={handleWishlistClick}
-                    className={`px-5 py-3.5 rounded-xl border-2 font-bold transition-all flex items-center justify-center ${
+                    className={`px-5 py-3 rounded-xl border-2 font-bold transition-all flex items-center justify-center ${
                       isWishlisted
                         ? "bg-pink-500 border-pink-500 text-white hover:bg-pink-600"
                         : "border-red-500 text-pink-500 hover:bg-pink-50"
@@ -571,7 +618,7 @@ function ProductDetail() {
                     title={
                       isCompared ? "Remove from Compare" : "Add to Compare"
                     }
-                    className={`px-5 py-3.5 rounded-xl border-2 font-bold transition-all ${
+                    className={`px-5 py-3 rounded-xl border-2 font-bold transition-all flex items-center justify-center ${
                       isCompared
                         ? "bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700"
                         : "border-indigo-600 text-indigo-600 hover:bg-indigo-50"
@@ -595,7 +642,7 @@ function ProductDetail() {
                 {isInStock && (
                   <button
                     onClick={handleBuyNow}
-                    className="w-full py-3.5 rounded-xl font-bold text-lg bg-orange-500 text-white hover:bg-orange-600 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-xl font-bold text-lg bg-orange-500 text-white hover:bg-orange-600 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
                   >
                     <svg
                       className="w-5 h-5"
@@ -940,9 +987,14 @@ function ProductDetail() {
                   </div>
                   <button
                     onClick={handleBundleAddToCart}
-                    className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg w-full sm:w-auto"
+                    disabled={!isBundleInStock}
+                    className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg w-full sm:w-auto disabled:bg-gray-400 disabled:cursor-not-allowed"
                   >
-                    Add All {selectedBundleIds.length + 1} to Cart
+                    {!isBundleInStock
+                      ? "Bundle Unavailable"
+                      : `Add All ${
+                          selectedBundleIds.length + 1
+                        } to Cart`}
                   </button>
                 </div>
               </div>

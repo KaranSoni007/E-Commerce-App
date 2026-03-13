@@ -146,7 +146,9 @@ function Navbar() {
           .toLowerCase()
           .split(" ")
           .filter(Boolean);
-        const filtered = AllProducts.filter((p) => {
+
+        const sourceProducts = JSON.parse(localStorage.getItem("allProducts")) || AllProducts;
+        const filtered = sourceProducts.filter((p) => {
           const productTitleLower = p.title.toLowerCase();
           return searchWords.every((word) => productTitleLower.includes(word));
         }).slice(0, 5);
@@ -361,7 +363,8 @@ function Navbar() {
                         .split(" ")
                         .filter(Boolean);
                       setSuggestions(
-                        AllProducts.filter((p) => {
+                        (JSON.parse(localStorage.getItem("allProducts")) || AllProducts)
+                        .filter((p) => {
                           const productTitleLower = p.title.toLowerCase();
                           return searchWords.every((word) =>
                             productTitleLower.includes(word),
