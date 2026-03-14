@@ -362,24 +362,26 @@ const CardView = memo(
               onClick={handleBuyNow}
               disabled={!isInStock}
               className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 relative z-30 flex items-center justify-center gap-2 ${
-                isInStock ? "bg-orange-500 text-white hover:bg-orange-600 hover:scale-[1.02] active:scale-[0.98]" : "bg-gray-300 text-gray-500 cursor-not-allowed hidden"
+                isInStock
+                  ? "bg-orange-500 text-white hover:bg-orange-600 hover:scale-[1.02] active:scale-[0.98]"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed hidden"
               }`}
               aria-label="Buy Now"
             >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>{" "}
-                Buy
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>{" "}
+              Buy
             </button>
           </div>
         </div>
@@ -526,7 +528,11 @@ function ECommerceWeb() {
     const loadLocalData = () => {
       // Try to load from local storage first (to pick up Admin Panel updates)
       const storedProducts = JSON.parse(localStorage.getItem("allProducts"));
-      if (storedProducts && Array.isArray(storedProducts) && storedProducts.length > 0) {
+      if (
+        storedProducts &&
+        Array.isArray(storedProducts) &&
+        storedProducts.length > 0
+      ) {
         setData(storedProducts);
       } else {
         setData(AllProducts || []);
